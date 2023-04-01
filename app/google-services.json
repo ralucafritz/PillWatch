@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "948069568364",
+    "project_id": "pillwatch-1d74e",
+    "storage_bucket": "pillwatch-1d74e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:948069568364:android:f83e59bb1d523d5e74ed49",
+        "android_client_info": {
+          "package_name": "com.example.pillwatch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "948069568364-rb00q6d540nlnspis5jvqafvs8hm4k3o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWSXG2h4ftdl5EPB-8RkRe-qpqTCp699c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "948069568364-rb00q6d540nlnspis5jvqafvs8hm4k3o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
