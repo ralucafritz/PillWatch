@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.pillwatch.database.AppDatabase
 import com.example.pillwatch.databinding.FragmentTestMedsBinding
 
 class TestMedsFragment : Fragment() {
@@ -19,11 +20,21 @@ class TestMedsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Binding
         val binding = FragmentTestMedsBinding.inflate(inflater)
 
-        binding.lifecycleOwner = this
+        // Create ViewModelFactory
+        val application = requireNotNull(this.activity).application
+        val dataSource = AppDatabase.getInstance(application).databaseDao
+        val viewModelFactory = TestMedsViewModelFactory(dataSource, application)
 
-        binding.viewModel = viewModel
+        // ViewModel
+        val testMedsViewModel = ViewModelProvider(this, viewModelFactory).get(TestMedsViewModel::class.java)
+        testMedsViewModel.getMedsData()
+        // Binding
+        binding.testMedsViewModel = testMedsViewModel
+
+        binding.lifecycleOwner = this
 
        return binding.root
     }

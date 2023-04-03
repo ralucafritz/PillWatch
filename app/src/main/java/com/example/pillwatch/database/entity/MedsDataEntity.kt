@@ -1,41 +1,41 @@
-package com.example.pillwatch.database
+package com.example.pillwatch.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "med_data_table")
-data class MedDataEntity(
+data class MedsDataEntity(
     @PrimaryKey(autoGenerate = true)
     var medId: Long = 0L,
 
-    @ColumnInfo(name = "CIM Code")
+    @ColumnInfo(name = "cim_code")
     val cimCode: String = "",
 
-    @ColumnInfo(name = "Trade name")
+    @ColumnInfo(name = "trade_name")
     val tradeName: String = "",
 
-    @ColumnInfo(name = "DCI")
+    @ColumnInfo(name = "dci")
     val dci: String = "",
 
-    @ColumnInfo(name = "Dosage Form")
+    @ColumnInfo(name = "dosage_form")
     val dosageForm: String = "",
 
-    @ColumnInfo(name = "Concentration")
+    @ColumnInfo(name = "concentration")
     val concentration: String = "",
 
-    @ColumnInfo(name = "ATC Code")
+    @ColumnInfo(name = "atc_code")
     val atcCode: String = "",
 
-    @ColumnInfo(name = "Prescription Type")
+    @ColumnInfo(name = "prescription_type")
     val prescriptionType: String = "",
 
-    @ColumnInfo(name = "Package volume")
-    val packageVolume: String = "",
+    @ColumnInfo(name = "package_volume")
+    val packageVolume: String? = "",
 
-    @ColumnInfo(name = "Last Update Date")
+    @ColumnInfo(name = "last_update_date")
     val lastUpdateDate: String = "",
 
-    @ColumnInfo(name = "RxCui")
+    @ColumnInfo(name = "rxcui")
     val rxCui: String = ""
 )
