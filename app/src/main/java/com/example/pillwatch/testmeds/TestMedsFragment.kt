@@ -30,7 +30,8 @@ class TestMedsFragment : Fragment() {
 
         // ViewModel
         val testMedsViewModel = ViewModelProvider(this, viewModelFactory).get(TestMedsViewModel::class.java)
-        testMedsViewModel.getMedsData()
+        testMedsViewModel.getMedsDataFromAPI()
+//        testMedsViewModel.clearData()
         // Binding
         binding.testMedsViewModel = testMedsViewModel
 

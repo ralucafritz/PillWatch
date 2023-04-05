@@ -18,6 +18,9 @@ interface DatabaseDao {
     @Query("SELECT * FROM med_data_table ORDER BY medId ASC")
     fun getAllMeds(): LiveData<List<MedsDataEntity>>
 
+    @Query("SELECT cim_code FROM med_data_table ORDER BY medId ASC LIMIT 1")
+    fun getFirstCIM(): String?
+
     @Query("SELECT last_update_date FROM med_data_table LIMIT 1")
     fun getLastUpdateDate(): LiveData<String>
 }

@@ -10,10 +10,7 @@ import com.example.pillwatch.database.repository.MedsDataRepository
 import com.example.pillwatch.network.AppApi
 import com.example.pillwatch.network.MedsDataProperty
 import com.example.pillwatch.network.MedsDataShaProperty
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import timber.log.Timber
 
 class TestMedsViewModel(val databaseDao: DatabaseDao, application: Application) :
@@ -32,20 +29,40 @@ class TestMedsViewModel(val databaseDao: DatabaseDao, application: Application) 
     val shaProperty: LiveData<MedsDataShaProperty>
         get() = _shaProperty
 
+    private val _cimCode = MutableLiveData<String?>()
+    val cimCode: LiveData<String?>
+        get() = _cimCode
+
     // coroutines stuff
     private var viewModelJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     private val dbCoroutineScope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
-    fun getMedsData() {
+    fun getMedsDataFromAPI() {
         coroutineScope.launch {
             val medsDataApiCall = AppApi.retrofitService.getDataset()
-            Timber.d("test")
             _shaProperty.value = medsDataApiCall
             val entitiesList = _shaProperty.value!!.file.map { it -> transformDataToEntity(it) }
             if (!entitiesList.isEmpty()) {
-                dbCoroutineScope.launch { medsDataRepository.insertAll(entitiesList) }
+                val cimCode = withContext(Dispatchers.IO) { databaseDao.getFirstCIM() }
+//                Timber.d("${_cimCode.value}, {$entitiesList[0].cimCode}")
+
+                if(cimCode == null || entitiesList[0].cimCode != cimCode) {
+                    dbCoroutineScope.launch {
+                        medsDataRepository.insertAll(entitiesList)
+                        Timber.d("Meds introduced to the database.")}
+                }
+                else {
+                    Timber.d("Failure: Meds were not introduced to the database. Duplicated CIM code detected.")
+                }
             }
+        }
+    }
+
+    fun clearData() {
+        dbCoroutineScope.launch{ databaseDao.clear()
+            Timber.d("Meds database clear successful.")
+
         }
     }
 
