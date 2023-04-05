@@ -4,24 +4,33 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.pillwatch.database.dao.DatabaseDao
+import com.example.pillwatch.database.dao.MedsDataDao
+import com.example.pillwatch.database.dao.MetadataDao
 import com.example.pillwatch.database.entity.MedsDataEntity
+import com.example.pillwatch.database.entity.MetadataEntity
 import com.example.pillwatch.database.repository.MedsDataRepository
+import com.example.pillwatch.database.repository.MetadataRepository
 import com.example.pillwatch.network.AppApi
 import com.example.pillwatch.network.MedsDataProperty
 import com.example.pillwatch.network.MedsDataShaProperty
 import kotlinx.coroutines.*
 import timber.log.Timber
 
-class TestMedsViewModel(val databaseDao: DatabaseDao, application: Application) :
+class TestMedsViewModel(
+    val medsDataDao: MedsDataDao,
+    metadataDao: MetadataDao,
+    application: Application
+) :
     AndroidViewModel(application) {
 
-    private val medsDataRepository: MedsDataRepository = MedsDataRepository(databaseDao)
+    private val SHA = "sha"
+    private val medsDataRepository: MedsDataRepository = MedsDataRepository(medsDataDao)
+    private val metadataRepository: MetadataRepository = MetadataRepository(metadataDao)
 
     // mutable live data
-    private val _shaProperty = MutableLiveData<MedsDataShaProperty>()
-    val shaProperty: LiveData<MedsDataShaProperty>
-        get() = _shaProperty
+    private val _responseAPI = MutableLiveData<MedsDataShaProperty>()
+    val responseAPI: LiveData<MedsDataShaProperty>
+        get() = _responseAPI
 
     // coroutines stuff
     private var viewModelJob = Job()
@@ -30,28 +39,70 @@ class TestMedsViewModel(val databaseDao: DatabaseDao, application: Application) 
 
     fun getMedsDataFromAPI() {
         coroutineScope.launch {
-            val medsDataApiCall = AppApi.retrofitService.getDataset()
-            _shaProperty.value = medsDataApiCall
-            val entitiesList = _shaProperty.value!!.file.map { it -> transformDataToEntity(it) }
-            if (!entitiesList.isEmpty()) {
-                val cimCode = withContext(Dispatchers.IO) { medsDataRepository.getFirstCIM() }
-//                Timber.d("${_cimCode.value}, {$entitiesList[0].cimCode}")
-
-                if(cimCode == null || entitiesList[0].cimCode != cimCode) {
-                    dbCoroutineScope.launch {
-                        medsDataRepository.insertAll(entitiesList)
-                        Timber.d("Meds introduced to the database.")}
-                }
-                else {
-                    Timber.d("Failure: Meds were not introduced to the database. Duplicated CIM code detected.")
+            val responseAPICall = AppApi.retrofitService.getDataset()
+            _responseAPI.value = responseAPICall
+            if (checkNewSha(_responseAPI.value!!.sha)) {
+                val entitiesList = _responseAPI.value!!.file.map { it -> transformDataToEntity(it) }
+                if (entitiesList.isNotEmpty()) {
+                    val cimCode = withContext(Dispatchers.IO) {
+                        medsDataRepository.getFirstCIM()
+                    }
+                    insertMeds(entitiesList, cimCode)
                 }
             }
         }
     }
 
-    fun clearData() {
-        dbCoroutineScope.launch{ medsDataRepository.clear()
-            Timber.d("Meds database clear successful.")
+    private suspend fun checkNewSha(newSha: String): Boolean {
+        val currentSha = withContext(Dispatchers.IO) {
+            metadataRepository.getMetadata(SHA)
+        }
+        if (currentSha == null) {
+            dbCoroutineScope.launch {
+                metadataRepository.insert(
+                    MetadataEntity(
+                        0L,
+                        SHA,
+                        newSha
+                    )
+                )
+            }
+            Timber.d("SHA value inserted")
+            return true
+        } else if (currentSha.value != newSha) {
+            dbCoroutineScope.launch {
+                metadataRepository.update(MetadataEntity(currentSha.id, SHA, newSha))
+            }
+            Timber.d("SHA value updated")
+            return true
+        }
+        Timber.d("SHA value is the same")
+        return false
+    }
+
+    private suspend fun insertMeds(entitiesList: List<MedsDataEntity>, cimCode: String?) {
+        if (cimCode == null || entitiesList[0].cimCode != cimCode) {
+            dbCoroutineScope.launch {
+                medsDataRepository.insertAll(entitiesList)
+                Timber.d("Meds introduced to the database.")
+            }
+        } else {
+            Timber.d("Failure: Meds were not introduced to the database. Duplicated CIM code detected.")
+        }
+    }
+
+    fun clearMedsData() {
+        dbCoroutineScope.launch {
+            medsDataRepository.clear()
+            Timber.d("Meds table cleared successfully.")
+
+        }
+    }
+
+    fun clearMetadata() {
+        dbCoroutineScope.launch {
+            metadataRepository.clear()
+            Timber.d("Metadata table cleared successfully.")
 
         }
     }

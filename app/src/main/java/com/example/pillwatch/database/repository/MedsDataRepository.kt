@@ -2,25 +2,25 @@ package com.example.pillwatch.database.repository
 
 
 import androidx.lifecycle.LiveData
-import com.example.pillwatch.database.dao.DatabaseDao
+import com.example.pillwatch.database.dao.MedsDataDao
 import com.example.pillwatch.database.entity.MedsDataEntity
 
-class MedsDataRepository(private val databaseDao: DatabaseDao) {
+class MedsDataRepository(private val medsDataDao: MedsDataDao) {
 
 
     fun insertAll(dataList: List<MedsDataEntity>) {
-            databaseDao.insertAll(dataList)
+            medsDataDao.insertAll(dataList)
     }
 
-    fun getAllMeds() : LiveData<List<MedsDataEntity>> {
-            return databaseDao.getAllMeds()
+    fun getAllMeds() : List<MedsDataEntity> {
+            return medsDataDao.getAllMeds()
     }
 
     fun clear() {
-        databaseDao.clear()
+        medsDataDao.clear()
     }
 
     fun getFirstCIM(): String? {
-        return databaseDao.getFirstCIM()
+        return medsDataDao.getFirstCIM()
     }
 }
