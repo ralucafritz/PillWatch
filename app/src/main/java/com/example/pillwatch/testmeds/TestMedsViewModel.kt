@@ -19,19 +19,9 @@ class TestMedsViewModel(val databaseDao: DatabaseDao, application: Application) 
     private val medsDataRepository: MedsDataRepository = MedsDataRepository(databaseDao)
 
     // mutable live data
-    private val _response = MutableLiveData<String>()
-    val response: LiveData<String>
-        get() = _response
-
-    var file = emptyList<MedsDataProperty>();
-
     private val _shaProperty = MutableLiveData<MedsDataShaProperty>()
     val shaProperty: LiveData<MedsDataShaProperty>
         get() = _shaProperty
-
-    private val _cimCode = MutableLiveData<String?>()
-    val cimCode: LiveData<String?>
-        get() = _cimCode
 
     // coroutines stuff
     private var viewModelJob = Job()
@@ -44,7 +34,7 @@ class TestMedsViewModel(val databaseDao: DatabaseDao, application: Application) 
             _shaProperty.value = medsDataApiCall
             val entitiesList = _shaProperty.value!!.file.map { it -> transformDataToEntity(it) }
             if (!entitiesList.isEmpty()) {
-                val cimCode = withContext(Dispatchers.IO) { databaseDao.getFirstCIM() }
+                val cimCode = withContext(Dispatchers.IO) { medsDataRepository.getFirstCIM() }
 //                Timber.d("${_cimCode.value}, {$entitiesList[0].cimCode}")
 
                 if(cimCode == null || entitiesList[0].cimCode != cimCode) {
@@ -60,7 +50,7 @@ class TestMedsViewModel(val databaseDao: DatabaseDao, application: Application) 
     }
 
     fun clearData() {
-        dbCoroutineScope.launch{ databaseDao.clear()
+        dbCoroutineScope.launch{ medsDataRepository.clear()
             Timber.d("Meds database clear successful.")
 
         }

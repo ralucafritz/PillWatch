@@ -15,4 +15,12 @@ class MedsDataRepository(private val databaseDao: DatabaseDao) {
     fun getAllMeds() : LiveData<List<MedsDataEntity>> {
             return databaseDao.getAllMeds()
     }
+
+    fun clear() {
+        databaseDao.clear()
+    }
+
+    fun getFirstCIM(): String? {
+        return databaseDao.getFirstCIM()
+    }
 }
