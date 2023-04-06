@@ -4,13 +4,20 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.pillwatch.database.dao.DatabaseDao
+import com.example.pillwatch.database.dao.MedsDataDao
+import com.example.pillwatch.database.dao.MetadataDao
 import com.example.pillwatch.database.entity.MedsDataEntity
+import com.example.pillwatch.database.entity.MetadataEntity
 
-@Database(entities = [MedsDataEntity::class], version = 1, exportSchema = false)
+@Database(
+    entities = [MedsDataEntity::class,
+                       MetadataEntity::class],
+    version = 2,
+    exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract val databaseDao: DatabaseDao
+    abstract val medsDataDao: MedsDataDao
+    abstract val metadataDao: MetadataDao
 
     companion object {
         @Volatile //  = value of INSTANCE is up to date and the same to all threads

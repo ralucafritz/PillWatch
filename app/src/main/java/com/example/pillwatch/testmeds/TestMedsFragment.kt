@@ -25,13 +25,15 @@ class TestMedsFragment : Fragment() {
 
         // Create ViewModelFactory
         val application = requireNotNull(this.activity).application
-        val dataSource = AppDatabase.getInstance(application).databaseDao
-        val viewModelFactory = TestMedsViewModelFactory(dataSource, application)
+        val medsDataDao = AppDatabase.getInstance(application).medsDataDao
+        val metadataDao = AppDatabase.getInstance(application).metadataDao
+        val viewModelFactory = TestMedsViewModelFactory(medsDataDao, metadataDao, application)
 
         // ViewModel
         val testMedsViewModel = ViewModelProvider(this, viewModelFactory).get(TestMedsViewModel::class.java)
         testMedsViewModel.getMedsDataFromAPI()
-//        testMedsViewModel.clearData()
+//        testMedsViewModel.clearMetadata()
+//        testMedsViewModel.clearMedsData()
         // Binding
         binding.testMedsViewModel = testMedsViewModel
 
