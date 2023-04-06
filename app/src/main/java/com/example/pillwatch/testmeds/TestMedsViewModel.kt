@@ -72,6 +72,7 @@ class TestMedsViewModel(
         } else if (currentSha.value != newSha) {
             dbCoroutineScope.launch {
                 metadataRepository.update(MetadataEntity(currentSha.id, SHA, newSha))
+                clearMedsData()
             }
             Timber.d("SHA value updated")
             return true
@@ -95,7 +96,6 @@ class TestMedsViewModel(
         dbCoroutineScope.launch {
             medsDataRepository.clear()
             Timber.d("Meds table cleared successfully.")
-
         }
     }
 
@@ -103,7 +103,6 @@ class TestMedsViewModel(
         dbCoroutineScope.launch {
             metadataRepository.clear()
             Timber.d("Metadata table cleared successfully.")
-
         }
     }
 
