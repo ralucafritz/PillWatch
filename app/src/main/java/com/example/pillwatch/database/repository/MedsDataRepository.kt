@@ -20,7 +20,4 @@ class MedsDataRepository(private val medsDataDao: MedsDataDao) {
         medsDataDao.clear()
     }
 
-    fun getFirstCIM(): String? {
-        return medsDataDao.getFirstCIM()
-    }
 }

@@ -19,5 +19,5 @@ interface MetadataDao {
     fun getAllMetadata(): List<MetadataEntity>
 
     @Query("SELECT * FROM metadata_table WHERE Name = :nameMetadata LIMIT 1")
-    fun getMetadata(nameMetadata: String): MetadataEntity
+    fun getMetadata(nameMetadata: String): MetadataEntity?
 }
