@@ -1,4 +1,4 @@
-package com.example.pillwatch.testmeds
+package com.example.pillwatch.fragments.testmeds
 
 import android.app.Application
 import androidx.lifecycle.ViewModel

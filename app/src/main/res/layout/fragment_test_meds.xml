@@ -5,13 +5,13 @@
     <data>
         <variable
             name="testMedsViewModel"
-            type="com.example.pillwatch.testmeds.TestMedsViewModel" />
+            type="com.example.pillwatch.fragments.testmeds.TestMedsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="testmeds.TestMedsFragment">
+        tools:context=".fragments.testmeds.TestMedsFragment">
 
         <ScrollView
             android:layout_width="match_parent"
