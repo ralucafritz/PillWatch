@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="welcomeViewModel"
             type="com.example.pillwatch.fragments.welcome.WelcomeViewModel" />
@@ -11,30 +12,37 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/md_theme_light_background"
         tools:context=".fragments.welcome.WelcomeFragment">
 
         <FrameLayout
-            android:layout_width="571dp"
-            android:layout_height="460dp"
-            android:layout_marginBottom="252dp"
+            android:id="@+id/frame_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="#ffffff"
-            app:layout_constraintBottom_toTopOf="@+id/get_started_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.26">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/image_welcome_id"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="fitCenter"
+                android:layout_height="350dp"
+                android:scaleType="centerCrop"
                 app:srcCompat="@drawable/bg_welcome" />
 
             <ImageView
-                android:id="@+id/fade_gradient"
+                android:id="@+id/fade_gradient_purple_id"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="350dp"
+                android:layout_gravity="bottom"
+                android:scaleType="fitEnd"
+                android:src="@drawable/fade_gradient_purple" />
+
+            <ImageView
+                android:id="@+id/fade_gradient_id"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
                 android:layout_gravity="bottom"
                 android:scaleType="fitEnd"
                 android:src="@drawable/fade_gradient" />
@@ -42,75 +50,78 @@
         </FrameLayout>
 
         <TextView
-            android:id="@+id/text_intro_welcome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="288dp"
-            android:text="@string/get_your_medicine_on_time"
+            android:id="@+id/text_intro_welcome_id"
+            android:layout_width="340dp"
+            android:layout_height="90dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="32dp"
+            android:text="@string/meds_on_time"
             android:textAlignment="center"
             android:textSize="@dimen/text_size_big"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.666"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/frame_id" />
+
+        <Button
+            android:id="@+id/get_started_button_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="32dp"
+            android:text="@string/get_started_button_txt"
+            android:textSize="@dimen/text_size_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_intro_welcome_id" />
+
+        <LinearLayout
+            android:id="@+id/layout_acc_login_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/get_started_button_id">
+
+            <TextView
+                android:id="@+id/have_an_account_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/already_have_an_account"
+                android:textSize="@dimen/text_size_medium" />
+
+            <TextView
+                android:id="@+id/log_in_welcome_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/log_in"
+                android:textColor="@color/md_theme_light_primary"
+                android:textSize="@dimen/text_size_medium"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteY="577dp" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/warning_text_welcome"
-            android:layout_width="354dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:id="@+id/warning_text_welcome_id"
+            android:layout_width="357dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="40dp"
             android:text="@string/warning_text_welcome"
             android:textAlignment="center"
             android:textSize="@dimen/text_size_small"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/log_in_welcome"
+            app:layout_constraintEnd_toEndOf="@+id/text_intro_welcome_id"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/have_an_account"
-            app:layout_constraintTop_toBottomOf="@+id/have_an_account"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintStart_toStartOf="@+id/text_intro_welcome_id"
+            app:layout_constraintTop_toBottomOf="@+id/layout_acc_login_id"
+            app:layout_constraintVertical_bias="0.5" />
 
-        <TextView
-            android:id="@+id/log_in_welcome"
-            android:layout_width="78dp"
-            android:layout_height="31dp"
-            android:text="@string/log_in"
-            android:textAlignment="viewStart"
-            android:textSize="@dimen/text_size_medium"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/have_an_account"
-            app:layout_constraintEnd_toEndOf="@+id/text_intro_welcome"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/have_an_account"
-            app:layout_constraintTop_toTopOf="@+id/have_an_account" />
-
-        <TextView
-            android:id="@+id/have_an_account"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:text="@string/already_have_an_account"
-            android:textAlignment="center"
-            android:textSize="@dimen/text_size_medium"
-            app:layout_constraintBottom_toTopOf="@+id/warning_text_welcome"
-            app:layout_constraintEnd_toStartOf="@+id/log_in_welcome"
-            app:layout_constraintStart_toStartOf="@+id/text_intro_welcome"
-            app:layout_constraintTop_toBottomOf="@+id/get_started_button" />
-
-        <Button
-            android:id="@+id/get_started_button"
-            android:layout_width="152dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="36dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/get_started_button_txt"
-            android:textSize="@dimen/text_size_small"
-            app:cornerRadius="@dimen/corner_radius"
-            app:layout_constraintBottom_toTopOf="@+id/have_an_account"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_intro_welcome" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

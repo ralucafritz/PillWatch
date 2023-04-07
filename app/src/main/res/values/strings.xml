@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">PillWatch</string>
     <string name="text_test">Text Test</string>
-    <string name="get_your_medicine_on_time">Get your medicine on time</string>
+    <string name="meds_on_time">Taking your meds on time was never easier</string>
     <string name="warning_text_welcome">This app is not intended as a replacement of a professional medical advice.</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="log_in">Log In</string>
-    <string name="get_started_button_txt">GET STARTED</string>
+    <string name="get_started_button_txt">Get started</string>
 </resources>
