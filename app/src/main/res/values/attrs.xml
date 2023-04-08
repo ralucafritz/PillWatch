@@ -15,4 +15,6 @@
     <attr name="colorCustomColor3Container" format="color" />
     <attr name="colorOnCustomColor3Container" format="color" />
     <attr name="harmonizeCustomColor3" format="boolean" />
+    <attr name="fadeGradientStart" format="reference|color"/>
+    <attr name="fadeGradientEnd" format="reference|color"/>
 </resources>

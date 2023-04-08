@@ -1,7 +1,7 @@
 
 <resources>
     <style name="AppTheme" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="colorPrimary">@color/md_theme_dark_primary</item>
+        <item name="colorPrimary">#AF86FD</item>
         <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/md_theme_dark_onPrimaryContainer</item>
@@ -43,5 +43,7 @@
         <item name="colorOnCustomColor3Container">#ffdbd0</item>
         <item name="harmonizeCustomColor3">false</item>
         <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>
+        <item name="fadeGradientStart">@color/md_theme_dark_background</item>
+        <item name="fadeGradientEnd">#6A1C1B1E</item>
     </style>
 </resources>
