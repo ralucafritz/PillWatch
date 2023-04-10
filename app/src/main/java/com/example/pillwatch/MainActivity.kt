@@ -2,6 +2,7 @@ package com.example.pillwatch
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.google.firebase.auth.FirebaseAuth
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {

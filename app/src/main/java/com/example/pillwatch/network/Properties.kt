@@ -21,3 +21,8 @@ data class MedsDataProperty(
     @Json(name ="Last Update Date") val lastUpdateDate: String,
     @Json(name ="RxCui") val rxCui: String
 )
+
+data class ValidationProperty(
+    val isValid: Boolean,
+    val message: String
+)

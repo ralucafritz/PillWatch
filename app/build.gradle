@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'androidx.navigation.safeargs.kotlin'
     id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -15,6 +16,7 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
+        resConfigs "en"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -41,10 +43,13 @@ android {
     // Enables data binding.
     buildFeatures {
         dataBinding true
+        viewBinding true
     }
 }
 
 dependencies {
+    implementation 'com.google.firebase:firebase-auth-ktx:21.2.0'
+    implementation 'androidx.annotation:annotation:1.6.0'
     def nav_version = "2.5.3"
     def room_version = "2.5.1"
     def retrofit_version = "2.9.0"
@@ -52,7 +57,7 @@ dependencies {
     def moshi_version = "1.14.0"
     def material_version = "1.4.1"
 
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.core:core-ktx:1.10.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0-alpha09'
@@ -82,6 +87,12 @@ dependencies {
     // LifeCycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+
+    // Firebase
+    implementation platform('com.google.firebase:firebase-bom:31.4.0')
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
+
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
