@@ -1,15 +1,15 @@
-package com.example.pillwatch.fragments.testmeds
+package com.example.pillwatch.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.pillwatch.database.dao.MedsDataDao
-import com.example.pillwatch.database.dao.MetadataDao
-import com.example.pillwatch.database.entity.MedsDataEntity
-import com.example.pillwatch.database.entity.MetadataEntity
-import com.example.pillwatch.database.repository.MedsDataRepository
-import com.example.pillwatch.database.repository.MetadataRepository
+import com.example.pillwatch.data.datasource.local.MedsDataDao
+import com.example.pillwatch.data.datasource.local.MetadataDao
+import com.example.pillwatch.data.model.MedsDataEntity
+import com.example.pillwatch.data.model.MetadataEntity
+import com.example.pillwatch.data.repository.MedsDataRepository
+import com.example.pillwatch.data.repository.MetadataRepository
 import com.example.pillwatch.network.AppApi
 import com.example.pillwatch.network.MedsDataProperty
 import com.example.pillwatch.network.MedsDataShaProperty

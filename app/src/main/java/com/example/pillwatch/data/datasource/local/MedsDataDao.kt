@@ -1,7 +1,7 @@
-package com.example.pillwatch.database.dao
+package com.example.pillwatch.data.datasource.local
 
 import androidx.room.*
-import com.example.pillwatch.database.entity.MedsDataEntity
+import com.example.pillwatch.data.model.MedsDataEntity
 
 @Dao
 interface MedsDataDao {

@@ -7,7 +7,22 @@
 
     <fragment
         android:id="@+id/welcomeFragment"
-        android:name="com.example.pillwatch.fragments.welcome.WelcomeFragment"
+        android:name="com.example.pillwatch.ui.fragment.welcome.WelcomeFragment"
         android:label="WelcomeFragment"
-        tools:layout="@layout/fragment_welcome" />
+        tools:layout="@layout/fragment_welcome" >
+        <action
+            android:id="@+id/action_welcomeFragment_to_signupActivity"
+            app:destination="@id/signupActivity" />
+        <action
+            android:id="@+id/action_welcomeFragment_to_loginActivity"
+            app:destination="@id/loginActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/signupActivity"
+        android:name="com.example.pillwatch.ui.activity.SignupActivity"
+        android:label="SignupActivity"/>
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.example.pillwatch.ui.activity.LoginActivity"
+        android:label="LoginActivity" />
 </navigation>

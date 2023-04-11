@@ -6,16 +6,16 @@
 
         <variable
             name="welcomeViewModel"
-            type="com.example.pillwatch.fragments.welcome.WelcomeViewModel" />
+            type="com.example.pillwatch.viewmodel.WelcomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.welcome.WelcomeFragment">
+        tools:context=".ui.fragment.welcome.WelcomeFragment">
 
         <FrameLayout
-            android:id="@+id/frame_id"
+            android:id="@+id/frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ffffff"
@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/image_welcome_id"
+                android:id="@+id/image_welcome"
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
                 android:scaleType="centerCrop"
@@ -32,7 +32,7 @@
                 tools:ignore="ContentDescription,ImageContrastCheck" />
 
             <ImageView
-                android:id="@+id/fade_gradient_purple_id"
+                android:id="@+id/fade_gradient_purple"
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
                 android:layout_gravity="bottom"
@@ -52,7 +52,7 @@
         </FrameLayout>
 
         <TextView
-            android:id="@+id/text_intro_welcome_id"
+            android:id="@+id/text_intro_welcome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -63,10 +63,10 @@
             android:textSize="@dimen/text_size_big"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/frame_id" />
+            app:layout_constraintTop_toBottomOf="@id/frame" />
 
         <Button
-            android:id="@+id/get_started_button_id"
+            android:id="@+id/get_started_button"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -78,10 +78,10 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_intro_welcome_id" />
+            app:layout_constraintTop_toBottomOf="@+id/text_intro_welcome" />
 
         <LinearLayout
-            android:id="@+id/layout_acc_login_id"
+            android:id="@+id/layout_acc_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -89,17 +89,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/get_started_button_id">
+            app:layout_constraintTop_toBottomOf="@+id/get_started_button">
 
             <TextView
-                android:id="@+id/have_an_account_id"
+                android:id="@+id/have_an_account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/already_have_an_account"
                 android:textSize="@dimen/text_size_medium" />
 
             <TextView
-                android:id="@+id/log_in_welcome_id"
+                android:id="@+id/log_in_welcome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -112,7 +112,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/warning_text_welcome_id"
+            android:id="@+id/warning_text_welcome"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
@@ -126,7 +126,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_acc_login_id"
+            app:layout_constraintTop_toBottomOf="@+id/layout_acc_login"
             app:layout_constraintVertical_bias="0.8" />
 
 

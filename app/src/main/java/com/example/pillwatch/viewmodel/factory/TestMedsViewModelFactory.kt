@@ -1,10 +1,11 @@
-package com.example.pillwatch.fragments.testmeds
+package com.example.pillwatch.viewmodel.factory
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.pillwatch.database.dao.MedsDataDao
-import com.example.pillwatch.database.dao.MetadataDao
+import com.example.pillwatch.data.datasource.local.MedsDataDao
+import com.example.pillwatch.data.datasource.local.MetadataDao
+import com.example.pillwatch.viewmodel.TestMedsViewModel
 
 class TestMedsViewModelFactory(
     private val medsDataDao: MedsDataDao,

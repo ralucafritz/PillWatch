@@ -1,13 +1,11 @@
-package com.example.pillwatch.database
+package com.example.pillwatch.data.datasource.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.pillwatch.database.dao.MedsDataDao
-import com.example.pillwatch.database.dao.MetadataDao
-import com.example.pillwatch.database.entity.MedsDataEntity
-import com.example.pillwatch.database.entity.MetadataEntity
+import com.example.pillwatch.data.model.MedsDataEntity
+import com.example.pillwatch.data.model.MetadataEntity
 
 @Database(
     entities = [MedsDataEntity::class,

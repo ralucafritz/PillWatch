@@ -1,7 +1,8 @@
-package com.example.pillwatch
+package com.example.pillwatch.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.pillwatch.R
 import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
