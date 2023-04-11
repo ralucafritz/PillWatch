@@ -1,4 +1,4 @@
-package com.example.pillwatch.fragments.testmeds
+package com.example.pillwatch.ui.fragment.testmeds
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.pillwatch.database.AppDatabase
+import com.example.pillwatch.data.datasource.local.AppDatabase
 import com.example.pillwatch.databinding.FragmentTestMedsBinding
+import com.example.pillwatch.viewmodel.TestMedsViewModel
+import com.example.pillwatch.viewmodel.factory.TestMedsViewModelFactory
 
 class TestMedsFragment : Fragment() {
 

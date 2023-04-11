@@ -1,4 +1,4 @@
-package com.example.pillwatch.extensions
+package com.example.pillwatch.utils.extensions
 
 import android.app.Activity
 import android.widget.Toast

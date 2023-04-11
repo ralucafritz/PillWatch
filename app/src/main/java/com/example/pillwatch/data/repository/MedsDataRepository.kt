@@ -1,9 +1,8 @@
-package com.example.pillwatch.database.repository
+package com.example.pillwatch.data.repository
 
 
-import androidx.lifecycle.LiveData
-import com.example.pillwatch.database.dao.MedsDataDao
-import com.example.pillwatch.database.entity.MedsDataEntity
+import com.example.pillwatch.data.datasource.local.MedsDataDao
+import com.example.pillwatch.data.model.MedsDataEntity
 
 class MedsDataRepository(private val medsDataDao: MedsDataDao) {
 

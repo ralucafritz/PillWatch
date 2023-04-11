@@ -1,4 +1,4 @@
-package com.example.pillwatch.database.entity
+package com.example.pillwatch.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

@@ -1,4 +1,4 @@
-package com.example.pillwatch.fragments.welcome
+package com.example.pillwatch.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController

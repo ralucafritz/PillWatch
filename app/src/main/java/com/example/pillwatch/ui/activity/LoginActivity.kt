@@ -1,4 +1,4 @@
-package com.example.pillwatch
+package com.example.pillwatch.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,10 +7,11 @@ import android.text.TextWatcher
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
+import com.example.pillwatch.R
 import com.example.pillwatch.databinding.ActivityLoginBinding
-import com.example.pillwatch.extensions.Extensions.timber
-import com.example.pillwatch.extensions.Extensions.toast
+import com.example.pillwatch.utils.extensions.Extensions.timber
+import com.example.pillwatch.utils.extensions.Extensions.toast
+import com.example.pillwatch.viewmodel.LoginViewModel
 
 class LoginActivity: AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -79,7 +80,7 @@ class LoginActivity: AppCompatActivity() {
 
         val intent = Intent(this, when (activityId) {
             R.id.nav_host_fragment -> { MainActivity::class.java }
-            R.id.signupActivity-> { SignupActivity::class.java }
+            R.id.signupActivity -> { SignupActivity::class.java }
             else -> { MainActivity::class.java }
         })
 

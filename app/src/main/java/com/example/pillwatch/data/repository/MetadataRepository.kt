@@ -1,8 +1,7 @@
-package com.example.pillwatch.database.repository
+package com.example.pillwatch.data.repository
 
-import androidx.lifecycle.LiveData
-import com.example.pillwatch.database.dao.MetadataDao
-import com.example.pillwatch.database.entity.MetadataEntity
+import com.example.pillwatch.data.datasource.local.MetadataDao
+import com.example.pillwatch.data.model.MetadataEntity
 
 class MetadataRepository (private val metadataDao: MetadataDao){
 

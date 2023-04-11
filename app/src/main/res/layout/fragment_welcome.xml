@@ -6,13 +6,13 @@
 
         <variable
             name="welcomeViewModel"
-            type="com.example.pillwatch.fragments.welcome.WelcomeViewModel" />
+            type="com.example.pillwatch.viewmodel.WelcomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.welcome.WelcomeFragment">
+        tools:context=".ui.fragment.welcome.WelcomeFragment">
 
         <FrameLayout
             android:id="@+id/frame"

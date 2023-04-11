@@ -1,4 +1,4 @@
-package com.example.pillwatch.fragments.welcome
+package com.example.pillwatch.ui.fragment.welcome
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.example.pillwatch.databinding.FragmentWelcomeBinding
+import com.example.pillwatch.viewmodel.WelcomeViewModel
 
 class WelcomeFragment: Fragment() {
 

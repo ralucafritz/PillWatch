@@ -1,4 +1,4 @@
-package com.example.pillwatch
+package com.example.pillwatch.viewmodel
 
 import android.util.Patterns
 import androidx.lifecycle.LiveData
@@ -8,7 +8,6 @@ import com.example.pillwatch.network.ValidationProperty
 import com.example.pillwatch.utils.FirebaseUtils.firebaseAuth
 import com.example.pillwatch.utils.FirebaseUtils.firebaseUser
 import timber.log.Timber
-import kotlin.reflect.jvm.internal.ReflectProperties.Val
 
 class SignupViewModel() : ViewModel() {
 

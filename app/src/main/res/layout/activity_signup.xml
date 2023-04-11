@@ -5,13 +5,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.pillwatch.SignupViewModel" />
+            type="com.example.pillwatch.viewmodel.SignupViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".SignupActivity">
+        tools:context=".ui.activity.SignupActivity">
 
         <ImageView
             android:id="@+id/image_signup"

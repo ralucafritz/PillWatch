@@ -1,8 +1,7 @@
-package com.example.pillwatch.database.dao
+package com.example.pillwatch.data.datasource.local
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.pillwatch.database.entity.MetadataEntity
+import com.example.pillwatch.data.model.MetadataEntity
 
 @Dao
 interface MetadataDao {

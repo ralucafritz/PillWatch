@@ -1,4 +1,4 @@
-package com.example.pillwatch
+package com.example.pillwatch.viewmodel
 
 import android.util.Patterns
 import androidx.lifecycle.LiveData

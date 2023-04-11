@@ -1,4 +1,4 @@
-package com.example.pillwatch
+package com.example.pillwatch.ui.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,10 +7,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation.findNavController
+import com.example.pillwatch.R
 import com.example.pillwatch.databinding.ActivitySignupBinding
-import com.example.pillwatch.extensions.Extensions.timber
-import com.example.pillwatch.extensions.Extensions.toast
+import com.example.pillwatch.utils.extensions.Extensions.timber
+import com.example.pillwatch.utils.extensions.Extensions.toast
+import com.example.pillwatch.viewmodel.SignupViewModel
 
 class SignupActivity : AppCompatActivity() {
 
@@ -91,7 +92,7 @@ class SignupActivity : AppCompatActivity() {
 
         val intent = Intent(this, when (activityId) {
             R.id.nav_host_fragment -> { MainActivity::class.java }
-            R.id.loginActivity-> { LoginActivity::class.java }
+            R.id.loginActivity -> { LoginActivity::class.java }
             else -> { MainActivity::class.java }
         })
 
