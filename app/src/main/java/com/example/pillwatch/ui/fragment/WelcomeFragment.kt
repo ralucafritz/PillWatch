@@ -1,4 +1,4 @@
-package com.example.pillwatch.ui.fragment.welcome
+package com.example.pillwatch.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
