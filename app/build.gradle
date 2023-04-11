@@ -83,6 +83,7 @@ dependencies {
     // Room
     implementation "androidx.room:room-runtime:$room_version"
     kapt  "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
 
     // LifeCycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -92,6 +93,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.4.0')
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
+    implementation 'com.google.android.gms:play-services-auth:20.5.0'
 
 
     // Testing

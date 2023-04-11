@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_welcomeFragment_to_loginActivity"
             app:destination="@id/loginActivity" />
+        <action
+            android:id="@+id/action_welcomeFragment_to_testMedsFragment"
+            app:destination="@id/testMedsFragment" />
     </fragment>
     <activity
         android:id="@+id/signupActivity"
@@ -25,4 +28,8 @@
         android:id="@+id/loginActivity"
         android:name="com.example.pillwatch.ui.activity.LoginActivity"
         android:label="LoginActivity" />
+    <fragment
+        android:id="@+id/testMedsFragment"
+        android:name="com.example.pillwatch.ui.fragment.TestMedsFragment"
+        android:label="TestMedsFragment" />
 </navigation>

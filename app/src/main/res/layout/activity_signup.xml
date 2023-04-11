@@ -17,7 +17,7 @@
             android:id="@+id/image_signup"
             android:layout_width="wrap_content"
             android:layout_height="310dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -79,22 +79,60 @@
             android:id="@+id/button_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:textSize="@dimen/text_size_big"
+            android:layout_marginTop="30dp"
+            android:textSize="@dimen/btn_text_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layout_edit_text_signup"
             android:text="@string/signup_btn" />
 
+        <TextView
+            android:id="@+id/text_between_btns"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/or"
+            android:layout_marginTop="10dp"
+            android:textSize="@dimen/text_size_medium"
+            android:textAlignment="textStart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_signup"/>
+
+        <Button
+            android:id="@+id/btn_google_sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:text="@string/sign_up_with_google"
+            android:textSize="@dimen/btn_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_between_btns"/>
+
+        <ImageView
+            android:id="@+id/googlelogo"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/googlelogo"
+            android:scaleType="fitCenter"
+            android:layout_marginStart="40dp"
+            app:tint="?attr/colorOnSurfaceInverse"
+            app:layout_constraintTop_toTopOf="@id/btn_google_sign_up"
+            app:layout_constraintStart_toStartOf="@+id/btn_google_sign_up"
+            app:layout_constraintBottom_toBottomOf="@id/btn_google_sign_up"/>
+
+
         <LinearLayout
             android:id="@+id/layout_login_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/button_signup"
+            app:layout_constraintTop_toBottomOf="@id/btn_google_sign_up"
             >
 
 

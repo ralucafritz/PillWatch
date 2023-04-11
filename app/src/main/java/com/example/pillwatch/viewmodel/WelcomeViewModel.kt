@@ -13,5 +13,8 @@ class WelcomeViewModel : ViewModel(){
     fun navigateToLogin(navController: NavController) {
         navController.navigate(R.id.action_welcomeFragment_to_loginActivity)
     }
+    fun navigateToRandom(navController: NavController) {
+        navController.navigate(R.id.action_welcomeFragment_to_testMedsFragment)
+    }
 
 }

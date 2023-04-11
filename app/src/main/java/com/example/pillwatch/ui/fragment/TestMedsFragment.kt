@@ -13,10 +13,6 @@ import com.example.pillwatch.viewmodel.factory.TestMedsViewModelFactory
 
 class TestMedsFragment : Fragment() {
 
-    private val viewModel: TestMedsViewModel by lazy {
-        ViewModelProvider(this)[TestMedsViewModel::class.java]
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

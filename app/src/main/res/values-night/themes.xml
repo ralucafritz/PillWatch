@@ -29,7 +29,7 @@
         <item name="colorCustomColor1">#dcb8ff</item>
         <item name="colorOnCustomColor1">#431a6b</item>
         <item name="colorCustomColor1Container">#5b3384</item>
-        <item name="fontFamily">@font/alegreya</item>
+        <item name="fontFamily">@font/amaranth</item>
         <item name="colorOnCustomColor1Container">#efdbff</item>
         <item name="harmonizeCustomColor1">false</item>
         <item name="colorCustomColor2">#ffba4b</item>

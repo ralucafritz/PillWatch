@@ -1,13 +1,19 @@
 package com.example.pillwatch.ui.fragment
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.pillwatch.databinding.FragmentWelcomeBinding
+import com.example.pillwatch.ui.activity.LoginActivity
+import com.example.pillwatch.ui.activity.SignupActivity
 import com.example.pillwatch.viewmodel.WelcomeViewModel
 
 class WelcomeFragment: Fragment() {
@@ -16,11 +22,13 @@ class WelcomeFragment: Fragment() {
         const val TAG = "WelcomeFragment"
     }
 
-    private val welcomeViewModel: WelcomeViewModel by lazy {
+    private val viewModel: WelcomeViewModel by lazy {
         ViewModelProvider(this)[WelcomeViewModel::class.java]
     }
 
     private lateinit var binding: FragmentWelcomeBinding
+
+    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,20 +38,28 @@ class WelcomeFragment: Fragment() {
         // Binding
         binding = FragmentWelcomeBinding.inflate(inflater)
 
-        val navController = NavHostFragment.findNavController(this)
+        navController = NavHostFragment.findNavController(this)
         // Binding
-        binding.welcomeViewModel = welcomeViewModel
+        binding.welcomeViewModel = viewModel
 
         binding.lifecycleOwner = this
 
         binding.getStartedButton.setOnClickListener {
-            welcomeViewModel.navigateToSignup(navController)
+            val intent = Intent(activity, SignupActivity::class.java)
+            getResult.launch(intent)
         }
 
         binding.logInWelcome.setOnClickListener {
-            welcomeViewModel.navigateToLogin(navController)
+            val intent = Intent(activity, LoginActivity::class.java)
+            getResult.launch(intent)
         }
 
         return binding.root
+    }
+
+    private val getResult = registerForActivityResult( ActivityResultContracts.StartActivityForResult()) {
+        if(it.resultCode == Activity.RESULT_OK) {
+            viewModel.navigateToRandom(navController)
+        }
     }
 }
