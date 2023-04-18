@@ -12,7 +12,7 @@ import com.example.pillwatch.data.model.UserEntity
     entities = [MedsDataEntity::class,
                        MetadataEntity::class,
                         UserEntity::class],
-    version = 4,
+    version = 2,
     exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 

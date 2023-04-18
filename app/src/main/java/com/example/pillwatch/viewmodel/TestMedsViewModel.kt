@@ -134,14 +134,11 @@ class TestMedsViewModel(
         // return the entity from the property
         return MedsDataEntity(
             0L,
-            data.cimCode,
             data.tradeName,
             data.dci,
             data.dosageForm,
             data.concentration,
             data.atcCode,
-            data.prescriptionType,
-            data.packageVolume,
             data.lastUpdateDate,
             data.rxCui
         )

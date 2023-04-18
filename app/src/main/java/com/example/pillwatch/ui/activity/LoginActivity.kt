@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.pillwatch.R
 import com.example.pillwatch.data.datasource.local.AppDatabase
 import com.example.pillwatch.databinding.ActivityLoginBinding
+import com.example.pillwatch.utils.extensions.ContextExtensions.setLoggedInStatus
 import com.example.pillwatch.utils.extensions.Extensions.timber
 import com.example.pillwatch.utils.extensions.Extensions.toast
 import com.example.pillwatch.viewmodel.LoginViewModel
@@ -35,7 +36,6 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val userDao = AppDatabase.getInstance(application).userDao
-
 
         val viewModelFactory = LoginViewModelFactory(userDao, application)
         viewModel = ViewModelProvider(this, viewModelFactory)[LoginViewModel::class.java]
@@ -71,11 +71,11 @@ class LoginActivity : AppCompatActivity() {
                 viewModel.login()
                 viewModel.loginResult.observe(this) { res ->
                     if (res == true) {
-                        setResult(Activity.RESULT_OK)
-                        finish()
+                        success()
                     }
                 }
             } else {
+                setLoggedInStatus(false)
                 toast(result.message)
             }
         }
@@ -107,13 +107,12 @@ class LoginActivity : AppCompatActivity() {
                 if (result.resultCode == RESULT_OK) {
                     val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
                     task.addOnCompleteListener {
-                        it
                         viewModel.loginWithGoogle(it)
                         viewModel.loginResult.observe(this) { res ->
                             if (res == true) {
-                                setResult(Activity.RESULT_OK)
-                                finish()
+                                success()
                             } else {
+                                setLoggedInStatus(false)
                                 toast("Google sign in failed")
                             }
                         }
@@ -142,6 +141,11 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         )
+    }
+
+    private fun success() {
+        setResult(Activity.RESULT_OK)
+        finish()
     }
 }
 

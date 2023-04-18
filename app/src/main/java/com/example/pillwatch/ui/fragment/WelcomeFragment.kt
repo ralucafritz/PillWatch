@@ -14,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.pillwatch.databinding.FragmentWelcomeBinding
 import com.example.pillwatch.ui.activity.LoginActivity
 import com.example.pillwatch.ui.activity.SignupActivity
+import com.example.pillwatch.utils.extensions.FragmentExtensions.getLoggedInStatus
 import com.example.pillwatch.viewmodel.WelcomeViewModel
 
 class WelcomeFragment: Fragment() {
@@ -52,6 +53,10 @@ class WelcomeFragment: Fragment() {
         binding.logInWelcome.setOnClickListener {
             val intent = Intent(activity, LoginActivity::class.java)
             getResult.launch(intent)
+        }
+
+        if(getLoggedInStatus()) {
+            viewModel.navigateToRandom(navController)
         }
 
         return binding.root

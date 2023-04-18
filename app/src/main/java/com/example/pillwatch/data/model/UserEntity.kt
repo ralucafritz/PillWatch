@@ -5,7 +5,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "users_table")
 data class UserEntity (
-    @PrimaryKey val id: Long,
+    @PrimaryKey (autoGenerate = true) val id: Long,
     val email: String,
-    val password: String
+    val password: String,
+    val idToken: String?
+
         )

@@ -14,14 +14,14 @@ import com.example.pillwatch.network.ValidationProperty
 import com.example.pillwatch.utils.FirebaseUtils.firebaseAuth
 import com.example.pillwatch.utils.FirebaseUtils.firebaseUser
 import com.example.pillwatch.utils.checkPassword
-import com.example.pillwatch.utils.extensions.Extensions.isInternetConnected
+import com.example.pillwatch.utils.extensions.ContextExtensions.setLoggedInStatus
+import com.example.pillwatch.utils.extensions.ContextExtensions.setPreference
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.*
-import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import java.util.*
 import kotlin.coroutines.resume
@@ -62,7 +62,7 @@ class LoginViewModel(private val userDao: UserDao, application: Application) :
     private val _password = MutableLiveData<String>()
     val password: LiveData<String>
         get() = _password
-    
+
     fun setEmail(email: String) {
         _email.value = email
     }
@@ -77,10 +77,12 @@ class LoginViewModel(private val userDao: UserDao, application: Application) :
                 false,
                 EMPTY_FIELDS_ERR
             )
+
             !Patterns.EMAIL_ADDRESS.matcher(_email.value!!).matches() -> ValidationProperty(
                 false,
                 INVALID_EMAIL_ERR
             )
+
             _password.value!!.length < 8 -> ValidationProperty(false, SHORT_PSW_ERR)
             else -> ValidationProperty(true, "")
         }
@@ -90,25 +92,14 @@ class LoginViewModel(private val userDao: UserDao, application: Application) :
         coroutineScope.launch {
             val email = _email.value!!
             val password = _password.value!!
-            if (!context.isInternetConnected()) {
-                val user = withContext(Dispatchers.IO) { repository.getUserByEmail(email) }
-                if (user != null && checkPassword(password, user.password)) {
-                    Timber.tag(TAG).d("Login successful: $firebaseUser")
-                } else {
-                    _loginResult.postValue(false)
-                    Timber.tag(TAG).d("Login failed.")
-                }
+            val user = withContext(Dispatchers.IO) { repository.getUserByEmail(email) }
+            if (user != null && checkPassword(password, user.password)) {
+                Timber.tag(TAG).d("Login successful: $firebaseUser")
+                setLoggedInStatusAndEmail(user.email)
+                _loginResult.postValue(true)
             } else {
-                firebaseAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            _loginResult.postValue(true)
-                            Timber.tag(TAG).d("Login successful: $firebaseUser")
-                        } else {
-                            _loginResult.postValue(false)
-                            Timber.tag(TAG).d("Login failed.")
-                        }
-                    }
+                _loginResult.postValue(false)
+                Timber.tag(TAG).d("Login failed.")
             }
         }
     }
@@ -127,23 +118,39 @@ class LoginViewModel(private val userDao: UserDao, application: Application) :
     }
 
     private suspend fun insertWithGoogle(idToken: String): Boolean {
-        return withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.Main + viewModelJob) {
             var result: Boolean
-            if (idToken == "")
+            if (idToken == "") {
                 result = false
-            val credential = GoogleAuthProvider.getCredential(idToken, null)
-            val authResult = signInWithCredential(credential)
-            result = if (authResult.success && authResult.user != null) {
-                dbCoroutineScope.launch { repository.insert(authResult.user!!) }
-                true
             } else {
-                false
+                val credential = GoogleAuthProvider.getCredential(idToken, null)
+                val authResult = signInWithCredential(credential, idToken)
+                result = if (authResult.success && authResult.user != null) {
+                    withContext(Dispatchers.IO) {
+                        val loadedUser = repository.getUserByIdToken(idToken)
+                        var emailToSet: String
+                        if (loadedUser == null) {
+                            val newUser = repository.insert(authResult.user!!)
+                            emailToSet = newUser.email
+                        } else {
+                            emailToSet = loadedUser.email
+                        }
+                        setLoggedInStatusAndEmail(emailToSet)
+                        true
+                    }
+                } else {
+                    context.setLoggedInStatus(false)
+                    false
+                }
             }
             result
         }
     }
 
-    private suspend fun signInWithCredential(credential: AuthCredential): AuthResultProperty {
+    private suspend fun signInWithCredential(
+        credential: AuthCredential,
+        idToken: String
+    ): AuthResultProperty {
         return suspendCoroutine { continuation ->
             firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener { task ->
@@ -153,7 +160,8 @@ class LoginViewModel(private val userDao: UserDao, application: Application) :
                         val user = UserEntity(
                             0L,
                             email = email,
-                            password
+                            password,
+                            idToken
                         )
                         continuation.resume(AuthResultProperty(true, task.result, user))
                     } else {
@@ -161,6 +169,11 @@ class LoginViewModel(private val userDao: UserDao, application: Application) :
                     }
                 }
         }
+    }
+
+    private fun setLoggedInStatusAndEmail(email: String) {
+        context.setLoggedInStatus(true)
+        context.setPreference("email", email)
     }
 
     override fun onCleared() {

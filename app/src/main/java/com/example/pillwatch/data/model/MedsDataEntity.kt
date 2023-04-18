@@ -9,9 +9,6 @@ data class MedsDataEntity(
     @PrimaryKey(autoGenerate = true)
     var medId: Long = 0L,
 
-    @ColumnInfo(name = "cim_code")
-    val cimCode: String = "",
-
     @ColumnInfo(name = "trade_name")
     val tradeName: String = "",
 
@@ -26,12 +23,6 @@ data class MedsDataEntity(
 
     @ColumnInfo(name = "atc_code")
     val atcCode: String = "",
-
-    @ColumnInfo(name = "prescription_type")
-    val prescriptionType: String = "",
-
-    @ColumnInfo(name = "package_volume")
-    val packageVolume: String? = "",
 
     @ColumnInfo(name = "last_update_date")
     val lastUpdateDate: String = "",

@@ -13,4 +13,11 @@ interface UserDao {
 
     @Query("DELETE FROM users_table")
     fun clear()
+
+    @Query("SELECT id FROM users_table WHERE email =:email")
+    fun getIdByEmail(email: String): Long?
+
+    @Query("SELECT * FROM users_table WHERE idToken =:idToken")
+    fun geUserByIdToken(idToken: String): UserEntity?
+
 }

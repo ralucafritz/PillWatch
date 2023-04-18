@@ -41,7 +41,7 @@ class SignupActivity : AppCompatActivity() {
         val userDao = AppDatabase.getInstance(application).userDao
 
         val viewModelFactory = SignupViewModelFactory(userDao, application)
-         viewModel = ViewModelProvider(this, viewModelFactory)[SignupViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[SignupViewModel::class.java]
 
         binding.viewModel = viewModel
 
@@ -86,8 +86,7 @@ class SignupActivity : AppCompatActivity() {
                 viewModel.signup()
                 viewModel.signupResult.observe(this) { res ->
                     if (res == true) {
-                        setResult(Activity.RESULT_OK)
-                        finish()
+                        success()
                     }
                 }
             } else {
@@ -123,40 +122,47 @@ class SignupActivity : AppCompatActivity() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
                     val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-                    task.addOnCompleteListener { it
-                    viewModel.signupWithGoogle(it)
-                    viewModel.signupResult.observe(this) { res ->
-                        if (res == true) {
-                            setResult(Activity.RESULT_OK)
-                            finish()
-                        } else {
-                            toast("Google sign up failed")
+                    task.addOnCompleteListener {
+                        it
+                        viewModel.signupWithGoogle(it)
+                        viewModel.signupResult.observe(this) { res ->
+                            if (res == true) {
+                                success()
+                            } else {
+                                toast("Google sign up failed")
+                            }
                         }
                     }
                 }
             }
-    }
 
-    binding.btnGoogleSignUp.setOnClickListener  {
-        val signInIntent = gsc.signInIntent
-        googleSignInLauncher.launch(signInIntent)
-    }
-}
-
-// navigation function
-private fun navigateToActivity(activityId: Int): Intent {
-    return Intent(
-        this, when (activityId) {
-            R.id.nav_host_fragment -> {
-                MainActivity::class.java
-            }
-            R.id.loginActivity -> {
-                LoginActivity::class.java
-            }
-            else -> {
-                MainActivity::class.java
-            }
+        binding.btnGoogleSignUp.setOnClickListener {
+            val signInIntent = gsc.signInIntent
+            googleSignInLauncher.launch(signInIntent)
         }
-    )
-}
+    }
+
+    // navigation function
+    private fun navigateToActivity(activityId: Int): Intent {
+        return Intent(
+            this, when (activityId) {
+                R.id.nav_host_fragment -> {
+                    MainActivity::class.java
+                }
+
+                R.id.loginActivity -> {
+                    LoginActivity::class.java
+                }
+
+                else -> {
+                    MainActivity::class.java
+                }
+            }
+        )
+    }
+
+    private fun success() {
+        setResult(Activity.RESULT_OK)
+        finish()
+    }
 }

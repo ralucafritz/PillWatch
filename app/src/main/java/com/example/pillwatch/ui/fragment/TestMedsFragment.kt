@@ -8,8 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.pillwatch.data.datasource.local.AppDatabase
 import com.example.pillwatch.databinding.FragmentTestMedsBinding
+import com.example.pillwatch.utils.extensions.FragmentExtensions.getLoggedInStatus
+import com.example.pillwatch.utils.extensions.FragmentExtensions.getPreference
 import com.example.pillwatch.viewmodel.TestMedsViewModel
 import com.example.pillwatch.viewmodel.factory.TestMedsViewModelFactory
+import timber.log.Timber
 
 class TestMedsFragment : Fragment() {
 
@@ -29,6 +32,12 @@ class TestMedsFragment : Fragment() {
 
         // ViewModel
         val testMedsViewModel = ViewModelProvider(this, viewModelFactory).get(TestMedsViewModel::class.java)
+
+        val loggedIn = getLoggedInStatus()
+        val email = getPreference("email", "")
+        Timber.d("Logged in status: $loggedIn")
+        Timber.d("Logged in status: ${email}")
+
         testMedsViewModel.getMedsDataFromAPI()
 //        testMedsViewModel.clearMetadata()
 //        testMedsViewModel.clearMedsData()
