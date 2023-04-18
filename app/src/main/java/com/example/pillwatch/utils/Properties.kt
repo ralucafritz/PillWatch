@@ -12,14 +12,11 @@ data class MedsDataShaProperty (
 
 @JsonClass(generateAdapter = true)
 data class MedsDataProperty(
-    @Json(name ="CIM Code") val cimCode: String,
     @Json(name ="Trade name")val tradeName: String,
     @Json(name ="DCI") val dci: String,
     @Json(name ="Dosage Form") val dosageForm: String,
     @Json( name ="Concentration") val concentration: String,
     @Json(name = "ATC Code") val atcCode: String,
-    @Json(name ="Prescription Type") val prescriptionType: String,
-    @Json(name ="Package volume") val packageVolume: String?,
     @Json(name ="Last Update Date") val lastUpdateDate: String,
     @Json(name ="RxCui") val rxCui: String
 )
@@ -34,3 +31,15 @@ data class AuthResultProperty(
     var result: AuthResult?,
     var user: UserEntity?
         )
+
+data class InteractionProperty(
+    var rxCui1: String,
+    var rxCui2: String,
+    var severity: String
+)
+
+data class InteractionList(
+    val interactionList: List<InteractionProperty>)
+
+data class InteractionTestProperty(
+    val interaction:  List<List<InteractionProperty>>)

@@ -31,14 +31,10 @@ class TestMedsFragment : Fragment() {
         val viewModelFactory = TestMedsViewModelFactory(medsDataDao, metadataDao, application)
 
         // ViewModel
-        val testMedsViewModel = ViewModelProvider(this, viewModelFactory).get(TestMedsViewModel::class.java)
+        val testMedsViewModel = ViewModelProvider(this, viewModelFactory)[TestMedsViewModel::class.java]
 
-        val loggedIn = getLoggedInStatus()
-        val email = getPreference("email", "")
-        Timber.d("Logged in status: $loggedIn")
-        Timber.d("Logged in status: ${email}")
-
-        testMedsViewModel.getMedsDataFromAPI()
+        testMedsViewModel.getInteractionDataFromAPI()
+//        testMedsViewModel.getMedsDataFromAPI()
 //        testMedsViewModel.clearMetadata()
 //        testMedsViewModel.clearMedsData()
         // Binding
