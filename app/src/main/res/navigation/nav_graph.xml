@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/welcomeFragment">
+    app:startDestination="@id/loadingFragment">
 
     <fragment
         android:id="@+id/welcomeFragment"
@@ -17,8 +17,8 @@
             android:id="@+id/action_welcomeFragment_to_loginActivity"
             app:destination="@id/loginActivity" />
         <action
-            android:id="@+id/action_welcomeFragment_to_testMedsFragment"
-            app:destination="@id/testMedsFragment" />
+            android:id="@+id/action_welcomeFragment_to_loadingFragment"
+            app:destination="@id/loadingFragment" />
     </fragment>
     <activity
         android:id="@+id/signupActivity"
@@ -32,4 +32,21 @@
         android:id="@+id/testMedsFragment"
         android:name="com.example.pillwatch.ui.fragment.TestMedsFragment"
         android:label="TestMedsFragment" />
+    <fragment
+        android:id="@+id/loadingFragment"
+        android:name="com.example.pillwatch.ui.fragment.LoadingFragment"
+        android:label="LoadingFragment" >
+        <action
+            android:id="@+id/action_loadingFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment"
+            app:enterAnim="@anim/fui_slide_in_right"
+            app:exitAnim="@anim/fui_slide_out_left" />
+        <action
+            android:id="@+id/action_loadingFragment_to_testMedsFragment"
+            app:destination="@id/testMedsFragment"
+            app:enterAnim="@anim/fui_slide_in_right"
+            app:exitAnim="@anim/fui_slide_out_left"
+            app:popEnterAnim="@anim/fui_slide_in_right"
+            app:popExitAnim="@anim/fui_slide_out_left" />
+    </fragment>
 </navigation>
