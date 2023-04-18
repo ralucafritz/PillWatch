@@ -56,7 +56,7 @@ class WelcomeFragment: Fragment() {
         }
 
         if(getLoggedInStatus()) {
-            viewModel.navigateToRandom(navController)
+            navController.popBackStack()
         }
 
         return binding.root
@@ -64,7 +64,7 @@ class WelcomeFragment: Fragment() {
 
     private val getResult = registerForActivityResult( ActivityResultContracts.StartActivityForResult()) {
         if(it.resultCode == Activity.RESULT_OK) {
-            viewModel.navigateToRandom(navController)
+            viewModel.navigateBack(navController)
         }
     }
 }
