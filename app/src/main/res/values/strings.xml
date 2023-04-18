@@ -22,4 +22,7 @@
     <string name="sign_up">Sign up</string>
     <string name="dont_have_an_account">Don\'t have an account?</string>
     <string name="log_in_btn">Log in</string>
+    <string name="or">or</string>
+    <string name="log_in_with_google">Log in with Google</string>
+    <string name="sign_up_with_google">Sign up with Google</string>
 </resources>

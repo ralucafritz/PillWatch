@@ -1,4 +1,4 @@
-package com.example.pillwatch.ui.fragment.testmeds
+package com.example.pillwatch.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,14 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.pillwatch.data.datasource.local.AppDatabase
 import com.example.pillwatch.databinding.FragmentTestMedsBinding
+import com.example.pillwatch.utils.extensions.FragmentExtensions.getLoggedInStatus
+import com.example.pillwatch.utils.extensions.FragmentExtensions.getPreference
 import com.example.pillwatch.viewmodel.TestMedsViewModel
 import com.example.pillwatch.viewmodel.factory.TestMedsViewModelFactory
+import timber.log.Timber
 
 class TestMedsFragment : Fragment() {
-
-    private val viewModel: TestMedsViewModel by lazy {
-        ViewModelProvider(this)[TestMedsViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +32,12 @@ class TestMedsFragment : Fragment() {
 
         // ViewModel
         val testMedsViewModel = ViewModelProvider(this, viewModelFactory).get(TestMedsViewModel::class.java)
+
+        val loggedIn = getLoggedInStatus()
+        val email = getPreference("email", "")
+        Timber.d("Logged in status: $loggedIn")
+        Timber.d("Logged in status: ${email}")
+
         testMedsViewModel.getMedsDataFromAPI()
 //        testMedsViewModel.clearMetadata()
 //        testMedsViewModel.clearMedsData()
