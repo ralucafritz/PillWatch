@@ -4,19 +4,19 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.pillwatch.data.model.MedsDataEntity
+import com.example.pillwatch.data.model.MedsEntity
 import com.example.pillwatch.data.model.MetadataEntity
 import com.example.pillwatch.data.model.UserEntity
 
 @Database(
-    entities = [MedsDataEntity::class,
+    entities = [MedsEntity::class,
                        MetadataEntity::class,
                         UserEntity::class],
     version = 2,
     exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract val medsDataDao: MedsDataDao
+    abstract val medsDao: MedsDao
     abstract val metadataDao: MetadataDao
     abstract val userDao: UserDao
 

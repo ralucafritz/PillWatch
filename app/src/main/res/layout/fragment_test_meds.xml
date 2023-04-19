@@ -13,27 +13,40 @@
         android:layout_height="match_parent"
         tools:context=".ui.fragment.TestMedsFragment">
 
+        <TextView
+            android:id="@+id/meds_interaction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            android:text='@{testMedsViewModel.responseInteractionDataAPI != null ? testMedsViewModel.responseInteractionDataAPI.toString() : ""}'
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/meds_interaction">
 
             <TextView
-                android:id="@+id/text_test"
+                android:id="@+id/meds_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin"
                 android:layout_marginTop="@dimen/margin"
                 android:layout_marginEnd="@dimen/margin"
-                android:text="@{testMedsViewModel.responseInteractionDataAPI.toString()}"
+                android:text='@{testMedsViewModel.responseMedsDataAPI != null ? testMedsViewModel.responseMedsDataAPI.toString() : ""}'
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
 
         </ScrollView>
 

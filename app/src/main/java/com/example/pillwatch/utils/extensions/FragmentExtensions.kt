@@ -5,7 +5,6 @@ import com.example.pillwatch.utils.extensions.ContextExtensions.getLoggedInStatu
 import com.example.pillwatch.utils.extensions.ContextExtensions.getPreference
 import com.example.pillwatch.utils.extensions.ContextExtensions.setLoggedInStatus
 import com.example.pillwatch.utils.extensions.ContextExtensions.setPreference
-import timber.log.Timber
 
 object FragmentExtensions {
 

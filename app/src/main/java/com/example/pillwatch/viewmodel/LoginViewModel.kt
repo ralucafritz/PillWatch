@@ -9,10 +9,11 @@ import androidx.lifecycle.MutableLiveData
 import com.example.pillwatch.data.datasource.local.UserDao
 import com.example.pillwatch.data.model.UserEntity
 import com.example.pillwatch.data.repository.UserRepository
-import com.example.pillwatch.network.AuthResultProperty
-import com.example.pillwatch.network.ValidationProperty
+import com.example.pillwatch.utils.AuthResultProperty
 import com.example.pillwatch.utils.FirebaseUtils.firebaseAuth
 import com.example.pillwatch.utils.FirebaseUtils.firebaseUser
+import com.example.pillwatch.utils.Role
+import com.example.pillwatch.utils.ValidationProperty
 import com.example.pillwatch.utils.checkPassword
 import com.example.pillwatch.utils.extensions.ContextExtensions.setLoggedInStatus
 import com.example.pillwatch.utils.extensions.ContextExtensions.setPreference
@@ -27,7 +28,7 @@ import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class LoginViewModel(private val userDao: UserDao, application: Application) :
+class LoginViewModel(userDao: UserDao, application: Application) :
     AndroidViewModel(application) {
 
     private val context: Context by lazy { application.applicationContext }
@@ -93,9 +94,9 @@ class LoginViewModel(private val userDao: UserDao, application: Application) :
             val email = _email.value!!
             val password = _password.value!!
             val user = withContext(Dispatchers.IO) { repository.getUserByEmail(email) }
-            if (user != null && checkPassword(password, user.password)) {
+            if (user.value != null && checkPassword(password, user.value!!.password)) {
                 Timber.tag(TAG).d("Login successful: $firebaseUser")
-                setLoggedInStatusAndEmail(user.email)
+                setLoggedInStatus(user.value!!.email, user.value!!.id)
                 _loginResult.postValue(true)
             } else {
                 _loginResult.postValue(false)
@@ -128,14 +129,16 @@ class LoginViewModel(private val userDao: UserDao, application: Application) :
                 result = if (authResult.success && authResult.user != null) {
                     withContext(Dispatchers.IO) {
                         val loadedUser = repository.getUserByIdToken(idToken)
-                        var emailToSet: String
-                        if (loadedUser == null) {
+                        var idToSet: Long?
+                        val emailToSet = if (loadedUser.value == null) {
                             val newUser = repository.insert(authResult.user!!)
-                            emailToSet = newUser.email
+                            idToSet = repository.getIdByEmail(newUser.email)
+                            newUser.email
                         } else {
-                            emailToSet = loadedUser.email
+                            idToSet = loadedUser.value!!.id
+                            loadedUser.value!!.email
                         }
-                        setLoggedInStatusAndEmail(emailToSet)
+                        setLoggedInStatus(emailToSet, idToSet!!)
                         true
                     }
                 } else {
@@ -160,8 +163,10 @@ class LoginViewModel(private val userDao: UserDao, application: Application) :
                         val user = UserEntity(
                             0L,
                             email = email,
+                            null,
                             password,
-                            idToken
+                            idToken,
+                            Role.USER
                         )
                         continuation.resume(AuthResultProperty(true, task.result, user))
                     } else {
@@ -171,8 +176,9 @@ class LoginViewModel(private val userDao: UserDao, application: Application) :
         }
     }
 
-    private fun setLoggedInStatusAndEmail(email: String) {
+    private fun setLoggedInStatus(email: String, id: Long) {
         context.setLoggedInStatus(true)
+        context.setPreference("id", id)
         context.setPreference("email", email)
     }
 

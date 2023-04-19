@@ -35,7 +35,7 @@ class WelcomeFragment: Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Binding
         binding = FragmentWelcomeBinding.inflate(inflater)
 

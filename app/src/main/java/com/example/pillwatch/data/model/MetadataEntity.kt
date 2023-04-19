@@ -9,9 +9,9 @@ class MetadataEntity (
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0L,
 
-    @ColumnInfo(name="Name")
+    @ColumnInfo(name="name")
     val name: String = "",
 
-    @ColumnInfo(name = "value")
-    val value: String = ""
+    @ColumnInfo(name = "metadata_value")
+    val metadataValue: String = ""
     )

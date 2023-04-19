@@ -20,13 +20,13 @@ class TestMedsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Binding
         val binding = FragmentTestMedsBinding.inflate(inflater)
 
         // Create ViewModelFactory
         val application = requireNotNull(this.activity).application
-        val medsDataDao = AppDatabase.getInstance(application).medsDataDao
+        val medsDataDao = AppDatabase.getInstance(application).medsDao
         val metadataDao = AppDatabase.getInstance(application).metadataDao
         val viewModelFactory = TestMedsViewModelFactory(medsDataDao, metadataDao, application)
 
@@ -34,7 +34,7 @@ class TestMedsFragment : Fragment() {
         val testMedsViewModel = ViewModelProvider(this, viewModelFactory)[TestMedsViewModel::class.java]
 
         testMedsViewModel.getInteractionDataFromAPI()
-//        testMedsViewModel.getMedsDataFromAPI()
+        testMedsViewModel.getMedsDataFromAPI()
 //        testMedsViewModel.clearMetadata()
 //        testMedsViewModel.clearMedsData()
         // Binding

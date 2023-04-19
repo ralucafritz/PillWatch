@@ -55,10 +55,9 @@
                 android:layout_marginTop="20dp"
                 android:ems="12"
                 android:hint="@string/password"
-                android:text="@{viewModel.password}"
+                android:text='@{viewModel.password != null ? viewModel.password : ""}'
                 android:inputType="textPassword"
-                android:textColorHint="?attr/colorOnSecondaryContainer"
-                tools:ignore="SpeakableTextPresentCheck" />
+                android:textColorHint="?attr/colorOnSecondaryContainer" />
 
 
             <EditText
@@ -68,10 +67,9 @@
                 android:layout_marginTop="20dp"
                 android:ems="12"
                 android:hint="@string/confirm_password"
-                android:text="@{viewModel.confirmPassword}"
+                android:text='@{viewModel.confirmPassword != null ? viewModel.confirmPassword : ""}'
                 android:textColorHint="?attr/colorOnSecondaryContainer"
-                android:inputType="textPassword"
-                tools:ignore="SpeakableTextPresentCheck" />
+                android:inputType="textPassword" />
 
         </LinearLayout>
 

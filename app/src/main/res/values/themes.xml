@@ -31,7 +31,7 @@
         <item name="colorCustomColor1Container">#efdbff</item>
         <item name="colorOnCustomColor1Container">#2c0051</item>
         <item name="harmonizeCustomColor1">false</item>
-        <item name="android:fontFamily">@values/preloaded_fonts</item>
+        <item name="android:fontFamily">@font/amaranth</item>
         <item name="colorCustomColor2">#815600</item>
         <item name="colorOnCustomColor2">#ffffff</item>
         <item name="colorCustomColor2Container">#ffddb1</item>

@@ -5,24 +5,21 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.pillwatch.data.datasource.local.MedsDataDao
+import com.example.pillwatch.data.datasource.local.MedsDao
 import com.example.pillwatch.data.datasource.local.MetadataDao
-import com.example.pillwatch.data.model.MedsDataEntity
+import com.example.pillwatch.data.model.MedsEntity
 import com.example.pillwatch.data.model.MetadataEntity
 import com.example.pillwatch.data.repository.MedsDataRepository
 import com.example.pillwatch.data.repository.MetadataRepository
 import com.example.pillwatch.network.AppApi
-import com.example.pillwatch.network.InteractionList
-import com.example.pillwatch.network.InteractionProperty
-import com.example.pillwatch.network.InteractionTestProperty
-import com.example.pillwatch.network.MedsDataProperty
-import com.example.pillwatch.network.MedsDataShaProperty
+import com.example.pillwatch.utils.InteractionProperty
+import com.example.pillwatch.utils.MedsDataProperty
+import com.example.pillwatch.utils.MedsDataShaProperty
 import kotlinx.coroutines.*
 import timber.log.Timber
-import java.lang.Exception
 
 class TestMedsViewModel(
-    val medsDataDao: MedsDataDao,
+    medsDao: MedsDao,
     metadataDao: MetadataDao,
     application: Application
 ) :
@@ -36,7 +33,7 @@ class TestMedsViewModel(
 
 
     // repositories
-    private val medsDataRepository: MedsDataRepository = MedsDataRepository(medsDataDao)
+    private val medsDataRepository: MedsDataRepository = MedsDataRepository(medsDao)
     private val metadataRepository: MetadataRepository = MetadataRepository(metadataDao)
 
     // mutable live data
@@ -66,7 +63,7 @@ class TestMedsViewModel(
             // check if  SHA is new or it doesn't exist in the current database
             if (checkNewSha(_responseMedsDataAPI.value!!.sha)) {
                 // transform the list from Property to Entity
-                val entitiesList = _responseMedsDataAPI.value!!.file.map { it -> transformDataToEntity(it) }
+                val entitiesList = _responseMedsDataAPI.value!!.file.map { transformDataToEntity(it) }
                 //  check if the list is empty or not
                 if (entitiesList.isNotEmpty()) {
                     // change to a different thread than Main
@@ -108,7 +105,7 @@ class TestMedsViewModel(
             metadataRepository.getMetadata(SHA)
         }
         // check if the current value is null -> no current sha detected
-        if (currentSha == null) {
+        if (currentSha.value == null) {
             // change from Main thread
             dbCoroutineScope.launch {
                 // insert the new sha
@@ -123,11 +120,11 @@ class TestMedsViewModel(
             // log the result
             Timber.tag(TAG_MEDS_DB).d("SHA value inserted")
             return true
-        } else if (currentSha.value != newSha) {
+        } else if (currentSha.value!!.metadataValue != newSha) {
             // change from Main thread
             dbCoroutineScope.launch {
                 // update the current sha value with the new value
-                metadataRepository.update(MetadataEntity(currentSha.id, SHA, newSha))
+                metadataRepository.update(MetadataEntity(currentSha.value!!.id, SHA, newSha))
                 // clear the meds_data_table in order for the new data to be introduced
                 clearMedsData()
             }
@@ -140,7 +137,7 @@ class TestMedsViewModel(
         return false
     }
 
-    fun clearMedsData() {
+    private fun clearMedsData() {
         // change from Main Thread
         dbCoroutineScope.launch {
             // clear the meds_data_table
@@ -160,9 +157,9 @@ class TestMedsViewModel(
         }
     }
 
-    private fun transformDataToEntity(data: MedsDataProperty): MedsDataEntity {
+    private fun transformDataToEntity(data: MedsDataProperty): MedsEntity {
         // return the entity from the property
-        return MedsDataEntity(
+        return MedsEntity(
             0L,
             data.tradeName,
             data.dci,
