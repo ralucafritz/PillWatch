@@ -1,4 +1,4 @@
-package com.example.pillwatch.network
+package com.example.pillwatch.utils
 
 import com.example.pillwatch.data.model.UserEntity
 import com.google.firebase.auth.AuthResult
@@ -37,9 +37,6 @@ data class InteractionProperty(
     var rxCui2: String,
     var severity: String
 )
-
-data class InteractionList(
-    val interactionList: List<InteractionProperty>)
 
 data class InteractionTestProperty(
     val interaction:  List<List<InteractionProperty>>)

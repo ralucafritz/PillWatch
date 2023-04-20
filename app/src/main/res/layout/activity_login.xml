@@ -111,7 +111,8 @@
             app:tint="?attr/colorOnSurfaceInverse"
             app:layout_constraintTop_toTopOf="@id/btn_google_sign_in"
             app:layout_constraintStart_toStartOf="@+id/btn_google_sign_in"
-            app:layout_constraintBottom_toBottomOf="@id/btn_google_sign_in"/>
+            app:layout_constraintBottom_toBottomOf="@id/btn_google_sign_in"
+            tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:id="@+id/layout_login_login"

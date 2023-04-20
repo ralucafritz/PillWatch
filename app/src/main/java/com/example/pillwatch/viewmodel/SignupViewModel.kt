@@ -3,15 +3,15 @@ package com.example.pillwatch.viewmodel
 import android.app.Application
 import android.content.Context
 import android.util.Patterns
-import android.widget.Toast
 import androidx.lifecycle.*
 import com.example.pillwatch.data.datasource.local.UserDao
 import com.example.pillwatch.data.model.UserEntity
 import com.example.pillwatch.data.repository.UserRepository
-import com.example.pillwatch.network.AuthResultProperty
-import com.example.pillwatch.network.ValidationProperty
+import com.example.pillwatch.utils.AuthResultProperty
 import com.example.pillwatch.utils.FirebaseUtils.firebaseAuth
 import com.example.pillwatch.utils.FirebaseUtils.firebaseUser
+import com.example.pillwatch.utils.Role
+import com.example.pillwatch.utils.ValidationProperty
 import com.example.pillwatch.utils.extensions.ContextExtensions.setLoggedInStatus
 import com.example.pillwatch.utils.extensions.ContextExtensions.setPreference
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -26,7 +26,7 @@ import java.util.*
 import kotlin.coroutines.suspendCoroutine
 
 class SignupViewModel(
-    private val userDao: UserDao,
+    userDao: UserDao,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -104,7 +104,7 @@ class SignupViewModel(
             val email = _email.value!!
             val password = _password.value!!
             withContext(Dispatchers.IO) {
-                if (repository.getUserByEmail(email) != null) {
+                if (repository.getUserByEmail(email).value != null) {
                     _signupResult.postValue(false)
                     Timber.tag(TAG).d("Signup failed: $EMAIL_TAKEN_ERR ")
                     context.setLoggedInStatus(false)
@@ -113,11 +113,14 @@ class SignupViewModel(
                     val newUser = UserEntity(
                         0L,
                         email,
+                        null,
                         password,
-                        null
+                        null,
+                        Role.USER
                     )
                     repository.insert(newUser)
-                    setLoggedInStatusAndEmail(newUser.email)
+                    val idToSet = repository.getIdByEmail(newUser.email)
+                    setLoggedInStatus(newUser.email, idToSet!!)
                     newUser
                 }
             } ?: return@launch
@@ -159,14 +162,16 @@ class SignupViewModel(
                 result = if (authResult.success && authResult.user != null) {
                     withContext(Dispatchers.IO) {
                         val loadedUser = repository.getUserByIdToken(idToken)
-                        var emailToSet: String
-                        if (loadedUser == null) {
+                        var idToSet: Long?
+                        val emailToSet = if (loadedUser.value == null) {
                             val newUser = repository.insert(authResult.user!!)
-                            emailToSet = newUser.email
+                            idToSet = repository.getIdByEmail(newUser.email)
+                            newUser.email
                         } else {
-                            emailToSet = loadedUser.email
+                            idToSet = loadedUser.value!!.id
+                            loadedUser.value!!.email
                         }
-                        setLoggedInStatusAndEmail(emailToSet)
+                        setLoggedInStatus(emailToSet, idToSet!!)
                         true
                     }
                 } else {
@@ -191,9 +196,11 @@ class SignupViewModel(
                         val password = UUID.randomUUID().toString()
                         val user = UserEntity(
                             0L,
-                            email = email,
+                            email,
+                            null,
                             password,
-                            idToken
+                            idToken,
+                            Role.USER
                         )
                         continuation.resume(AuthResultProperty(true, task.result, user))
                     } else {
@@ -203,8 +210,9 @@ class SignupViewModel(
         }
     }
 
-    private fun setLoggedInStatusAndEmail(email: String) {
+    private fun setLoggedInStatus(email: String, id: Long) {
         context.setLoggedInStatus(true)
+        context.setPreference("id", id)
         context.setPreference("email", email)
     }
 

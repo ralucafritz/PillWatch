@@ -1,22 +1,23 @@
 package com.example.pillwatch.data.repository
 
 
-import com.example.pillwatch.data.datasource.local.MedsDataDao
-import com.example.pillwatch.data.model.MedsDataEntity
+import androidx.lifecycle.LiveData
+import com.example.pillwatch.data.datasource.local.MedsDao
+import com.example.pillwatch.data.model.MedsEntity
 
-class MedsDataRepository(private val medsDataDao: MedsDataDao) {
+class MedsDataRepository(private val medsDao: MedsDao) {
 
 
-    fun insertAll(dataList: List<MedsDataEntity>) {
-            medsDataDao.insertAll(dataList)
+    fun insertAll(dataList: List<MedsEntity>) {
+            medsDao.insertAll(dataList)
     }
 
-    fun getAllMeds() : List<MedsDataEntity> {
-            return medsDataDao.getAllMeds()
+    fun getAllMeds() : LiveData<List<MedsEntity>> {
+            return medsDao.getAllMeds()
     }
 
     fun clear() {
-        medsDataDao.clear()
+        medsDao.clear()
     }
 
 }

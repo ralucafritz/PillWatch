@@ -11,17 +11,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import com.example.pillwatch.R
 import com.example.pillwatch.data.datasource.local.AppDatabase
-import com.example.pillwatch.data.datasource.local.UserDao
 import com.example.pillwatch.databinding.ActivitySignupBinding
 import com.example.pillwatch.utils.extensions.Extensions.timber
 import com.example.pillwatch.utils.extensions.Extensions.toast
 import com.example.pillwatch.viewmodel.SignupViewModel
 import com.example.pillwatch.viewmodel.factory.SignupViewModelFactory
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import kotlinx.coroutines.coroutineScope
 
 class SignupActivity : AppCompatActivity() {
 
@@ -110,7 +107,7 @@ class SignupActivity : AppCompatActivity() {
         }
         onBackPressedDispatcher.addCallback(this, callback)
 
-        // google signin
+        // google sign in
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
@@ -123,7 +120,6 @@ class SignupActivity : AppCompatActivity() {
                 if (result.resultCode == RESULT_OK) {
                     val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
                     task.addOnCompleteListener {
-                        it
                         viewModel.signupWithGoogle(it)
                         viewModel.signupResult.observe(this) { res ->
                             if (res == true) {

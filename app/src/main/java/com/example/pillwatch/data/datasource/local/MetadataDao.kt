@@ -1,5 +1,6 @@
 package com.example.pillwatch.data.datasource.local
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.pillwatch.data.model.MetadataEntity
 
@@ -15,8 +16,8 @@ interface MetadataDao {
     fun clear()
 
     @Query("SELECT * FROM metadata_table ORDER BY id ASC")
-    fun getAllMetadata(): List<MetadataEntity>
+    fun getAllMetadata(): LiveData<List<MetadataEntity>>
 
     @Query("SELECT * FROM metadata_table WHERE Name = :nameMetadata LIMIT 1")
-    fun getMetadata(nameMetadata: String): MetadataEntity?
+    fun getMetadata(nameMetadata: String): LiveData<MetadataEntity?>
 }

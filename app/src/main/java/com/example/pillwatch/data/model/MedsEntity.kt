@@ -4,10 +4,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "med_data_table")
-data class MedsDataEntity(
+@Entity(tableName = "meds_table")
+data class MedsEntity(
     @PrimaryKey(autoGenerate = true)
-    var medId: Long = 0L,
+    @ColumnInfo(name = "id")
+    var id: Long = 0L,
 
     @ColumnInfo(name = "trade_name")
     val tradeName: String = "",
