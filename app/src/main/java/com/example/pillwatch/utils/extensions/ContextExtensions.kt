@@ -23,6 +23,10 @@ object ContextExtensions {
         return SharedPreferencesUtil.getPreference(this, key, type)
     }
 
+    fun Context.getPreference(key: String) : String {
+        return SharedPreferencesUtil.getPreference(this, key, "")
+    }
+
     fun Context.isInternetConnected(): Boolean {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.example.pillwatch.viewmodel.LoginViewModel" />
@@ -40,13 +41,17 @@
             <EditText
                 android:id="@+id/editTextEmailAddress_login"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:ems="12"
                 android:hint="@string/email"
+                android:minHeight="48dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:background="@drawable/edit_text_field"
                 android:inputType="textEmailAddress"
                 android:text="@{viewModel.email}"
                 android:textColorHint="?attr/colorOnSecondaryContainer"
-                tools:ignore="SpeakableTextPresentCheck" />
+                tools:ignore="Autofill,SpeakableTextPresentCheck" />
 
             <EditText
                 android:id="@+id/editTextPassword_login"
@@ -54,47 +59,53 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="20dp"
                 android:ems="12"
+                android:minHeight="48dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:background="@drawable/edit_text_field"
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:text="@{viewModel.password}"
                 android:textColorHint="?attr/colorOnSecondaryContainer"
-                tools:ignore="SpeakableTextPresentCheck" />
+                tools:ignore="Autofill,SpeakableTextPresentCheck" />
 
 
         </LinearLayout>
 
-            <Button
-                android:id="@+id/button_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="40dp"
-                android:layout_marginEnd="40dp"
-                android:text="@string/log_in_btn"
-                android:textSize="@dimen/btn_text_size"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_edit_text_login"/>
+        <Button
+            android:id="@+id/button_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="60dp"
+            android:background="@drawable/slightly_rounded_button"
+            android:text="@string/log_in_btn"
+            android:textSize="@dimen/btn_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_edit_text_login" />
 
-            <TextView
-                android:id="@+id/text_between_btns"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/or"
-                android:layout_marginTop="10dp"
-                android:textSize="@dimen/text_size_medium"
-                android:textAlignment="textStart"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/button_login"/>
+        <TextView
+            android:id="@+id/text_between_btns"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/or"
+            android:textAlignment="textStart"
+            android:textSize="@dimen/text_size_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_login" />
 
         <Button
             android:id="@+id/btn_google_sign_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="60dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginEnd="60dp"
+            android:background="@drawable/slightly_rounded_button"
             android:text="@string/log_in_with_google"
             android:textSize="@dimen/btn_text_size"
             app:layout_constraintEnd_toEndOf="parent"
@@ -105,13 +116,13 @@
             android:id="@+id/googlelogo"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/googlelogo"
+            android:layout_marginStart="20dp"
             android:scaleType="fitCenter"
-            android:layout_marginStart="40dp"
-            app:tint="?attr/colorOnSurfaceInverse"
-            app:layout_constraintTop_toTopOf="@id/btn_google_sign_in"
-            app:layout_constraintStart_toStartOf="@+id/btn_google_sign_in"
+            android:src="@drawable/googlelogo"
             app:layout_constraintBottom_toBottomOf="@id/btn_google_sign_in"
+            app:layout_constraintStart_toStartOf="@+id/btn_google_sign_in"
+            app:layout_constraintTop_toTopOf="@id/btn_google_sign_in"
+            app:tint="?attr/colorOnSurfaceInverse"
             tools:ignore="ContentDescription" />
 
         <LinearLayout

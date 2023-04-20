@@ -31,7 +31,7 @@
         <item name="colorCustomColor1Container">#efdbff</item>
         <item name="colorOnCustomColor1Container">#2c0051</item>
         <item name="harmonizeCustomColor1">false</item>
-        <item name="android:fontFamily">@font/amaranth</item>
+        <item name="android:fontFamily">@font/lato</item>
         <item name="colorCustomColor2">#815600</item>
         <item name="colorOnCustomColor2">#ffffff</item>
         <item name="colorCustomColor2Container">#ffddb1</item>
@@ -45,5 +45,6 @@
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
         <item name="fadeGradientStart">@color/md_theme_light_background</item>
         <item name="fadeGradientEnd">#1EFFFBFF</item>
+        <item name="android:textColorHint">@color/md_theme_light_secondary</item>
     </style>
 </resources>
