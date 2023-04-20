@@ -48,5 +48,20 @@
             app:exitAnim="@anim/fui_slide_out_left"
             app:popEnterAnim="@anim/fui_slide_in_right"
             app:popExitAnim="@anim/fui_slide_out_left" />
+        <action
+            android:id="@+id/action_loadingFragment_to_usernameCreationFragment"
+            app:destination="@id/usernameCreationFragment"
+            app:enterAnim="@anim/fui_slide_in_right"
+            app:exitAnim="@anim/fui_slide_out_left"
+            app:popEnterAnim="@anim/fui_slide_in_right"
+            app:popExitAnim="@anim/fui_slide_out_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/usernameCreationFragment"
+        android:name="com.example.pillwatch.ui.fragment.UsernameCreationFragment"
+        android:label="UsernameCreationFragment" >
+        <action
+            android:id="@+id/action_usernameCreationFragment_to_testMedsFragment"
+            app:destination="@id/testMedsFragment" />
     </fragment>
 </navigation>

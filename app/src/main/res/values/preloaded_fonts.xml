@@ -2,6 +2,8 @@
 <resources>
     <array name="preloaded_fonts" translatable="false">
         <item>@font/amaranth</item>
+        <item>@font/lato</item>
         <item>@font/paytone_one</item>
+        <item>@font/cocogoose_classic_medium_trial</item>
     </array>
 </resources>

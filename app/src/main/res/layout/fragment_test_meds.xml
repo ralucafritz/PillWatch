@@ -4,7 +4,7 @@
 
     <data>
         <variable
-            name="testMedsViewModel"
+            name="viewModel"
             type="com.example.pillwatch.viewmodel.TestMedsViewModel" />
     </data>
 
@@ -20,7 +20,7 @@
             android:layout_marginStart="@dimen/margin"
             android:layout_marginTop="@dimen/margin"
             android:layout_marginEnd="@dimen/margin"
-            android:text='@{testMedsViewModel.responseInteractionDataAPI != null ? testMedsViewModel.responseInteractionDataAPI.toString() : ""}'
+            android:text='@{viewModel.responseInteractionDataAPI != null ? viewModel.responseInteractionDataAPI.toString() : ""}'
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +42,7 @@
                 android:layout_marginStart="@dimen/margin"
                 android:layout_marginTop="@dimen/margin"
                 android:layout_marginEnd="@dimen/margin"
-                android:text='@{testMedsViewModel.responseMedsDataAPI != null ? testMedsViewModel.responseMedsDataAPI.toString() : ""}'
+                android:text='@{viewModel.responseMedsDataAPI != null ? viewModel.responseMedsDataAPI.toString() : ""}'
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"

@@ -16,7 +16,7 @@ class LoadingFragment : Fragment(){
 
     private lateinit var binding: FragmentLoadingBinding
     private lateinit var navController: NavController
-    private lateinit var loadingViewModel: LoadingViewModel
+    private lateinit var viewModel: LoadingViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,21 +33,24 @@ class LoadingFragment : Fragment(){
         val application = requireNotNull(this.activity).application
 
         val viewModelFactory = LoadingViewModelFactory(application)
-        loadingViewModel = ViewModelProvider(this, viewModelFactory)[LoadingViewModel::class.java]
-        binding.loadingViewModel = loadingViewModel
+        viewModel = ViewModelProvider(this, viewModelFactory)[LoadingViewModel::class.java]
+        binding.viewModel = viewModel
 
         // Lifecycle
         binding.lifecycleOwner = this
 
         // Spinner, login status and navigation depending on login status
         binding.loadingSpinner.visibility = View.VISIBLE
-        loadingViewModel.checkLoginStatus()
-        loadingViewModel.loggedInStatus.observe(viewLifecycleOwner) {
+        viewModel.checkLoginStatus()
+        viewModel.loggedInStatus.observe(viewLifecycleOwner) {
             binding.loadingSpinner.visibility = View.GONE
             if(it) {
-                loadingViewModel.navigateToHome(navController)
+                when (viewModel.username.value) {
+                    "" -> viewModel.navigateToUsernameCreate(navController)
+                    else -> viewModel.navigateToHome(navController)
+                }
             } else {
-                loadingViewModel.navigateToWelcome(navController)
+                viewModel.navigateToWelcome(navController)
             }
         }
 

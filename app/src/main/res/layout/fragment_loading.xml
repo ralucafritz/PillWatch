@@ -4,7 +4,7 @@
 
     <data>
         <variable
-            name="loadingViewModel"
+            name="viewModel"
             type="com.example.pillwatch.viewmodel.LoadingViewModel" />
     </data>
 
@@ -17,14 +17,27 @@
             android:id="@+id/appName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/paytone_one"
+            android:fontFamily="@font/cocogoose_classic_medium_trial"
             android:text="@string/app_name"
             android:textColor="?attr/colorPrimary"
-            android:textSize="70sp"
+            android:textSize="90sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/welcome_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text='@{viewModel.welcomeMessage != null ? viewModel.welcomeMessage : ""}'
+            android:textColor="?attr/colorPrimary"
+            android:textSize="@dimen/text_size_medium"
+            tools:text="Welcome XXXX"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appName" />
 
         <ProgressBar
             android:id="@+id/loadingSpinner"

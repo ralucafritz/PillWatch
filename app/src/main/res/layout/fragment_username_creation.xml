@@ -1,0 +1,76 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.pillwatch.viewmodel.UsernameCreationViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorPrimary"
+        tools:context=".ui.fragment.UsernameCreationFragment">
+
+
+        <TextView
+            android:id="@+id/choose_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginBottom="48dp"
+            android:text="@string/choose_an_username"
+            android:textColor="?attr/colorPrimaryContainer"
+            android:textSize="@dimen/text_size_xl"
+            app:layout_constraintBottom_toTopOf="@+id/background"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="450dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="200dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/rounded_rectangle"
+            tools:ignore="ContentDescription,VisualLintBounds" />
+
+        <EditText
+            android:id="@+id/username_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/edit_text_field"
+            android:ems="12"
+            android:hint="@string/username"
+            android:inputType="text"
+            android:minHeight="60dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textSize="@dimen/text_size_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/background"
+            tools:ignore="Autofill" />
+
+        <ImageButton
+            android:id="@+id/button_next"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginBottom="64dp"
+            android:background="@drawable/slightly_rounded_button"
+            app:layout_constraintBottom_toBottomOf="@+id/background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/baseline_keyboard_double_arrow_right_24"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

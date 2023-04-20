@@ -31,14 +31,14 @@ class TestMedsFragment : Fragment() {
         val viewModelFactory = TestMedsViewModelFactory(medsDataDao, metadataDao, application)
 
         // ViewModel
-        val testMedsViewModel = ViewModelProvider(this, viewModelFactory)[TestMedsViewModel::class.java]
+        val viewModel = ViewModelProvider(this, viewModelFactory)[TestMedsViewModel::class.java]
 
-        testMedsViewModel.getInteractionDataFromAPI()
-        testMedsViewModel.getMedsDataFromAPI()
-//        testMedsViewModel.clearMetadata()
-//        testMedsViewModel.clearMedsData()
+        viewModel.getInteractionDataFromAPI()
+        viewModel.getMedsDataFromAPI()
+//        viewModel.clearMetadata()
+//        viewModel.clearMedsData()
         // Binding
-        binding.testMedsViewModel = testMedsViewModel
+        binding.viewModel = viewModel
 
         binding.lifecycleOwner = this
 

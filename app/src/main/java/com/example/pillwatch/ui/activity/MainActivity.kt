@@ -13,7 +13,8 @@ class MainActivity : AppCompatActivity() {
         Timber.plant(Timber.DebugTree())
 //        setLoggedInStatus(false)
 //        setPreference("email","")
-//        setPreference("id", 0L:)
+//        setPreference("id", 0L)
+//        setPreference("username", "")
         setContentView(R.layout.activity_main)
     }
 }
