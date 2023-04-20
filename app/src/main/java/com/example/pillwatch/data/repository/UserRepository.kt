@@ -29,7 +29,11 @@ class UserRepository(private val userDao: UserDao) {
     }
 
     fun getUserByIdToken(idToken: String): LiveData<UserEntity?> {
-        return userDao.geUserByIdToken(idToken)
+        return userDao.getUserByIdToken(idToken)
+    }
+
+    fun getUserNameById(id: Long) : String? {
+        return userDao.getUserNameById(id)
     }
 
     fun updateUserName(userId: String, newName: String) {

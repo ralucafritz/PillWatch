@@ -20,7 +20,10 @@ interface UserDao {
     fun getIdByEmail(email: String): Long?
 
     @Query("SELECT * FROM users_table WHERE idToken =:idToken")
-    fun geUserByIdToken(idToken: String): LiveData<UserEntity?>
+    fun getUserByIdToken(idToken: String): LiveData<UserEntity?>
+
+    @Query("SELECT username FROM users_table WHERE id =:id")
+    fun getUserNameById(id: Long): String?
 
     @Query("UPDATE users_table SET username = :newName WHERE id = :userId")
     fun updateUserName(userId: String, newName: String)
