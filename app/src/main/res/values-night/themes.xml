@@ -46,5 +46,6 @@
         <item name="fadeGradientStart">@color/md_theme_dark_background</item>
         <item name="fadeGradientEnd">#6A1C1B1E</item>
         <item name="android:textColorHint">@color/md_theme_dark_secondary</item>
+        <item name="bottomNav">#4D948F99</item>
     </style>
 </resources>

@@ -1,8 +1,6 @@
 package com.example.pillwatch.ui.fragment
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +8,13 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.example.pillwatch.R
+import com.example.pillwatch.data.datasource.local.AppDatabase
 import com.example.pillwatch.databinding.FragmentUsernameCreationBinding
 import com.example.pillwatch.utils.extensions.Extensions.toast
-import com.example.pillwatch.utils.extensions.FragmentExtensions.getLoggedInStatus
+import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarVisibilityState
+import com.example.pillwatch.utils.extensions.FragmentExtensions.navBarVisibilityState
 import com.example.pillwatch.utils.extensions.FragmentExtensions.setPreference
-import com.example.pillwatch.viewmodel.LoadingViewModel
 import com.example.pillwatch.viewmodel.UsernameCreationViewModel
 import com.example.pillwatch.viewmodel.factory.UsernameCreationViewModelFactory
 
@@ -32,9 +32,14 @@ class UsernameCreationFragment : Fragment() {
         // Binding
         binding = FragmentUsernameCreationBinding.inflate(inflater)
 
+        navBarVisibilityState(requireActivity(), R.id.usernameCreationFragment)
+        toolbarVisibilityState(requireActivity(), R.id.usernameCreationFragment)
+
         // Create ViewModelFactory
         val application = requireNotNull(this.activity).application
-        val viewModelFactory = UsernameCreationViewModelFactory(application)
+
+        val userDao = AppDatabase.getInstance(application).userDao
+        val viewModelFactory = UsernameCreationViewModelFactory(userDao, application)
 
         // ViewModel
         viewModel = ViewModelProvider(this, viewModelFactory)[UsernameCreationViewModel::class.java]
@@ -42,22 +47,12 @@ class UsernameCreationFragment : Fragment() {
         // NavController
         navController = NavHostFragment.findNavController(this)
 
-        // get data from username EditText
-        binding.usernameText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun afterTextChanged(p0: Editable?) {
-                viewModel.setUsername(p0.toString())
-            }
-        })
-
         // next button
         binding.buttonNext.setOnClickListener {
-            val validationResult = viewModel.isValid()
+            val username = binding.usernameText.text .toString() ?: ""
+            val validationResult = viewModel.isValid(username)
             if (validationResult.isValid) {
-                setPreference("username", viewModel.username.value!!)
+                viewModel.updateUsername()
                 viewModel.navigateToHome(navController)
             } else {
                 requireNotNull(this.activity).toast(validationResult.message)

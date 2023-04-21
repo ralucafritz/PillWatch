@@ -49,7 +49,7 @@ class LoadingViewModel(application : Application): ViewModel() {
         navController.navigate(R.id.action_loadingFragment_to_welcomeFragment)
     }
     fun navigateToHome(navController: NavController) {
-        navController.navigate(R.id.action_loadingFragment_to_testMedsFragment)
+        navController.navigate(R.id.action_loadingFragment_to_homeFragment)
     }
     fun navigateToUsernameCreate(navController: NavController) {
         navController.navigate(R.id.action_loadingFragment_to_usernameCreationFragment)

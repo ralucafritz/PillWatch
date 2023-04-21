@@ -8,7 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentLoadingBinding
+import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarVisibilityState
+import com.example.pillwatch.utils.extensions.FragmentExtensions.navBarVisibilityState
 import com.example.pillwatch.viewmodel.LoadingViewModel
 import com.example.pillwatch.viewmodel.factory.LoadingViewModelFactory
 
@@ -25,6 +28,9 @@ class LoadingFragment : Fragment(){
     ): View {
         // Binding
         binding = FragmentLoadingBinding.inflate(inflater)
+
+        navBarVisibilityState(requireActivity(), R.id.loadingFragment)
+        toolbarVisibilityState(requireActivity(), R.id.loadingFragment)
 
         // NavController
         navController = NavHostFragment.findNavController(this)

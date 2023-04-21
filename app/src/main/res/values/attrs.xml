@@ -18,4 +18,6 @@
     <attr name="harmonizeCustomColor3" format="boolean" />
     <attr name="fadeGradientStart" format="reference|color"/>
     <attr name="fadeGradientEnd" format="reference|color"/>
+    <attr name ="bottomNav" format="reference|color" />
+    <attr name ="colorTertiaryContainer" format="reference|color"/>
 </resources>

@@ -44,29 +44,11 @@ class LoginActivity : AppCompatActivity() {
 
         binding.lifecycleOwner = this
 
-        // get data from email EditText
-        binding.editTextEmailAddressLogin.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun afterTextChanged(p0: Editable?) {
-                viewModel.setEmail(p0.toString())
-            }
-        })
-        // get data from pwd EditText
-        binding.editTextPasswordLogin.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun afterTextChanged(p0: Editable?) {
-                viewModel.setPassword(p0.toString())
-            }
-        })
         // login btn on click
         binding.buttonLogin.setOnClickListener {
-            val result = viewModel.isValid()
+            val email = binding.editTextEmailAddressLogin.text .toString() ?: ""
+            val password = binding.editTextPasswordLogin.text .toString() ?: ""
+            val result = viewModel.isValid(email, password)
             if (result.isValid) {
                 viewModel.login()
                 viewModel.loginResult.observe(this) { res ->

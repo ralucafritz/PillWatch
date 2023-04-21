@@ -67,7 +67,7 @@
             android:background="@drawable/slightly_rounded_button"
             app:layout_constraintBottom_toBottomOf="@+id/background"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/baseline_keyboard_double_arrow_right_24"
+            app:srcCompat="@drawable/ic_right_double_arrow"
             tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
 

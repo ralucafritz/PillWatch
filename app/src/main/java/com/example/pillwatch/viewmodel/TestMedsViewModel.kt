@@ -105,7 +105,7 @@ class TestMedsViewModel(
             metadataRepository.getMetadata(SHA)
         }
         // check if the current value is null -> no current sha detected
-        if (currentSha.value == null) {
+        if (currentSha == null) {
             // change from Main thread
             dbCoroutineScope.launch {
                 // insert the new sha
@@ -120,11 +120,11 @@ class TestMedsViewModel(
             // log the result
             Timber.tag(TAG_MEDS_DB).d("SHA value inserted")
             return true
-        } else if (currentSha.value!!.metadataValue != newSha) {
+        } else if (currentSha.metadataValue != newSha) {
             // change from Main thread
             dbCoroutineScope.launch {
                 // update the current sha value with the new value
-                metadataRepository.update(MetadataEntity(currentSha.value!!.id, SHA, newSha))
+                metadataRepository.update(MetadataEntity(currentSha.id, SHA, newSha))
                 // clear the meds_data_table in order for the new data to be introduced
                 clearMedsData()
             }
