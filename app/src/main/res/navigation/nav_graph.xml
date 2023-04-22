@@ -29,10 +29,6 @@
         android:name="com.example.pillwatch.ui.activity.LoginActivity"
         android:label="LoginActivity" />
     <fragment
-        android:id="@+id/testMedsFragment"
-        android:name="com.example.pillwatch.ui.fragment.TestMedsFragment"
-        android:label="TestMedsFragment" />
-    <fragment
         android:id="@+id/loadingFragment"
         android:name="com.example.pillwatch.ui.fragment.LoadingFragment"
         android:label="LoadingFragment" >
@@ -56,9 +52,6 @@
         android:id="@+id/usernameCreationFragment"
         android:name="com.example.pillwatch.ui.fragment.UsernameCreationFragment"
         android:label="UsernameCreationFragment" >
-        <action
-            android:id="@+id/action_usernameCreationFragment_to_testMedsFragment"
-            app:destination="@id/testMedsFragment" />
         <action
             android:id="@+id/action_usernameCreationFragment_to_homeFragment"
             app:destination="@id/homeFragment" />

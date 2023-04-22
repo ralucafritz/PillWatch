@@ -2,6 +2,7 @@ package com.example.pillwatch.viewmodel
 
 import android.app.Application
 import android.content.Context
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,7 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class LoadingViewModel(application : Application): ViewModel() {
+class LoadingViewModel(application : Application): AndroidViewModel(application) {
 
     companion object {
         const val TAG = "Loading"

@@ -2,16 +2,14 @@ package com.example.pillwatch.viewmodel
 
 import android.app.Application
 import android.content.Context
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.pillwatch.R
 import com.example.pillwatch.data.datasource.local.UserDao
 import com.example.pillwatch.data.repository.UserRepository
-import com.example.pillwatch.utils.SharedPreferencesUtil.getPreference
-import com.example.pillwatch.utils.SharedPreferencesUtil.setPreference
 import com.example.pillwatch.utils.ValidationProperty
 import com.example.pillwatch.utils.extensions.ContextExtensions.getPreference
 import com.example.pillwatch.utils.extensions.ContextExtensions.setPreference
@@ -20,7 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
 
-class UsernameCreationViewModel(userDao: UserDao, application: Application) : ViewModel() {
+class UsernameCreationViewModel(userDao: UserDao, application: Application) : AndroidViewModel(application) {
 
     private val context: Context by lazy { application.applicationContext }
 

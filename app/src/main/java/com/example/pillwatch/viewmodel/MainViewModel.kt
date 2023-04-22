@@ -2,6 +2,7 @@ package com.example.pillwatch.viewmodel
 
 import android.app.Application
 import android.content.Context
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,7 +24,7 @@ class MainViewModel(
     metadataDao: MetadataDao,
     userDao: UserDao,
     application: Application)
-    : ViewModel() {
+    : AndroidViewModel(application) {
 
     private val repositoryMeds = MedsDataRepository(medsDao)
     private val repositoryMetadata = MetadataRepository(metadataDao)
