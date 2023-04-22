@@ -4,8 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
@@ -44,41 +42,12 @@ class SignupActivity : AppCompatActivity() {
 
         binding.lifecycleOwner = this
 
-        // get data from email EditText
-        binding.editTextEmailAddressSignup.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun afterTextChanged(p0: Editable?) {
-                viewModel.setEmail(p0.toString())
-            }
-        })
-        // get data from pwd EditText
-        binding.editTextPasswordSignup.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun afterTextChanged(p0: Editable?) {
-                viewModel.setPassword(p0.toString())
-            }
-        })
-
-        // get data from confirm pwd EditText
-        binding.editTextConfirmPasswordSignup.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-            override fun afterTextChanged(p0: Editable?) {
-                viewModel.setConfirmedPassword(p0.toString())
-            }
-        })
-
         // signup btn on click
         binding.buttonSignup.setOnClickListener {
-            val result = viewModel.isValid()
+            val email = binding.editTextEmailAddressSignup.text .toString() ?: ""
+            val password = binding.editTextPasswordSignup.text .toString() ?: ""
+            val confirmPassword = binding.editTextConfirmPasswordSignup.text .toString() ?: ""
+            val result = viewModel.isValid(email, password, confirmPassword)
             if (result.isValid) {
                 viewModel.signup()
                 viewModel.signupResult.observe(this) { res ->

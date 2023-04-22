@@ -22,7 +22,7 @@ class MetadataRepository (private val metadataDao: MetadataDao){
         metadataDao.clear()
     }
 
-    fun getMetadata(nameMetadata: String) : LiveData<MetadataEntity?> {
+    fun getMetadata(nameMetadata: String) : MetadataEntity? {
         return metadataDao.getMetadata(nameMetadata)
     }
 }

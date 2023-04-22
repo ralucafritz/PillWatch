@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/medicationFragment"
+        android:icon="@drawable/ic_medication_hand_pill"
+        android:title="@string/medication"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/settingsFragment"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/settings"
+        app:showAsAction="always"/>
+</menu>

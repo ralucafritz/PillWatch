@@ -16,7 +16,7 @@ class UserRepository(private val userDao: UserDao) {
         return hashedUser
     }
 
-    fun getUserByEmail(email: String): LiveData<UserEntity?> {
+    fun getUserByEmail(email: String): UserEntity? {
         return userDao.getUserByEmail(email)
     }
 
@@ -28,7 +28,7 @@ class UserRepository(private val userDao: UserDao) {
         return userDao.getIdByEmail(email)
     }
 
-    fun getUserByIdToken(idToken: String): LiveData<UserEntity?> {
+    fun getUserByIdToken(idToken: String): UserEntity? {
         return userDao.getUserByIdToken(idToken)
     }
 
@@ -36,11 +36,11 @@ class UserRepository(private val userDao: UserDao) {
         return userDao.getUserNameById(id)
     }
 
-    fun updateUserName(userId: String, newName: String) {
+    fun updateUserName(userId: Long, newName: String) {
         userDao.updateUserName(userId, newName)
     }
 
-    fun updateUserRole(userId: String, newRole: Role) {
+    fun updateUserRole(userId: Long, newRole: Role) {
         userDao.updateUserRole(userId, newRole)
     }
 

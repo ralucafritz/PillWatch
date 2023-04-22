@@ -11,7 +11,6 @@ import com.example.pillwatch.data.model.UserEntity
 import com.example.pillwatch.data.repository.UserRepository
 import com.example.pillwatch.utils.AuthResultProperty
 import com.example.pillwatch.utils.FirebaseUtils.firebaseAuth
-import com.example.pillwatch.utils.FirebaseUtils.firebaseUser
 import com.example.pillwatch.utils.Role
 import com.example.pillwatch.utils.ValidationProperty
 import com.example.pillwatch.utils.checkPassword
@@ -44,7 +43,6 @@ class LoginViewModel(userDao: UserDao, application: Application) :
     // coroutine scope for database stuff
     private val dbCoroutineScope = CoroutineScope(Dispatchers.IO + viewModelJob)
 
-
     companion object {
         const val TAG = "Auth"
         const val INVALID_EMAIL_ERR = "Invalid email."
@@ -64,28 +62,28 @@ class LoginViewModel(userDao: UserDao, application: Application) :
     val password: LiveData<String>
         get() = _password
 
-    fun setEmail(email: String) {
-        _email.value = email
-    }
-
-    fun setPassword(password: String) {
-        _password.value = password
-    }
-
-    fun isValid(): ValidationProperty {
+    fun isValid(email: String, password: String): ValidationProperty {
         return when {
-            _email.value == null || _password.value == null -> ValidationProperty(
+            email == "" || password == "" -> ValidationProperty(
                 false,
                 EMPTY_FIELDS_ERR
             )
 
-            !Patterns.EMAIL_ADDRESS.matcher(_email.value!!).matches() -> ValidationProperty(
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> ValidationProperty(
                 false,
                 INVALID_EMAIL_ERR
             )
 
-            _password.value!!.length < 8 -> ValidationProperty(false, SHORT_PSW_ERR)
-            else -> ValidationProperty(true, "")
+            password.length < 8 -> ValidationProperty(
+                false,
+                SHORT_PSW_ERR
+            )
+
+            else -> {
+                _email.value = email
+                _password.value = password
+                ValidationProperty(true, "")
+            }
         }
     }
 
@@ -94,9 +92,8 @@ class LoginViewModel(userDao: UserDao, application: Application) :
             val email = _email.value!!
             val password = _password.value!!
             val user = withContext(Dispatchers.IO) { repository.getUserByEmail(email) }
-            if (user.value != null && checkPassword(password, user.value!!.password)) {
-                Timber.tag(TAG).d("Login successful: $firebaseUser")
-                setLoggedInStatus(user.value!!.email, user.value!!.id)
+            if (user != null && checkPassword(password, user.password)) {
+                setLoggedInStatus(user.email, user.id, user.username)
                 _loginResult.postValue(true)
             } else {
                 _loginResult.postValue(false)
@@ -120,25 +117,27 @@ class LoginViewModel(userDao: UserDao, application: Application) :
 
     private suspend fun insertWithGoogle(idToken: String): Boolean {
         return withContext(Dispatchers.Main + viewModelJob) {
-            var result: Boolean
             if (idToken == "") {
-                result = false
+                false
             } else {
                 val credential = GoogleAuthProvider.getCredential(idToken, null)
                 val authResult = signInWithCredential(credential, idToken)
-                result = if (authResult.success && authResult.user != null) {
+                if (authResult.success && authResult.user != null) {
                     withContext(Dispatchers.IO) {
-                        val loadedUser = repository.getUserByIdToken(idToken)
+                        val loadedUser = repository.getUserByEmail(authResult.user!!.email)
                         var idToSet: Long?
-                        val emailToSet = if (loadedUser.value == null) {
+                        var nameToSet: String?
+                        val emailToSet = if (loadedUser == null) {
                             val newUser = repository.insert(authResult.user!!)
                             idToSet = repository.getIdByEmail(newUser.email)
+                            nameToSet = null
                             newUser.email
                         } else {
-                            idToSet = loadedUser.value!!.id
-                            loadedUser.value!!.email
+                            idToSet = loadedUser.id
+                            nameToSet = loadedUser.username
+                            loadedUser.email
                         }
-                        setLoggedInStatus(emailToSet, idToSet!!)
+                        setLoggedInStatus(emailToSet, idToSet!!, nameToSet)
                         true
                     }
                 } else {
@@ -146,7 +145,6 @@ class LoginViewModel(userDao: UserDao, application: Application) :
                     false
                 }
             }
-            result
         }
     }
 
@@ -176,10 +174,13 @@ class LoginViewModel(userDao: UserDao, application: Application) :
         }
     }
 
-    private fun setLoggedInStatus(email: String, id: Long) {
+    private fun setLoggedInStatus(email: String, id: Long, username: String?) {
         context.setLoggedInStatus(true)
         context.setPreference("id", id)
         context.setPreference("email", email)
+        if (username != null) {
+            context.setPreference("username", username)
+        }
     }
 
     override fun onCleared() {

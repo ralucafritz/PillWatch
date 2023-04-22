@@ -11,10 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentWelcomeBinding
 import com.example.pillwatch.ui.activity.LoginActivity
 import com.example.pillwatch.ui.activity.SignupActivity
+import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarVisibilityState
 import com.example.pillwatch.utils.extensions.FragmentExtensions.getLoggedInStatus
+import com.example.pillwatch.utils.extensions.FragmentExtensions.navBarVisibilityState
 import com.example.pillwatch.viewmodel.WelcomeViewModel
 
 class WelcomeFragment: Fragment() {
@@ -38,6 +41,9 @@ class WelcomeFragment: Fragment() {
     ): View {
         // Binding
         binding = FragmentWelcomeBinding.inflate(inflater)
+
+        navBarVisibilityState(requireActivity(), R.id.welcomeFragment)
+        toolbarVisibilityState(requireActivity(), R.id.welcomeFragment)
 
         navController = NavHostFragment.findNavController(this)
         // Binding

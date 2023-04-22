@@ -28,4 +28,10 @@
     <string name="choose_an_username">Choose an username:</string>
     <string name="username"><font size = "18"><i>Username</i></font></string>
     <string name="next">Next</string>
+    <string name="settings">Settings</string>
+    <string name="medication">Medication</string>
+    <string name="home">Home</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+    <string name="profile">Profile</string>
 </resources>

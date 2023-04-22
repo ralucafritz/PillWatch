@@ -69,33 +69,34 @@ class SignupViewModel(
     val confirmPassword: LiveData<String>
         get() = _confirmPassword
 
-    fun setEmail(email: String) {
-        _email.value = email
-    }
-
-    fun setPassword(password: String) {
-        _password.value = password
-    }
-
-    fun setConfirmedPassword(confirmedPassword: String) {
-        _confirmPassword.value = confirmedPassword
-    }
-
-    fun isValid(): ValidationProperty {
+    fun isValid(email: String, password: String, confirmPassword: String): ValidationProperty {
         return when {
-            _email.value == null || _password.value == null -> ValidationProperty(
+            email == "" || password == "" || confirmPassword == "" -> ValidationProperty(
                 false,
                 EMPTY_FIELDS_ERR
             )
 
-            !Patterns.EMAIL_ADDRESS.matcher(_email.value!!).matches() -> ValidationProperty(
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> ValidationProperty(
                 false,
                 INVALID_EMAIL_ERR
             )
 
-            _password.value!!.length < 8 -> ValidationProperty(false, SHORT_PSW_ERR)
-            _password.value != _confirmPassword.value -> ValidationProperty(false, MATCHING_PSW_ERR)
-            else -> ValidationProperty(true, "")
+            password.length < 8 -> ValidationProperty(
+                false,
+                SHORT_PSW_ERR
+            )
+
+            password != confirmPassword -> ValidationProperty(
+                false,
+                MATCHING_PSW_ERR
+            )
+
+            else -> {
+                _email.value = email
+                _password.value = password
+                _confirmPassword.value = confirmPassword
+                ValidationProperty(true, "")
+            }
         }
     }
 
@@ -104,7 +105,7 @@ class SignupViewModel(
             val email = _email.value!!
             val password = _password.value!!
             withContext(Dispatchers.IO) {
-                if (repository.getUserByEmail(email).value != null) {
+                if (repository.getUserByEmail(email) != null) {
                     _signupResult.postValue(false)
                     Timber.tag(TAG).d("Signup failed: $EMAIL_TAKEN_ERR ")
                     context.setLoggedInStatus(false)
@@ -120,7 +121,8 @@ class SignupViewModel(
                     )
                     repository.insert(newUser)
                     val idToSet = repository.getIdByEmail(newUser.email)
-                    setLoggedInStatus(newUser.email, idToSet!!)
+                    setLoggedInStatus(newUser.email, idToSet!!, null)
+                    _signupResult.postValue(true)
                     newUser
                 }
             } ?: return@launch
@@ -153,25 +155,27 @@ class SignupViewModel(
 
     private suspend fun insertWithGoogle(idToken: String): Boolean {
         return withContext(Dispatchers.Main + viewModelJob) {
-            var result: Boolean
             if (idToken == "") {
-                result = false
+                false
             } else {
                 val credential = GoogleAuthProvider.getCredential(idToken, null)
                 val authResult = signInWithCredential(credential, idToken)
-                result = if (authResult.success && authResult.user != null) {
+                if (authResult.success && authResult.user != null) {
                     withContext(Dispatchers.IO) {
-                        val loadedUser = repository.getUserByIdToken(idToken)
+                        val loadedUser = repository.getUserByEmail(authResult.user!!.email)
                         var idToSet: Long?
-                        val emailToSet = if (loadedUser.value == null) {
+                        var nameToSet: String?
+                        val emailToSet = if (loadedUser == null) {
                             val newUser = repository.insert(authResult.user!!)
                             idToSet = repository.getIdByEmail(newUser.email)
+                            nameToSet = null
                             newUser.email
                         } else {
-                            idToSet = loadedUser.value!!.id
-                            loadedUser.value!!.email
+                            idToSet = loadedUser.id
+                            nameToSet = loadedUser.username
+                            loadedUser.email
                         }
-                        setLoggedInStatus(emailToSet, idToSet!!)
+                        setLoggedInStatus(emailToSet, idToSet!!, nameToSet)
                         true
                     }
                 } else {
@@ -179,7 +183,6 @@ class SignupViewModel(
                     false
                 }
             }
-            result
         }
     }
 
@@ -210,10 +213,13 @@ class SignupViewModel(
         }
     }
 
-    private fun setLoggedInStatus(email: String, id: Long) {
+    private fun setLoggedInStatus(email: String, id: Long, username: String?) {
         context.setLoggedInStatus(true)
         context.setPreference("id", id)
         context.setPreference("email", email)
+        if (username != null) {
+            context.setPreference("username", username)
+        }
     }
 
     override fun onCleared() {
