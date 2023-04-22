@@ -10,7 +10,7 @@ import com.example.pillwatch.data.datasource.local.UserDao
 import com.example.pillwatch.data.model.UserEntity
 import com.example.pillwatch.data.repository.UserRepository
 import com.example.pillwatch.utils.AuthResultProperty
-import com.example.pillwatch.utils.FirebaseUtils.firebaseAuth
+import com.example.pillwatch.utils.extensions.FirebaseUtils.firebaseAuth
 import com.example.pillwatch.utils.Role
 import com.example.pillwatch.utils.ValidationProperty
 import com.example.pillwatch.utils.checkPassword

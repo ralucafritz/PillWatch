@@ -28,4 +28,10 @@
         android:title="Clean"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/nav_update"
+        android:icon="@drawable/ic_update"
+        android:title="@string/check_for_updates"
+        app:showAsAction="always" />
+
 </menu>

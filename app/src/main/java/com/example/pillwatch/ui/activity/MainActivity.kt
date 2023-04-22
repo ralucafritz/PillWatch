@@ -6,7 +6,9 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -15,9 +17,17 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.pillwatch.R
 import com.example.pillwatch.data.datasource.local.AppDatabase
 import com.example.pillwatch.databinding.ActivityMainBinding
+import com.example.pillwatch.utils.extensions.ContextExtensions.dismissProgressDialog
 import com.example.pillwatch.utils.extensions.ContextExtensions.getPreference
+import com.example.pillwatch.utils.extensions.ContextExtensions.showAlert
+import com.example.pillwatch.utils.extensions.ContextExtensions.showProgressDialog
 import com.example.pillwatch.viewmodel.MainViewModel
+import com.example.pillwatch.viewmodel.MedsViewModel
 import com.example.pillwatch.viewmodel.factory.MainViewModelFactory
+import com.example.pillwatch.viewmodel.factory.MedsViewModelFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 
@@ -27,30 +37,61 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfigurationNavBottom: AppBarConfiguration
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainViewModel
+    private lateinit var mainViewModel: MainViewModel
+    private lateinit var medsViewModel: MedsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.plant(Timber.DebugTree())
         binding = com.example.pillwatch.databinding.ActivityMainBinding.inflate(layoutInflater)
 
-
+        /**
+         *    DatabaseDao access
+         */
         val userDao = AppDatabase.getInstance(application).userDao
         val medsDao = AppDatabase.getInstance(application).medsDao
         val metadataDao = AppDatabase.getInstance(application).metadataDao
 
-        val viewModelFactory = MainViewModelFactory(medsDao, metadataDao, userDao, application)
-        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+        /**
+         *    ViewModels initializations
+         */
+        val mainViewModelFactory = MainViewModelFactory(medsDao, metadataDao, userDao, application)
+        mainViewModel = ViewModelProvider(this, mainViewModelFactory)[MainViewModel::class.java]
+
+        val medsViewModelFactory = MedsViewModelFactory(medsDao, metadataDao, application)
+        medsViewModel = ViewModelProvider(this, medsViewModelFactory)[MedsViewModel::class.java]
 
         setContentView(binding.root)
         binding.apply {
 
+            /**
+             *     NavController initialization
+             */
             val navHostFragment =
                 supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             navController = navHostFragment.navController
 
+            /**
+             *      Toolbar initialization
+             *      Toolbar title changed to the username saved in SharedPreferences
+             */
             setSupportActionBar(toolbar)
             toolbar.title = getPreference("username")
+
+            /**
+             *      This function sets the @currentFragmentId MutableLiveData value in the ViewModel
+             *      @param bool is used to determine if the ToolbarFrame should be visible or not
+             */
+            bottomNavigationView.setupWithNavController(navController)
+
+            appBarConfigurationNavBottom = AppBarConfiguration(
+                setOf(R.id.homeFragment, R.id.medicationFragment, R.id.settingsFragment)
+            )
+            setupActionBarWithNavController(navController, appBarConfigurationNavBottom)
+
+            /**
+             *      DrawerView ActionToggle initialization and setup
+             */
             supportActionBar?.setDisplayShowTitleEnabled(false)
             actionBarDrawerToggle = ActionBarDrawerToggle(
                 this@MainActivity,
@@ -59,34 +100,13 @@ class MainActivity : AppCompatActivity() {
                 R.string.nav_open,
                 R.string.nav_close
             )
-
             drawerLayout.addDrawerListener(actionBarDrawerToggle)
             actionBarDrawerToggle.syncState()
-
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-            drawerView.setNavigationItemSelectedListener { item ->
-                when (item.itemId) {
-                    R.id.nav_logout -> {
-                        navController.navigate(R.id.loadingFragment)
-                        viewModel.logout()
-                    }
-
-                    R.id.nav_clean -> {
-                        navController.navigate(R.id.loadingFragment)
-                        viewModel.clear()
-                    }
-
-                    else -> {
-                        navController.popBackStack(viewModel.currentFragmentId.value!!, true)
-                        navController.navigate(item.itemId)
-                    }
-                }
-
-                drawerLayout.closeDrawer(GravityCompat.START)
-                true
-            }
-
+            /**
+             *      HamburgerIcon click listener for opening and closing the drawer
+             */
             hamburgerIcon.setOnClickListener {
                 if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     drawerLayout.closeDrawer(GravityCompat.START)
@@ -94,13 +114,40 @@ class MainActivity : AppCompatActivity() {
                     drawerLayout.openDrawer(GravityCompat.START)
                 }
             }
+            /**
+             *      DrawerView navigation options and the logic for the options
+             */
+            drawerView.setNavigationItemSelectedListener { item ->
+                when (item.itemId) {
+                    R.id.nav_logout -> {
+                        navController.navigate(R.id.loadingFragment)
+                        mainViewModel.logout()
+                        drawerLayout.closeDrawer(GravityCompat.START)
+                    }
 
-            bottomNavigationView.setupWithNavController(navController)
+                    R.id.nav_clean -> {
+                        navController.navigate(R.id.loadingFragment)
+                        mainViewModel.clear()
+                        drawerLayout.closeDrawer(GravityCompat.START)
+                    }
 
-            appBarConfigurationNavBottom = AppBarConfiguration(
-                setOf(R.id.homeFragment, R.id.medicationFragment, R.id.settingsFragment)
-            )
-            setupActionBarWithNavController(navController, appBarConfigurationNavBottom)
+                    R.id.nav_update -> {
+                        val progressDialog = showProgressDialog("Checking for updates")
+                        lifecycleScope .launch {
+                            withContext(Dispatchers.IO) {medsViewModel.getMedsDataFromAPI()
+                            }
+                            dismissProgressDialog(progressDialog, medsViewModel.updateDialogTitle.value!!, medsViewModel.updateMessage.value!!)
+                        }
+                    }
+
+                    else -> {
+                        navController.popBackStack(mainViewModel.currentFragmentId.value!!, true)
+                        navController.navigate(item.itemId)
+                        drawerLayout.closeDrawer(GravityCompat.START)
+                    }
+                }
+                true
+            }
         }
     }
 
@@ -112,13 +159,19 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
+    /**
+     *      This function sets the @currentFragmentId MutableLiveData value in the ViewModel
+     *      @param bool is used to determine if the ToolbarFrame should be visible or not
+     */
     fun isVisible(bool: Boolean, fragmentId: Int) {
-        viewModel.setCurrentFragmentId(fragmentId)
+        mainViewModel.setCurrentFragmentId(fragmentId)
         if (bool) {
             binding.toolbarFrame.visibility = View.VISIBLE
         } else {
             binding.toolbarFrame.visibility = View.INVISIBLE
         }
     }
+
+
 
 }

@@ -1,9 +1,9 @@
-package com.example.pillwatch.utils
+package com.example.pillwatch.utils.extensions
 
 import android.content.Context
 import androidx.preference.PreferenceManager
 
-object SharedPreferencesUtil {
+object SharedPreferencesExtensions {
 
     inline fun <reified  T> getPreference(context: Context, key: String, defaultValue: T) : T {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -30,6 +30,7 @@ object SharedPreferencesUtil {
         }
         editor.apply()
     }
+
 
 
 }
