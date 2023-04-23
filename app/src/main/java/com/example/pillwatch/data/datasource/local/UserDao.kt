@@ -8,7 +8,7 @@ import com.example.pillwatch.utils.Role
 @Dao
 interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(user: UserEntity)
+    fun insert(user: UserEntity): Long
 
     @Query("SELECT * FROM users_table WHERE email = :email LIMIT 1")
     fun getUserByEmail(email: String): UserEntity?

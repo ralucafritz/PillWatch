@@ -8,13 +8,14 @@ import android.text.TextWatcher
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.ViewModelProvider
 import com.example.pillwatch.R
 import com.example.pillwatch.data.datasource.local.AppDatabase
 import com.example.pillwatch.databinding.ActivityLoginBinding
 import com.example.pillwatch.utils.extensions.ContextExtensions.setLoggedInStatus
+import com.example.pillwatch.utils.extensions.ContextExtensions.toast
 import com.example.pillwatch.utils.extensions.Extensions.timber
-import com.example.pillwatch.utils.extensions.Extensions.toast
 import com.example.pillwatch.viewmodel.LoginViewModel
 import com.example.pillwatch.viewmodel.factory.LoginViewModelFactory
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -31,9 +32,10 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         timber()
-
+        setTheme(R.style.AppTheme)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         val userDao = AppDatabase.getInstance(application).userDao
 

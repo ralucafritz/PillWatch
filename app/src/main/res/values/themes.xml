@@ -45,7 +45,8 @@
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
         <item name="fadeGradientStart">@color/md_theme_light_background</item>
         <item name="fadeGradientEnd">#1EFFFBFF</item>
-        <item name="android:textColorHint">@color/md_theme_light_secondary</item>
+        <item name="android:textColorHint">#6A3E3B45</item>
         <item name="bottomNav">#4D7A757F</item>
+        <item name="logo_pillwatch">@drawable/ic_logo_for_light</item>
     </style>
 </resources>

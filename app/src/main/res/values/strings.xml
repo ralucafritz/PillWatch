@@ -16,9 +16,9 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="signup_btn">Sign up</string>
-    <string name="confirm_password"><font size = "18"><i>Confirm Password</i></font></string>
-    <string name="password"><font size = "18"><i>Password</i></font></string>
-    <string name="email"><font size = "18"><i>Email</i></font></string>
+    <string name="confirm_password"><font size = "18">Confirm Password</font></string>
+    <string name="password"><font size = "18">Password</font></string>
+    <string name="email"><font size = "18">Email</font></string>
     <string name="sign_up">Sign up</string>
     <string name="dont_have_an_account">Don\'t have an account?</string>
     <string name="log_in_btn">Log in</string>
@@ -26,7 +26,7 @@
     <string name="log_in_with_google">Log in with Google</string>
     <string name="sign_up_with_google">Sign up with Google</string>
     <string name="choose_an_username">Choose an username:</string>
-    <string name="username"><font size = "18"><i>Username</i></font></string>
+    <string name="username"><font size = "18">Username</font></string>
     <string name="next">Next</string>
     <string name="settings">Settings</string>
     <string name="medication">Medication</string>
@@ -35,4 +35,5 @@
     <string name="nav_close">Close</string>
     <string name="profile">Profile</string>
     <string name="check_for_updates">Check for meds updates</string>
+    <string name="an_app_for_your_needs">An app for your needs</string>
 </resources>
