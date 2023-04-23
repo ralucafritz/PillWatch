@@ -17,12 +17,6 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/nav_logout"
-        android:icon="@drawable/ic_logout"
-        android:title="Logout"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/nav_clean"
         android:icon="@drawable/ic_clean"
         android:title="Clean"
@@ -32,6 +26,12 @@
         android:id="@+id/nav_update"
         android:icon="@drawable/ic_update"
         android:title="@string/check_for_updates"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/ic_logout"
+        android:title="Logout"
         app:showAsAction="always" />
 
 </menu>

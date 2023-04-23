@@ -1,47 +1,93 @@
 package com.example.pillwatch.data.repository
 
+import android.provider.SyncStateContract.Helpers.insert
 import androidx.lifecycle.LiveData
 import androidx.room.Query
 import com.example.pillwatch.data.datasource.local.UserDao
 import com.example.pillwatch.data.model.UserEntity
 import com.example.pillwatch.utils.Role
 import com.example.pillwatch.utils.hashPassword
+import com.example.pillwatch.utils.randomPassword
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class UserRepository(private val userDao: UserDao) {
 
-    fun insert(user: UserEntity): UserEntity {
-        val hashedPassword = hashPassword(user.password)
-        val hashedUser = UserEntity(user.id, user.email, user.username, hashedPassword, user.idToken, user.role)
-        userDao.insert(hashedUser)
-        return hashedUser
+    suspend fun insert(email: String, password: String): UserEntity? {
+        return withContext(Dispatchers.IO) {
+            val hashedUser =
+                UserEntity(
+                    0L,
+                    email,
+                    null,
+                    password,
+                    null,
+                    Role.USER
+                )
+            val id = userDao.insert(hashedUser)
+            hashedUser.copy(id = id)
+        }
+
     }
 
-    fun getUserByEmail(email: String): UserEntity? {
-        return userDao.getUserByEmail(email)
+    suspend fun signup(email: String, password: String = "") : UserEntity?{
+        return withContext(Dispatchers.IO) {
+            val user = userDao.getUserByEmail(email)
+            if (user != null  ) {
+                if(password!=""){
+                    null
+                }
+                else {
+                    user
+                }
+            } else {
+                val hashedPassword = hashPassword(password)
+                insert(email, hashedPassword)
+            }
+        }
     }
 
-    fun clear() {
-        userDao.clear()
+    suspend fun getUserByEmail(email: String): UserEntity? {
+        return withContext(Dispatchers.IO) {
+            userDao.getUserByEmail(email)
+        }
     }
 
-    fun getIdByEmail(email: String): Long? {
-        return userDao.getIdByEmail(email)
+    suspend fun clear() {
+        withContext(Dispatchers.IO) {
+            userDao.clear()
+        }
     }
 
-    fun getUserByIdToken(idToken: String): UserEntity? {
-        return userDao.getUserByIdToken(idToken)
+    suspend fun getIdByEmail(email: String): Long? {
+        return withContext(Dispatchers.IO) {
+            userDao.getIdByEmail(email)
+        }
     }
 
-    fun getUserNameById(id: Long) : String? {
-        return userDao.getUserNameById(id)
+    suspend fun getUserByIdToken(idToken: String): UserEntity? {
+        return withContext(Dispatchers.IO) {
+            userDao.getUserByIdToken(idToken)
+        }
     }
 
-    fun updateUserName(userId: Long, newName: String) {
-        userDao.updateUserName(userId, newName)
+    suspend fun getUserNameById(id: Long): String? {
+        return withContext(Dispatchers.IO) {
+            userDao.getUserNameById(id)
+        }
     }
 
-    fun updateUserRole(userId: Long, newRole: Role) {
-        userDao.updateUserRole(userId, newRole)
+    suspend fun updateUserName(userId: Long, newName: String) {
+        withContext(Dispatchers.IO) {
+            userDao.updateUserName(userId, newName)
+        }
+
+    }
+
+    suspend fun updateUserRole(userId: Long, newRole: Role) {
+        withContext(Dispatchers.IO) {
+            userDao.updateUserRole(userId, newRole)
+        }
     }
 
 }

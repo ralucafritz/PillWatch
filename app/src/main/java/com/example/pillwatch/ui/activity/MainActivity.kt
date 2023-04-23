@@ -6,7 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.Observer
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -19,7 +19,6 @@ import com.example.pillwatch.data.datasource.local.AppDatabase
 import com.example.pillwatch.databinding.ActivityMainBinding
 import com.example.pillwatch.utils.extensions.ContextExtensions.dismissProgressDialog
 import com.example.pillwatch.utils.extensions.ContextExtensions.getPreference
-import com.example.pillwatch.utils.extensions.ContextExtensions.showAlert
 import com.example.pillwatch.utils.extensions.ContextExtensions.showProgressDialog
 import com.example.pillwatch.viewmodel.MainViewModel
 import com.example.pillwatch.viewmodel.MedsViewModel
@@ -43,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.plant(Timber.DebugTree())
-        binding = com.example.pillwatch.databinding.ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
 
         /**
          *    DatabaseDao access
@@ -167,11 +166,12 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.setCurrentFragmentId(fragmentId)
         if (bool) {
             binding.toolbarFrame.visibility = View.VISIBLE
+            binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         } else {
-            binding.toolbarFrame.visibility = View.INVISIBLE
+            binding.toolbarFrame.visibility = View.GONE
+            binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
     }
-
 
 
 }

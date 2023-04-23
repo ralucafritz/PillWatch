@@ -20,4 +20,5 @@
     <attr name="fadeGradientEnd" format="reference|color"/>
     <attr name ="bottomNav" format="reference|color" />
     <attr name ="colorTertiaryContainer" format="reference|color"/>
+    <attr name ="logo_pillwatch" format ="reference"/>
 </resources>

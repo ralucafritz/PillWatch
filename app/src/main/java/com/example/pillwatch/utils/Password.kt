@@ -2,6 +2,7 @@ package com.example.pillwatch.utils
 
 import java.math.BigInteger
 import java.security.MessageDigest
+import java.util.UUID
 
 fun hashPassword(input: String): String {
     val md = MessageDigest.getInstance("SHA-256")
@@ -17,4 +18,8 @@ fun hashPassword(input: String): String {
 fun checkPassword(inputPassword: String, storedHashedPassword: String): Boolean {
     val inputHashedPassword = hashPassword(inputPassword)
     return inputHashedPassword == storedHashedPassword
+}
+
+fun randomPassword(): String {
+    return UUID.randomUUID().toString()
 }

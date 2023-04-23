@@ -11,7 +11,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.pillwatch.R
 import com.example.pillwatch.data.datasource.local.AppDatabase
 import com.example.pillwatch.databinding.FragmentUsernameCreationBinding
-import com.example.pillwatch.utils.extensions.Extensions.toast
+import com.example.pillwatch.utils.extensions.ContextExtensions.toast
 import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarVisibilityState
 import com.example.pillwatch.utils.extensions.FragmentExtensions.navBarVisibilityState
 import com.example.pillwatch.utils.extensions.FragmentExtensions.setPreference

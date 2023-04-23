@@ -4,10 +4,20 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContentProviderCompat.requireContext
 
 object ContextExtensions {
+    /**
+     *
+     *      Extension function to show a toast message
+     *      @param msg is the message that is about to be showed
+     *
+     */
+    fun Context.toast(msg: String){
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    }
     /**
      *      Extension function to set the value of the `isLoggedIn` preference from SharedPreferences
      */

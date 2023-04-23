@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.pillwatch.R
 import com.example.pillwatch.data.datasource.local.AppDatabase
 import com.example.pillwatch.databinding.ActivitySignupBinding
+import com.example.pillwatch.utils.extensions.ContextExtensions.toast
 import com.example.pillwatch.utils.extensions.Extensions.timber
-import com.example.pillwatch.utils.extensions.Extensions.toast
 import com.example.pillwatch.viewmodel.SignupViewModel
 import com.example.pillwatch.viewmodel.factory.SignupViewModelFactory
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -63,8 +63,7 @@ class SignupActivity : AppCompatActivity() {
         // login text on click
         binding.logIn.setOnClickListener {
             val intent = navigateToActivity(R.id.loginActivity)
-            startActivity(intent)
-            finish()
+            getResult.launch(intent)
         }
 
         // back button callback
@@ -124,6 +123,12 @@ class SignupActivity : AppCompatActivity() {
                 }
             }
         )
+    }
+
+    private val getResult = registerForActivityResult( ActivityResultContracts.StartActivityForResult()) {
+        if(it.resultCode == Activity.RESULT_OK) {
+            success()
+        }
     }
 
     private fun success() {

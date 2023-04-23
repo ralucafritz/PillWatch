@@ -3,8 +3,6 @@ package com.example.pillwatch.ui.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -13,8 +11,8 @@ import com.example.pillwatch.R
 import com.example.pillwatch.data.datasource.local.AppDatabase
 import com.example.pillwatch.databinding.ActivityLoginBinding
 import com.example.pillwatch.utils.extensions.ContextExtensions.setLoggedInStatus
+import com.example.pillwatch.utils.extensions.ContextExtensions.toast
 import com.example.pillwatch.utils.extensions.Extensions.timber
-import com.example.pillwatch.utils.extensions.Extensions.toast
 import com.example.pillwatch.viewmodel.LoginViewModel
 import com.example.pillwatch.viewmodel.factory.LoginViewModelFactory
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -31,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         timber()
-
+        setTheme(R.style.AppTheme)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -64,8 +62,7 @@ class LoginActivity : AppCompatActivity() {
         // signup txt on click
         binding.signup.setOnClickListener {
             val intent = navigateToActivity(R.id.signupActivity)
-            startActivity(intent)
-            finish()
+            getResult.launch(intent)
         }
 
         val callback = object : OnBackPressedCallback(true) {
@@ -123,6 +120,12 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         )
+    }
+
+    private val getResult = registerForActivityResult( ActivityResultContracts.StartActivityForResult()) {
+        if(it.resultCode == Activity.RESULT_OK) {
+            success()
+        }
     }
 
     private fun success() {

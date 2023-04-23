@@ -1,6 +1,5 @@
 package com.example.pillwatch.utils
 
-import com.example.pillwatch.data.model.UserEntity
 import com.google.firebase.auth.AuthResult
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -29,7 +28,7 @@ data class ValidationProperty(
 data class AuthResultProperty(
     var success: Boolean,
     var result: AuthResult?,
-    var user: UserEntity?
+    var email: String?
         )
 
 data class InteractionProperty(

@@ -14,61 +14,69 @@
         android:layout_height="match_parent"
         tools:context=".ui.activity.LoginActivity">
 
-        <ImageView
-            android:id="@+id/image_login"
-            android:layout_width="wrap_content"
-            android:layout_height="310dp"
-            android:layout_marginTop="20dp"
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/bg_pill_bottle"
-            tools:ignore="ContentDescription" />
+            tools:background="@android:color/black" />
+
+
+        <include
+            android:id="@+id/logo"
+            layout="@layout/logo_container"
+            android:layout_width="320dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="60dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
         <LinearLayout
             android:id="@+id/layout_edit_text_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="60dp"
             android:layout_marginEnd="40dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_login">
+            app:layout_constraintTop_toBottomOf="@+id/logo">
 
             <EditText
                 android:id="@+id/editTextEmailAddress_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_field"
                 android:ems="12"
                 android:hint="@string/email"
+                android:inputType="textEmailAddress"
                 android:minHeight="48dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:background="@drawable/edit_text_field"
-                android:inputType="textEmailAddress"
                 android:text="@{viewModel.email}"
-                android:textColorHint="?attr/colorOnSecondaryContainer"
                 tools:ignore="Autofill,SpeakableTextPresentCheck" />
 
             <EditText
                 android:id="@+id/editTextPassword_login"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:background="@drawable/edit_text_field"
                 android:ems="12"
+                android:hint="@string/password"
+                android:inputType="textPassword"
                 android:minHeight="48dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:background="@drawable/edit_text_field"
-                android:hint="@string/password"
-                android:inputType="textPassword"
                 android:text="@{viewModel.password}"
-                android:textColorHint="?attr/colorOnSecondaryContainer"
                 tools:ignore="Autofill,SpeakableTextPresentCheck" />
-
 
         </LinearLayout>
 
@@ -77,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="60dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="60dp"
             android:layout_marginEnd="60dp"
             android:background="@drawable/slightly_rounded_button"
             android:text="@string/log_in_btn"
