@@ -18,47 +18,48 @@
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            tools:background="@android:color/black"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@android:color/black" />
 
-        <ImageView
+
+        <include
             android:id="@+id/logo"
-            android:layout_width="match_parent"
-            android:layout_height="360dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="45dp"
+            layout="@layout/logo_container"
+            android:layout_width="320dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="60dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="?attr/logo_pillwatch"
-            tools:ignore="ContentDescription" />
+            app:layout_constraintTop_toTopOf="parent" />
+
 
         <LinearLayout
             android:id="@+id/layout_edit_text_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
+            android:layout_marginTop="60dp"
             android:layout_marginEnd="40dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/logo">
+            app:layout_constraintTop_toBottomOf="@+id/logo">
 
             <EditText
                 android:id="@+id/editTextEmailAddress_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_field"
                 android:ems="12"
                 android:hint="@string/email"
+                android:inputType="textEmailAddress"
                 android:minHeight="48dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:background="@drawable/edit_text_field"
-                android:inputType="textEmailAddress"
                 android:text="@{viewModel.email}"
                 tools:ignore="Autofill,SpeakableTextPresentCheck" />
 
@@ -67,13 +68,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:background="@drawable/edit_text_field"
                 android:ems="12"
+                android:hint="@string/password"
+                android:inputType="textPassword"
                 android:minHeight="48dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:background="@drawable/edit_text_field"
-                android:hint="@string/password"
-                android:inputType="textPassword"
                 android:text="@{viewModel.password}"
                 tools:ignore="Autofill,SpeakableTextPresentCheck" />
 
@@ -84,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="60dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="60dp"
             android:layout_marginEnd="60dp"
             android:background="@drawable/slightly_rounded_button"
             android:text="@string/log_in_btn"

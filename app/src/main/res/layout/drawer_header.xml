@@ -5,30 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <ImageView
+    <include
         android:id="@+id/logo"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginStart="40dp"
-        app:layout_constraintTop_toTopOf="parent"
+        layout="@layout/logo_container"
+        android:layout_width="320dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="?attr/logo_pillwatch"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/appName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="230dp"
         android:fontFamily="@font/cocogoose_classic_medium_trial"
         android:text="@string/app_name"
         android:textColor="?attr/colorPrimary"
-        android:textSize="30sp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="70sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logo" />
 
     <View
         android:id="@+id/separating_line"
@@ -36,9 +34,8 @@
         android:layout_height="1dp"
         android:layout_marginTop="10dp"
         android:background="@android:color/darker_gray"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appName"/>
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

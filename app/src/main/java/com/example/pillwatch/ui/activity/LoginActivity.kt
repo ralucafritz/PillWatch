@@ -3,12 +3,9 @@ package com.example.pillwatch.ui.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.ViewModelProvider
 import com.example.pillwatch.R
 import com.example.pillwatch.data.datasource.local.AppDatabase
@@ -35,7 +32,6 @@ class LoginActivity : AppCompatActivity() {
         setTheme(R.style.AppTheme)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         val userDao = AppDatabase.getInstance(application).userDao
 
@@ -66,8 +62,7 @@ class LoginActivity : AppCompatActivity() {
         // signup txt on click
         binding.signup.setOnClickListener {
             val intent = navigateToActivity(R.id.signupActivity)
-            startActivity(intent)
-            finish()
+            getResult.launch(intent)
         }
 
         val callback = object : OnBackPressedCallback(true) {
@@ -125,6 +120,12 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         )
+    }
+
+    private val getResult = registerForActivityResult( ActivityResultContracts.StartActivityForResult()) {
+        if(it.resultCode == Activity.RESULT_OK) {
+            success()
+        }
     }
 
     private fun success() {
