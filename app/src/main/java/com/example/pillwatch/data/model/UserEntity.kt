@@ -7,23 +7,23 @@ import com.example.pillwatch.utils.Role
 import java.util.UUID
 
 @Entity(tableName = "users_table")
-data class UserEntity (
+data class UserEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name= "id")
+    @ColumnInfo(name = "id")
     val id: Long = 0L,
 
-    @ColumnInfo(name= "email")
+    @ColumnInfo(name = "email")
     val email: String,
 
-    @ColumnInfo(name= "username")
+    @ColumnInfo(name = "username")
     val username: String?,
 
-    @ColumnInfo(name= "password")
+    @ColumnInfo(name = "password")
     val password: String,
 
-    @ColumnInfo(name= "idToken")
+    @ColumnInfo(name = "idToken")
     val idToken: String?,
 
-    @ColumnInfo(name= "role")
+    @ColumnInfo(name = "role")
     val role: Role
-    )
+)

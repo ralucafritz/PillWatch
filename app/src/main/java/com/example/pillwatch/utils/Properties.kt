@@ -4,20 +4,20 @@ import com.google.firebase.auth.AuthResult
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
-data class MedsDataShaProperty (
+data class MedsDataShaProperty(
     val file: List<MedsDataProperty>,
     val sha: String
 )
 
 @JsonClass(generateAdapter = true)
 data class MedsDataProperty(
-    @Json(name ="Trade name")val tradeName: String,
-    @Json(name ="DCI") val dci: String,
-    @Json(name ="Dosage Form") val dosageForm: String,
-    @Json( name ="Concentration") val concentration: String,
+    @Json(name = "Trade name") val tradeName: String,
+    @Json(name = "DCI") val dci: String,
+    @Json(name = "Dosage Form") val dosageForm: String,
+    @Json(name = "Concentration") val concentration: String,
     @Json(name = "ATC Code") val atcCode: String,
-    @Json(name ="Last Update Date") val lastUpdateDate: String,
-    @Json(name ="RxCui") val rxCui: String
+    @Json(name = "Last Update Date") val lastUpdateDate: String,
+    @Json(name = "RxCui") val rxCui: String
 )
 
 data class ValidationProperty(
@@ -29,7 +29,7 @@ data class AuthResultProperty(
     var success: Boolean,
     var result: AuthResult?,
     var email: String?
-        )
+)
 
 data class InteractionProperty(
     var rxCui1: String,
@@ -38,4 +38,5 @@ data class InteractionProperty(
 )
 
 data class InteractionTestProperty(
-    val interaction:  List<List<InteractionProperty>>)
+    val interaction: List<List<InteractionProperty>>
+)
