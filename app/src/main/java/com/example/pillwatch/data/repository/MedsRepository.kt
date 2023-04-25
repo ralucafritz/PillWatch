@@ -10,17 +10,15 @@ import timber.log.Timber
 class MedsRepository(private val medsDao: MedsDao) {
 
     fun insertAll(dataList: List<MedsEntity>) {
-            medsDao.insertAll(dataList)
+        medsDao.insertAll(dataList)
     }
 
-    fun getAllMeds() : LiveData<List<MedsEntity>> {
-            return medsDao.getAllMeds()
+    fun getAllMeds(): LiveData<List<MedsEntity>> {
+        return medsDao.getAllMeds()
     }
 
-    fun searchMedsWithName(medName: String): List<String> {
-        val queryResult =  medsDao.searchMedsWithName(medName)
-        Timber.d(queryResult.toString())
-        return queryResult
+    fun searchMedsWithName(medName: String): List<MedsEntity> {
+        return medsDao.searchMedsWithName(medName)
     }
 
     fun clear() {

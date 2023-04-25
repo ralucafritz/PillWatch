@@ -63,6 +63,7 @@ class MedicationFragment : Fragment(){
             val medsList = viewModel.getMedsList()
             if(medsList != null) {
                 val adapter = MedsListAdapter(medsList)
+                recyclerView.adapter = adapter
             }
         }
 

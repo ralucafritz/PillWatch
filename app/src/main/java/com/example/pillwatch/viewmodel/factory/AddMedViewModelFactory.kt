@@ -9,12 +9,13 @@ import com.example.pillwatch.viewmodel.AddMedViewModel
 
 class AddMedViewModelFactory(
     private val medsDao: MedsDao,
+    private val userMedsDao: UserMedsDao,
     private val application: Application
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AddMedViewModel::class.java)) {
-            return AddMedViewModel(medsDao, application) as T
+            return AddMedViewModel(medsDao, userMedsDao, application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
