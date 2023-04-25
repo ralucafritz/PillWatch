@@ -50,11 +50,14 @@ class MainActivity : AppCompatActivity() {
         val userDao = AppDatabase.getInstance(application).userDao
         val medsDao = AppDatabase.getInstance(application).medsDao
         val metadataDao = AppDatabase.getInstance(application).metadataDao
+        val userMedsDao = AppDatabase.getInstance(application).userMedsDao
+        val alarmDao = AppDatabase.getInstance(application).alarmDao
+        val medsLogDao = AppDatabase.getInstance(application).medsLogDao
 
         /**
          *    ViewModels initializations
          */
-        val mainViewModelFactory = MainViewModelFactory(medsDao, metadataDao, userDao, application)
+        val mainViewModelFactory = MainViewModelFactory(medsDao, metadataDao, userDao, userMedsDao, medsLogDao, alarmDao,application)
         mainViewModel = ViewModelProvider(this, mainViewModelFactory)[MainViewModel::class.java]
 
         val medsViewModelFactory = MedsViewModelFactory(medsDao, metadataDao, application)

@@ -3,26 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="viewModel"
-            type="com.example.pillwatch.viewmodel.UsernameCreationViewModel" />
+            type="com.example.pillwatch.viewmodel.AddMedViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/colorPrimary"
-        tools:context=".ui.fragment.UsernameCreationFragment">
-
+        tools:context=".ui.fragment.AddMedFragment">
 
         <TextView
-            android:id="@+id/choose_username"
+            android:id="@+id/add_med_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginBottom="48dp"
-            android:text="@string/choose_an_username"
+            android:text="@string/add_the_medicine_name"
             android:textColor="?attr/colorPrimaryContainer"
             android:textSize="@dimen/text_size_xl"
             app:layout_constraintBottom_toTopOf="@+id/background"
@@ -40,18 +38,20 @@
             app:srcCompat="@drawable/rounded_rectangle"
             tools:ignore="ContentDescription,VisualLintBounds" />
 
-        <EditText
-            android:id="@+id/username_text"
+        <AutoCompleteTextView
+            android:id="@+id/med_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
             android:background="@drawable/edit_text_field"
             android:ems="12"
-            android:hint="@string/username"
+            android:hint="@string/medicine_name"
             android:inputType="text"
             android:minHeight="60dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
+            android:text="@={viewModel.medName}"
+            android:dropDownHeight="200dp"
             android:textSize="@dimen/text_size_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +59,7 @@
             tools:ignore="Autofill" />
 
         <ImageButton
-            android:id="@+id/button_next"
+            android:id="@+id/btn_next"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginEnd="64dp"
@@ -71,7 +71,6 @@
             android:paddingStart="10dp"
             android:paddingEnd="5dp"
             tools:ignore="ContentDescription,RtlSymmetry,SpeakableTextPresentCheck" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

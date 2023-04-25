@@ -9,7 +9,7 @@ import com.example.pillwatch.data.datasource.local.MedsDao
 import com.example.pillwatch.data.datasource.local.MetadataDao
 import com.example.pillwatch.data.model.MedsEntity
 import com.example.pillwatch.data.model.MetadataEntity
-import com.example.pillwatch.data.repository.MedsDataRepository
+import com.example.pillwatch.data.repository.MedsRepository
 import com.example.pillwatch.data.repository.MetadataRepository
 import com.example.pillwatch.network.AppApi
 import com.example.pillwatch.utils.InteractionProperty
@@ -36,7 +36,7 @@ class MedsViewModel(
     }
 
     // repositories
-    private val medsDataRepository: MedsDataRepository = MedsDataRepository(medsDao)
+    private val medsRepository: MedsRepository = MedsRepository(medsDao)
     private val metadataRepository: MetadataRepository = MetadataRepository(metadataDao)
     // mutable live data
     private val _responseMedsDataAPI = MutableLiveData<MedsDataShaProperty>()
@@ -87,7 +87,7 @@ class MedsViewModel(
                         // change to a different thread than Main
                         dbCoroutineScope.launch {
                             // Insert the meds in the database
-                            medsDataRepository.insertAll(entitiesList)
+                            medsRepository.insertAll(entitiesList)
                         }
                         // log the result
                         _updateDialogTitle.value = "Success"
@@ -185,7 +185,7 @@ class MedsViewModel(
         // change from Main Thread
         dbCoroutineScope.launch {
             // clear the meds_data_table
-            medsDataRepository.clear()
+            medsRepository.clear()
             // log the result
             Timber.tag(TAG_MEDS_DB).d("Meds table cleared successfully.")
         }
@@ -195,8 +195,8 @@ class MedsViewModel(
         // return the entity from the property
         return MedsEntity(
             0L,
-            data.tradeName,
-            data.dci,
+            data.tradeName.lowercase(),
+            data.dci.lowercase(),
             data.dosageForm,
             data.concentration,
             data.atcCode,

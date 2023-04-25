@@ -73,6 +73,9 @@
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_addMedFragment"
+            app:destination="@id/addMedFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -95,9 +98,20 @@
         <action
             android:id="@+id/action_medicationFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_medicationFragment_to_addMedFragment"
+            app:destination="@id/addMedFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.pillwatch.ui.fragment.ProfileFragment"
         android:label="ProfileFragment" />
+    <fragment
+        android:id="@+id/addMedFragment"
+        android:name="com.example.pillwatch.ui.fragment.AddMedFragment"
+        android:label="AddMedFragment" >
+        <action
+            android:id="@+id/action_addMedFragment_to_medicationFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>
