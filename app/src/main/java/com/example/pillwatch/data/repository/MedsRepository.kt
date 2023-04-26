@@ -21,6 +21,10 @@ class MedsRepository(private val medsDao: MedsDao) {
         return medsDao.searchMedsWithName(medName)
     }
 
+    fun getRxCuiForMed(medId: Long): String {
+        return medsDao.getRxCuiForMed(medId)
+    }
+
     fun clear() {
         medsDao.clear()
     }

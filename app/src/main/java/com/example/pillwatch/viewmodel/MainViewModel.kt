@@ -60,14 +60,13 @@ class MainViewModel(
 
     fun clear() {
         viewModelScope.launch{
-            cleanMedsData()
-            cleanMetadata()
-            cleanUsers()
+//            cleanMedsData()
+//            cleanMetadata()
+//            cleanUsers()
             cleanUserMeds()
             cleanAlarms()
             cleanMedsLog()
         }
-        logout()
     }
 
     private suspend fun cleanMedsData() {

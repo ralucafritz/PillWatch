@@ -5,9 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -22,10 +19,9 @@ import com.example.pillwatch.utils.extensions.FragmentExtensions.navBarVisibilit
 import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarVisibilityState
 import com.example.pillwatch.viewmodel.AddMedViewModel
 import com.example.pillwatch.viewmodel.factory.AddMedViewModelFactory
-import kotlinx.coroutines.NonDisposableHandle.parent
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
+import timber.log.Timber
 
 class AddMedFragment : Fragment() {
 
@@ -52,7 +48,7 @@ class AddMedFragment : Fragment() {
         val application = requireNotNull(this.activity).application
 
         val medsDao = AppDatabase.getInstance(application).medsDao
-        val userMedsDao =  AppDatabase.getInstance(application).userMedsDao
+        val userMedsDao = AppDatabase.getInstance(application).userMedsDao
 
         val viewModelFactory = AddMedViewModelFactory(medsDao, userMedsDao, application)
         viewModel = ViewModelProvider(this, viewModelFactory)[AddMedViewModel::class.java]
@@ -60,33 +56,33 @@ class AddMedFragment : Fragment() {
 
         binding.btnNext.setOnClickListener {
             lifecycleScope.launch {
-                viewModel.addMedToUser()
+                viewModel.addMedToUser(requireContext())
+                viewModel.medDbSaveStatus.observe(viewLifecycleOwner, Observer {
+                    if( it != null && it) {
+                        viewModel.navigateAfterAdd(navController)
+                    }
+                })
             }
-            viewModel.navigateToMedication(navController)
         }
 
         // Lifecycle
         binding.lifecycleOwner = this
 
+
         viewModel.medName.observe(viewLifecycleOwner, Observer {
             lifecycleScope.launch {
-                if (viewModel.medName.value != null && viewModel.medName.value!!.length >= 3) {
+                if (viewModel.medName.value != null) {
                     viewModel.searchMedName(it)
-                    if (viewModel.searchList.isNotEmpty()) {
-                        val adapter = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.select_dialog_item,
-                            viewModel.searchList
-                        )
-                        binding.medName.setAdapter(adapter)
-                    }
+                    val adapter =  AutoCompleteAdapter(requireContext(),  Pair(viewModel.nameList ?: listOf<String>(), viewModel.concentrationList  ?: listOf<String>()))
+                    binding.medName.setAdapter(adapter)
                 }
             }
         })
 
-        binding.medName.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            viewModel.getPairAtPosition(position)
-        }
+        binding.medName.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, id ->
+                viewModel.getPairAtPosition(position)
+            }
 
         return binding.root
     }

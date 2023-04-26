@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.data.model.MedsEntity
 import com.example.pillwatch.data.model.MedsLogEntity
@@ -46,6 +47,14 @@ abstract class AppDatabase : RoomDatabase() {
                         "pill_watch_database"
                     )
                         .fallbackToDestructiveMigration()
+                        .addCallback(object : RoomDatabase.Callback() {
+                            override fun onOpen(db: SupportSQLiteDatabase) {
+                                super.onOpen(db)
+                                db.execSQL("PRAGMA foreign_keys=ON;")
+                                db.setForeignKeyConstraintsEnabled(true)
+                                db.enableWriteAheadLogging()
+                            }
+                        })
                         .build()
                     INSTANCE = instance
                 }

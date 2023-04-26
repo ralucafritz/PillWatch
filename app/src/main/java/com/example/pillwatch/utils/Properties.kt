@@ -14,7 +14,7 @@ data class MedsDataProperty(
     @Json(name = "Trade name") val tradeName: String,
     @Json(name = "DCI") val dci: String,
     @Json(name = "Dosage Form") val dosageForm: String,
-    @Json(name = "Concentration") val concentration: String,
+    @Json(name = "Concentration") val concentration: String = "",
     @Json(name = "ATC Code") val atcCode: String,
     @Json(name = "Last Update Date") val lastUpdateDate: String,
     @Json(name = "RxCui") val rxCui: String

@@ -21,6 +21,9 @@ interface MedsDao {
     @Query("SELECT * FROM meds_table WHERE trade_name LIKE '%' ||  :medName || '%' ")
     fun searchMedsWithName(medName: String):List<MedsEntity>
 
+    @Query("SELECT rxcui FROM meds_table WHERE id = :medId")
+    fun getRxCuiForMed(medId: Long): String
+
     @Query("SELECT * FROM meds_table WHERE trade_name LIKE :inputText")
     fun getMedsWithSimilarName(inputText: String) : LiveData<List<MedsEntity>>
 }

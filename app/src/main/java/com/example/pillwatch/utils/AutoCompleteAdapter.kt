@@ -4,20 +4,18 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
+import android.widget.BaseAdapter
 import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
 import com.example.pillwatch.R
-import com.example.pillwatch.data.model.MedsEntity
 import java.util.Locale
 
-class AutoCompleteAdapter (context: Context, medsList: List<MedsEntity>) :  ArrayAdapter<MedsEntity>(context, 0, medsList) {
+class AutoCompleteAdapter (private val context: Context, private val medsData: Pair<List<String>, List<String>>) :  BaseAdapter(), Filterable {
 
-    private var filteredMedsList: List<MedsEntity> = ArrayList()
-
-    override fun getFilter(): Filter {
-        return medFilter
-    }
+    private val medConcs = medsData.second
+    private val medNames = medsData.first
+    private var filteredData: List<String> = medsData.first
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var convertViewVar = convertView
@@ -28,44 +26,52 @@ class AutoCompleteAdapter (context: Context, medsList: List<MedsEntity>) :  Arra
             )
         }
 
-        val medLabel: TextView = convertViewVar!!.findViewById(R.id.autocomplete_item_place_label)
+        val medLabel: TextView = convertViewVar!!.findViewById(R.id.autocomplete_item_med_label)
+        val concLabel: TextView = convertViewVar!!.findViewById(R.id.autocomplete_item_conc_label)
 
-        val med = getItem(position)
-        if (med != null) {
-            medLabel.text = med.tradeName
+        if(medNames.isNotEmpty() && medConcs.isNotEmpty()) {
+            val medName = medNames.getOrNull(position)
+            val medConc = medConcs.getOrNull(position)
+
+            medLabel.text = medName ?: ""
+            concLabel.text = medConc ?: ""
+
         }
 
         return convertViewVar!!
     }
 
-    private val medFilter = object : Filter() {
-        override fun performFiltering(constraint: CharSequence?): FilterResults {
-            val results = FilterResults()
-            filteredMedsList = ArrayList()
-
-            filteredMedsList = if (constraint.isNullOrEmpty()) {
-                medsList
-            } else {
-                val filterPattern = constraint.toString().lowercase(Locale.ROOT).trim()
-                medsList.filter { it.tradeName.lowercase(Locale.ROOT).contains(filterPattern) }
-            }
-
-            results.values = filteredMedsList
-            results.count = filteredMedsList.size
-
-            return results
-        }
-
-        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-            clear()
-            val filteredList = results?.values as? List<MedsEntity> ?: emptyList()
-            addAll(filteredList)
-            notifyDataSetChanged()
-        }
-
-        override fun convertResultToString(resultValue: Any?): CharSequence {
-            return (resultValue as MedsEntity).tradeName
-        }
+    override fun getItem(position: Int): Any {
+        return medsData.first[position]
     }
 
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getCount(): Int {
+        return medNames.size
+    }
+
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+        val view = super.getDropDownView(position, convertView, parent)
+        val dropDownHeight =  200
+        parent.layoutParams.height = dropDownHeight
+        return view
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val results = FilterResults()
+                results.values = medNames
+                results.count = medNames.size
+                return results
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                notifyDataSetChanged()
+            }
+        }
+    }
 }

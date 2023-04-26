@@ -112,6 +112,6 @@
         android:label="AddMedFragment" >
         <action
             android:id="@+id/action_addMedFragment_to_medicationFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/medicationFragment" />
     </fragment>
 </navigation>

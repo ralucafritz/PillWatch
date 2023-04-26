@@ -2,6 +2,7 @@ package com.example.pillwatch.data.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -9,12 +10,15 @@ import androidx.room.PrimaryKey
     foreignKeys = [ForeignKey(
         entity = UserEntity::class,
         parentColumns = ["id"],
-        childColumns = ["userId"]
+        childColumns = ["userId"],
+        onDelete = ForeignKey.CASCADE
     ), ForeignKey(
         entity = MedsEntity::class,
         parentColumns = ["id"],
-        childColumns = ["medId"]
-    )]
+        childColumns = ["medId"],
+        onDelete = ForeignKey.CASCADE
+    )],
+    indices = [Index("userId"), Index("medId")]
 )
 data class UserMedsEntity(
     @PrimaryKey(autoGenerate = true)
