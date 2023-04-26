@@ -42,6 +42,10 @@ class HomeFragment : Fragment(){
         viewModel = ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]
         binding.viewModel = viewModel
 
+        binding.btnAdd.setOnClickListener {
+            viewModel.navigateToAddAMed(navController)
+        }
+
         // Lifecycle
         binding.lifecycleOwner = this
 

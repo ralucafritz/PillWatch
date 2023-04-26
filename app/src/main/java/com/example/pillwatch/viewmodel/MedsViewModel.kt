@@ -9,7 +9,7 @@ import com.example.pillwatch.data.datasource.local.MedsDao
 import com.example.pillwatch.data.datasource.local.MetadataDao
 import com.example.pillwatch.data.model.MedsEntity
 import com.example.pillwatch.data.model.MetadataEntity
-import com.example.pillwatch.data.repository.MedsDataRepository
+import com.example.pillwatch.data.repository.MedsRepository
 import com.example.pillwatch.data.repository.MetadataRepository
 import com.example.pillwatch.network.AppApi
 import com.example.pillwatch.utils.InteractionProperty
@@ -36,21 +36,11 @@ class MedsViewModel(
     }
 
     // repositories
-    private val medsDataRepository: MedsDataRepository = MedsDataRepository(medsDao)
+    private val medsRepository: MedsRepository = MedsRepository(medsDao)
     private val metadataRepository: MetadataRepository = MetadataRepository(metadataDao)
     // mutable live data
     private val _responseMedsDataAPI = MutableLiveData<MedsDataShaProperty>()
-    val responseMedsDataAPI: LiveData<MedsDataShaProperty>
-        get() = _responseMedsDataAPI
-
-    private val _responseInteractionDataAPI = MutableLiveData<List<InteractionProperty>>()
-    val responseInteractionDataAPI: LiveData<List<InteractionProperty>>
-        get() = _responseInteractionDataAPI
-
     private val _checkUpdateResult = MutableLiveData<Boolean?>()
-    val checkUpdateResult: LiveData<Boolean?>
-        get() = _checkUpdateResult
-
     private val _updateMessage = MutableLiveData<String>()
     val updateMessage: LiveData<String>
         get() = _updateMessage
@@ -86,8 +76,9 @@ class MedsViewModel(
                     if (entitiesList.isNotEmpty()) {
                         // change to a different thread than Main
                         dbCoroutineScope.launch {
+                            medsRepository.clear()
                             // Insert the meds in the database
-                            medsDataRepository.insertAll(entitiesList)
+                            medsRepository.insertAll(entitiesList)
                         }
                         // log the result
                         _updateDialogTitle.value = "Success"
@@ -104,7 +95,7 @@ class MedsViewModel(
                     }
                 } else {
                     // log the result
-                    _updateDialogTitle.value = "Success"
+                    _updateDialogTitle.value = "No update required"
                     _updateMessage.value = UP_TO_DATE
                     Timber.tag(TAG_MEDS_DB)
                         .d("Meds were not introduced into the database. $UP_TO_DATE")
@@ -121,27 +112,6 @@ class MedsViewModel(
         return Result.success(result)
     }
 
-    fun getInteractionDataFromAPI() {
-        val interactionList = mutableListOf<InteractionProperty>()
-        viewModelScope.launch {
-            try {
-                // call the API
-                val responseInteractionDataAPI =
-                    AppApi.retrofitService.getInteractionData("207106", listOf("152923", "656659"))
-
-                for (lists in responseInteractionDataAPI.interaction) {
-                    lists.forEach {
-                        interactionList.add(it)
-                    }
-                }
-                _responseInteractionDataAPI.value = interactionList
-                Timber.tag(TAG_INTERACTION).d(responseInteractionDataAPI.toString())
-
-            } catch (e: Exception) {
-                Timber.tag(TAG_INTERACTION).e("Server error $e.printStackTrace().toString()")
-            }
-        }
-    }
 
     private suspend fun checkNewSha(newSha: String): Boolean {
         // get the current value of SHA
@@ -170,7 +140,6 @@ class MedsViewModel(
                 // update the current sha value with the new value
                 metadataRepository.update(MetadataEntity(currentSha.id, SHA, newSha))
                 // clear the meds_data_table in order for the new data to be introduced
-                clearMedsData()
             }
             // log the result
             Timber.tag(TAG_MEDS_DB).d("SHA value updated")
@@ -185,7 +154,7 @@ class MedsViewModel(
         // change from Main Thread
         dbCoroutineScope.launch {
             // clear the meds_data_table
-            medsDataRepository.clear()
+            medsRepository.clear()
             // log the result
             Timber.tag(TAG_MEDS_DB).d("Meds table cleared successfully.")
         }

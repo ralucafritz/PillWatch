@@ -5,13 +5,18 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pillwatch.data.datasource.local.AlarmDao
 import com.example.pillwatch.data.datasource.local.MedsDao
+import com.example.pillwatch.data.datasource.local.MedsLogDao
 import com.example.pillwatch.data.datasource.local.MetadataDao
 import com.example.pillwatch.data.datasource.local.UserDao
-import com.example.pillwatch.data.repository.MedsDataRepository
+import com.example.pillwatch.data.datasource.local.UserMedsDao
+import com.example.pillwatch.data.repository.AlarmRepository
+import com.example.pillwatch.data.repository.MedsRepository
+import com.example.pillwatch.data.repository.MedsLogRepository
 import com.example.pillwatch.data.repository.MetadataRepository
+import com.example.pillwatch.data.repository.UserMedsRepository
 import com.example.pillwatch.data.repository.UserRepository
 import com.example.pillwatch.utils.extensions.ContextExtensions.setLoggedInStatus
 import com.example.pillwatch.utils.extensions.ContextExtensions.setPreference
@@ -23,12 +28,18 @@ class MainViewModel(
     medsDao: MedsDao,
     metadataDao: MetadataDao,
     userDao: UserDao,
+    userMedsDao: UserMedsDao,
+    medsLogDao: MedsLogDao,
+    alarmDao: AlarmDao,
     application: Application)
     : AndroidViewModel(application) {
 
-    private val repositoryMeds = MedsDataRepository(medsDao)
-    private val repositoryMetadata = MetadataRepository(metadataDao)
-    private val repositoryUser = UserRepository(userDao)
+    private val medsRepository = MedsRepository(medsDao)
+    private val metadataRepository = MetadataRepository(metadataDao)
+    private val userRepository = UserRepository(userDao)
+    private val userMedsRepository = UserMedsRepository(userMedsDao)
+    private val medsLogRepository = MedsLogRepository(medsLogDao)
+    private val alarmRepository = AlarmRepository(alarmDao)
 
     private val _currentFragmentId = MutableLiveData<Int>()
     val currentFragmentId: LiveData<Int>
@@ -49,30 +60,48 @@ class MainViewModel(
 
     fun clear() {
         viewModelScope.launch{
-            cleanMedsData()
-            cleanMetadata()
-            cleanUsers()
+//            cleanMedsData()
+//            cleanMetadata()
+//            cleanUsers()
+            cleanUserMeds()
+            cleanAlarms()
+            cleanMedsLog()
         }
-        logout()
     }
 
     private suspend fun cleanMedsData() {
         withContext(Dispatchers.IO) {
-            repositoryMeds.clear()
+            medsRepository.clear()
         }
     }
 
 
     private suspend fun cleanMetadata() {
         withContext(Dispatchers.IO) {
-            repositoryMetadata.clear()
+            metadataRepository.clear()
         }
     }
 
 
     private suspend fun cleanUsers() {
         withContext(Dispatchers.IO) {
-            repositoryUser.clear()
+            userRepository.clear()
+        }
+    }
+
+    private suspend fun cleanUserMeds() {
+        withContext(Dispatchers.IO) {
+            userMedsRepository.clear()
+        }
+    }
+    private suspend fun cleanAlarms() {
+        withContext(Dispatchers.IO) {
+            alarmRepository.clear()
+        }
+    }
+    private suspend fun cleanMedsLog() {
+        withContext(Dispatchers.IO) {
+            medsLogRepository.clear()
         }
     }
 }

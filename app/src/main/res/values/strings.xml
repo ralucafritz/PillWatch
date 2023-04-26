@@ -36,4 +36,8 @@
     <string name="profile">Profile</string>
     <string name="check_for_updates">Check for meds updates</string>
     <string name="an_app_for_your_needs">An app for your needs</string>
+    <string name="add_a_med">Add a med</string>
+    <string name="medname">MedName</string>
+    <string name="add_the_medicine_name">Add the medicine name:</string>
+    <string name="medicine_name">Medicine name</string>
 </resources>

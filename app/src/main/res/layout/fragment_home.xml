@@ -34,7 +34,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/button_next"
+            android:id="@+id/btn_add"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginEnd="30dp"
