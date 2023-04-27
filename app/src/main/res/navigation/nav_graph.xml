@@ -113,5 +113,24 @@
         <action
             android:id="@+id/action_addMedFragment_to_medicationFragment"
             app:destination="@id/medicationFragment" />
+        <action
+            android:id="@+id/action_addMedFragment_to_chooseAlarmFragment"
+            app:destination="@id/chooseAlarmFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseAlarmFragment"
+        android:name="com.example.pillwatch.ui.fragment.ChooseAlarmFragment"
+        android:label="ChooseAlarmFragment" >
+        <action
+            android:id="@+id/action_chooseAlarmFragment_to_setAlarmsFragment"
+            app:destination="@id/setAlarmsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/setAlarmsFragment"
+        android:name="com.example.pillwatch.ui.fragment.SetAlarmsFragment"
+        android:label="SetAlarmsFragment" >
+        <action
+            android:id="@+id/action_setAlarmsFragment_to_medicationFragment"
+            app:destination="@id/medicationFragment" />
     </fragment>
 </navigation>

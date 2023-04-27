@@ -1,0 +1,61 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.pillwatch.viewmodel.ChooseAlarmViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorPrimary"
+        tools:context=".ui.fragment.ChooseAlarmFragment">
+
+
+        <TextView
+            android:id="@+id/choose_alarm_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginBottom="48dp"
+            android:text="Choose alarm frequency:"
+            android:textColor="?attr/colorPrimaryContainer"
+            android:textSize="@dimen/text_size_xl"
+            app:layout_constraintBottom_toTopOf="@+id/background"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="450dp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="200dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/rounded_rectangle"
+            tools:ignore="ContentDescription,VisualLintBounds" />
+
+
+        <ImageButton
+            android:id="@+id/button_next"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginEnd="64dp"
+            android:layout_marginBottom="64dp"
+            android:background="@drawable/slightly_rounded_button"
+            app:layout_constraintBottom_toBottomOf="@+id/background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_right_double_arrow"
+            android:paddingStart="10dp"
+            android:paddingEnd="5dp"
+            tools:ignore="ContentDescription,RtlSymmetry,SpeakableTextPresentCheck" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

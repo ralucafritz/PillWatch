@@ -42,9 +42,7 @@ object FragmentExtensions {
      */
     fun Fragment.navBarVisibilityState(activity: Activity, fragmentId: Int) {
         val visibleStatus = when (fragmentId) {
-            R.id.homeFragment -> View.VISIBLE
-            R.id.medicationFragment -> View.VISIBLE
-            R.id.settingsFragment -> View.VISIBLE
+            R.id.homeFragment, R.id.medicationFragment, R.id.settingsFragment -> View.VISIBLE
             else -> View.GONE
         }
 
@@ -57,9 +55,7 @@ object FragmentExtensions {
      */
     fun Fragment.toolbarVisibilityState(activity: Activity, fragmentId: Int) {
         val showStatus = when (fragmentId) {
-            R.id.homeFragment -> true
-            R.id.medicationFragment -> true
-            R.id.settingsFragment -> true
+            R.id.homeFragment, R.id.medicationFragment , R.id.settingsFragment-> true
             else -> false
         }
 
