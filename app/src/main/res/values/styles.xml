@@ -1,0 +1,5 @@
+<resources>
+    <style name="SpinnerItemText" parent="@android:style/Widget.TextView.SpinnerItem">
+        <item name="android:background">@drawable/spinner_item_background</item>
+    </style>
+</resources>

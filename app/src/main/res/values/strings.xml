@@ -37,7 +37,25 @@
     <string name="check_for_updates">Check for meds updates</string>
     <string name="an_app_for_your_needs">An app for your needs</string>
     <string name="add_a_med">Add a med</string>
-    <string name="medname">MedName</string>
+    <string name="medName">MedName</string>
     <string name="add_the_medicine_name">Add the medicine name:</string>
     <string name="medicine_name">Medicine name</string>
+    <string name="concentration">concentration</string>
+
+    <string-array name="concentration_measures">
+        <item>-</item>
+        <item>mg</item>
+        <item>ml</item>
+        <item>g</item>
+        <item>%</item>
+        <item>UI</item>
+        <item>MU</item>
+        <item>micrograms</item>
+        <item>mg/ml</item>
+        <item>mg/g</item>
+        <item>µg/ml</item>
+        <item>MU/ml</item>
+        <item>UI/ml</item>
+    </string-array>
+
 </resources>

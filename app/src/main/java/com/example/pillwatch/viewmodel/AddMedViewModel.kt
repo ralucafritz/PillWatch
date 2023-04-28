@@ -19,7 +19,6 @@ import com.example.pillwatch.utils.InteractionProperty
 import com.example.pillwatch.utils.extensions.ContextExtensions.getPreference
 import com.example.pillwatch.utils.extensions.ContextExtensions.showAlert
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -35,13 +34,14 @@ class AddMedViewModel(
     private val context: Context by lazy { application.applicationContext }
 
     val medName = MutableLiveData("")
+    val concentrationEditText = MutableLiveData ("")
 
     private val medsRepository = MedsRepository(medsDao)
     private val userMedsRepository = UserMedsRepository(userMedsDao)
 
     private val _responseInteractionDataAPI = MutableLiveData<List<InteractionProperty>>()
-    private val _selectedPairNumber = MutableLiveData<Int>()
-    private val _selectedPair = MutableLiveData<MedsEntity>()
+    private val _selectedMedNumber = MutableLiveData<Int>()
+    private val _selectedMed = MutableLiveData<MedsEntity>()
     private val _pairList = MutableLiveData<List<MedsEntity>>()
 
     val concentrationList: MutableList<String> = mutableListOf()
@@ -80,23 +80,23 @@ class AddMedViewModel(
     }
 
     fun getPairAtPosition(position: Int) {
-        _selectedPairNumber.value = position
-        _selectedPair.value = _pairList.value?.get(position)
+        _selectedMedNumber.value = position
+        _selectedMed.value = _pairList.value?.get(position)
+        concentrationEditText.value = _selectedMed.value!!.concentration ?: ""
     }
 
     suspend fun addMedToUser(context: Context) {
         val userId = context.getPreference("id", 0L).toString().toLong()
         val medId: Long?
         val name: String
-        if (_selectedPair.value != null && medName.value != "") {
-            if (_selectedPair.value!!.tradeName == medName.value) {
-                medId = _selectedPair.value!!.id
-                name = _selectedPair.value!!.tradeName
+        if (_selectedMed.value != null && medName.value != "") {
+            if (_selectedMed.value!!.tradeName == medName.value) {
+                medId = _selectedMed.value!!.id
+                name = _selectedMed.value!!.tradeName
             } else {
                 medId = null
                 name = medName.value!!
             }
-
             if (medId != null) {
                 viewModelScope.launch {
                     checkInteraction(medId, userId, context)
@@ -108,7 +108,8 @@ class AddMedViewModel(
                                     0L,
                                     name,
                                     userId,
-                                    medId
+                                    medId,
+                                    concentrationEditText.value
                                 )
                             )
                         }
@@ -118,6 +119,20 @@ class AddMedViewModel(
                     }
                 }
             }
+        }
+        if(medName.value!=null) {
+            withContext(Dispatchers.IO) {
+                userMedsRepository.insert(
+                    UserMedsEntity(
+                        0L,
+                        medName.value!!,
+                        userId,
+                        null,
+                        concentrationEditText.value
+                    )
+                )
+            }
+            medDbSaveStatus.value = true
         }
     }
 
@@ -230,19 +245,19 @@ class AddMedViewModel(
         var count = 0
         if (lowCount > 0) {
             val severityLowPairs =
-                severityLow.filter { it.first == _selectedPair.value?.rxCui || it.second == _selectedPair.value?.rxCui }
+                severityLow.filter { it.first == _selectedMed.value?.rxCui || it.second == _selectedMed.value?.rxCui }
             builder.append("- ${severityLowPairs.size} low severity\n")
             count += severityLowPairs.size
         }
         if (moderateCount > 0) {
             val severityModeratePairs =
-                severityModerate.filter { it.first == _selectedPair.value?.rxCui || it.second == _selectedPair.value?.rxCui }
+                severityModerate.filter { it.first == _selectedMed.value?.rxCui || it.second == _selectedMed.value?.rxCui }
             builder.append("- ${severityModeratePairs.size} moderate severity\n")
             count += severityModeratePairs.size
         }
         if (highCount > 0) {
             val severityHighPairs =
-                severityHigh.filter { it.first == _selectedPair.value?.rxCui || it.second == _selectedPair.value?.rxCui }
+                severityHigh.filter { it.first == _selectedMed.value?.rxCui || it.second == _selectedMed.value?.rxCui }
             builder.append("- ${severityHighPairs.size} high severity\n")
             count += severityHighPairs.size
         }

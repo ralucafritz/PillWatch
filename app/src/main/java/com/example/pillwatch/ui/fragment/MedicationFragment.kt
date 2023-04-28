@@ -62,7 +62,7 @@ class MedicationFragment : Fragment(){
         lifecycleScope .launch {
             val medsList = viewModel.getMedsList()
             if(medsList != null) {
-                val adapter = MedsListAdapter(medsList)
+                val adapter = MedsListAdapter(requireContext(), medsList)
                 recyclerView.adapter = adapter
             }
         }

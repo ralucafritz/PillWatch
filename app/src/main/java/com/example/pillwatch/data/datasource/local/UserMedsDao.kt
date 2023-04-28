@@ -15,7 +15,6 @@ interface UserMedsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(userMedList : List<UserMedsEntity>)
 
-
     @Query("SELECT * FROM user_meds_table WHERE userId = :userId")
     fun getMedsForUserId(userId: Long): List<UserMedsEntity>
 

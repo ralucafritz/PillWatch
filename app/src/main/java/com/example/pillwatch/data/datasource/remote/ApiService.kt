@@ -14,7 +14,7 @@ private const val  IP_PC = "192.168.56.1"
 private const val  IP_LAPTOP = "192.168.0.24"
 
 
-private const val BASE_URL = "http://${IP_PC}:3000/"
+private const val BASE_URL = "http://${IP_LAPTOP}:3000/"
 
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())

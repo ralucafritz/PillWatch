@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,16 +20,14 @@ import com.example.pillwatch.utils.extensions.FragmentExtensions.navBarVisibilit
 import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarVisibilityState
 import com.example.pillwatch.viewmodel.AddMedViewModel
 import com.example.pillwatch.viewmodel.factory.AddMedViewModelFactory
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import timber.log.Timber
+
 
 class AddMedFragment : Fragment() {
 
     private lateinit var binding: FragmentAddMedBinding
     private lateinit var navController: NavController
     private lateinit var viewModel: AddMedViewModel
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,6 +53,16 @@ class AddMedFragment : Fragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)[AddMedViewModel::class.java]
         binding.viewModel = viewModel
 
+//        val items = resources.getStringArray(R.array.concentration_measures)
+//        val adapter: ArrayAdapter<String> = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item, items)
+//        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+//        binding.concentrationSpinner.adapter = adapter
+//        binding.concentrationSpinner.isEnabled = true
+//        binding.concentrationValueText.isEnabled = true
+
+        // Lifecycle
+        binding.lifecycleOwner = this
+
         binding.btnNext.setOnClickListener {
             lifecycleScope.launch {
                 viewModel.addMedToUser(requireContext())
@@ -64,10 +73,6 @@ class AddMedFragment : Fragment() {
                 })
             }
         }
-
-        // Lifecycle
-        binding.lifecycleOwner = this
-
 
         viewModel.medName.observe(viewLifecycleOwner, Observer {
             lifecycleScope.launch {
@@ -86,4 +91,5 @@ class AddMedFragment : Fragment() {
 
         return binding.root
     }
+
 }

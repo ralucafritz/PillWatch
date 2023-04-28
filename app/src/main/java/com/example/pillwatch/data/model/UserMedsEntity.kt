@@ -26,5 +26,6 @@ data class UserMedsEntity(
     val tradeName: String,
     val userId: Long,
     val medId: Long? = null,
+    val concentration: String? = ""
 ) {
 }

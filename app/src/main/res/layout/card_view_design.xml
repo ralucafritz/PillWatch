@@ -21,17 +21,48 @@
             android:layout_height="55dp"
             android:src="@drawable/ic_alarm_2"
             app:tint="?attr/colorPrimary"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            android:layout_gravity="center_vertical"/>
 
-        <TextView
-            android:id="@+id/med_item_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="15dp"
-            android:text="@string/medname"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/med_item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                tools:text="@string/medName"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+           <ImageView
+               android:id="@+id/med_item_fab"
+               android:layout_width="17dp"
+               android:layout_height="17dp"
+               android:layout_marginStart="3dp"
+               android:layout_gravity="center_vertical" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"/>
+
+           <TextView
+               android:id="@+id/med_item_conc"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="10dp"
+               android:layout_marginEnd="15dp"
+               tools:text="x mg/ml"
+               android:textSize="15sp"
+               android:textStyle="italic"
+               tools:ignore="HardcodedText" />
+       </LinearLayout>
 
     </LinearLayout>
 

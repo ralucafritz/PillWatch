@@ -1,6 +1,8 @@
 
 <resources>
     <color name="seed">#6750A4</color>
+    <color name ="green">#358E06</color>
+    <color name = "red" >#FFBA1A1A</color>
     <color name="md_theme_light_primary">#6750A4</color>
     <color name="md_theme_light_onPrimary">#FFFFFF</color>
     <color name="md_theme_light_primaryContainer">#E9DDFF</color>
