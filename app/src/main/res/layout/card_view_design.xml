@@ -15,13 +15,23 @@
         android:padding="5dp"
         tools:ignore="UseCompoundDrawables">
 
-    <ViewStub
-        android:id="@+id/pill_image_med_item"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:inflatedId="@+id/pills_container"
-        android:layout="@layout/pills_container"
-        android:layout_gravity="center_vertical"/>
+        <FrameLayout
+            android:id="@+id/pills_container"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/pill_image_med_item"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="7dp"
+                android:src="?attr/logo_pills"
+                tools:ignore="ContentDescription" />
+
+        </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -27,7 +27,6 @@ class MedsListAdapter(private val context: Context, private val medList: List<Us
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val med = medList[position]
-        holder.img.inflate()
         holder.medItemName.text = med.tradeName
         holder.medItemConc.text = med.concentration
         if(med.medId != null) {
@@ -40,7 +39,7 @@ class MedsListAdapter(private val context: Context, private val medList: List<Us
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val img: ViewStub
+        val img: ImageView
         val medItemName: TextView
         val medItemConc: TextView
         val medItemFab: ImageView
