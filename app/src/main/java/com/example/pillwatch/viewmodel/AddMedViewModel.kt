@@ -58,8 +58,8 @@ class AddMedViewModel(
     val medAddedId: LiveData<Long?>
         get() = _medAddedId
 
-    private val _navigationCheck = MutableLiveData<Boolean>()
-    val navigationCheck: LiveData<Boolean>
+    private val _navigationCheck = MutableLiveData<Boolean?>()
+    val navigationCheck: LiveData<Boolean?>
         get() = _navigationCheck
 
     fun searchMedName(medName: String) {
@@ -109,7 +109,7 @@ class AddMedViewModel(
                     checkInteraction(medId, userId, context)
                     waitUntilAddMedCheck()
                     if (addMedCheck.value != null && addMedCheck.value == true) {
-                        _medAddedId.value =withContext(Dispatchers.IO) {
+                        _medAddedId.value = withContext(Dispatchers.IO) {
                             userMedsRepository.insert(
                                 UserMedsEntity(
                                     0L,
@@ -120,7 +120,7 @@ class AddMedViewModel(
                                 )
                             )
                         }
-                        if(_medAddedId.value != null) {
+                        if (_medAddedId.value != null) {
                             _navigationCheck.value = true
                         }
                     } else {
@@ -128,25 +128,25 @@ class AddMedViewModel(
                     }
                 }
             }
-        }
-        if(medName.value!="") {
-            _medAddedId.value = withContext(Dispatchers.IO) {
-                userMedsRepository.insert(
-                    UserMedsEntity(
-                        0L,
-                        medName.value!!,
-                        userId,
-                        null,
-                        concentrationEditText.value
+        } else {
+            if (medName.value != "") {
+                _medAddedId.value = withContext(Dispatchers.IO) {
+                    userMedsRepository.insert(
+                        UserMedsEntity(
+                            0L,
+                            medName.value!!,
+                            userId,
+                            null,
+                            concentrationEditText.value
+                        )
                     )
-                )
-            }
-            if(_medAddedId.value != null) {
-                _navigationCheck.value = true
+                }
+                if (_medAddedId.value != null) {
+                    _navigationCheck.value = true
+                }
             }
         }
     }
-
     private suspend fun waitUntilAddMedCheck(): Boolean = suspendCoroutine { continuation ->
         val observer = object : Observer<Boolean?> {
             override fun onChanged(value: Boolean?) {
@@ -280,7 +280,7 @@ class AddMedViewModel(
     }
 
     fun navigationCompleteToAlarmFrequency() {
-        _navigationCheck.value= false
+        _navigationCheck.value = null
         _medAddedId.value = null
     }
 
