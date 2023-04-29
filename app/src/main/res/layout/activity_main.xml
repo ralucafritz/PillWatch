@@ -31,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@drawable/toolbar_rectangle"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -41,8 +42,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:titleMarginStart="70dp"
                 app:titleTextColor="?attr/colorOnPrimarySurface"
-                tools:ignore="RtlSymmetry"
-                tools:title="RaluTest" />
+                tools:ignore="RtlSymmetry" />
 
             <ImageView
                 android:id="@+id/hamburger_icon"
@@ -53,6 +53,16 @@
                 android:src="@drawable/ic_menu"
                 app:tint="?attr/colorOnPrimarySurface"
                 tools:ignore="ContentDescription,RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/toolbar_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="70dp"
+                tools:text="RaluTest"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="@dimen/text_size_big"
+                android:layout_gravity="center_vertical"/>
 
         </FrameLayout>
 

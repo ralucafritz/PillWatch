@@ -6,26 +6,31 @@
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:layout_margin="10dp"
-    app:cardElevation="6dp">
+    app:cardElevation="7dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
         android:padding="5dp"
         tools:ignore="UseCompoundDrawables">
 
-        <ImageView
-            android:id="@+id/pill_image_med_item"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:src="@drawable/ic_alarm_2"
-            app:tint="?attr/colorPrimary"
-            tools:ignore="ContentDescription"
-            android:layout_gravity="center_vertical"/>
+    <ViewStub
+        android:id="@+id/pill_image_med_item"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:inflatedId="@+id/pills_container"
+        android:layout="@layout/pills_container"
+        android:layout_gravity="center_vertical"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:ignore="UseCompoundDrawables">
 
        <LinearLayout
-           android:layout_width="wrap_content"
+           android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:orientation="horizontal">
 
@@ -64,6 +69,19 @@
                tools:ignore="HardcodedText" />
        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            tools:ignore="UseCompoundDrawables">
+
+
+        </LinearLayout>
+
     </LinearLayout>
+
+    </LinearLayout>
+
 
 </androidx.cardview.widget.CardView>

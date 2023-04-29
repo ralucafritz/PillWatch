@@ -3,6 +3,7 @@ package com.example.pillwatch.viewmodel
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
@@ -53,7 +54,13 @@ class AddMedViewModel(
     val severityModerate: MutableList<Pair<String, String>> = mutableListOf()
     val severityLow: MutableList<Pair<String, String>> = mutableListOf()
 
-    val medDbSaveStatus = MutableLiveData<Boolean>()
+    private val _medAddedId = MutableLiveData<Long?>()
+    val medAddedId: LiveData<Long?>
+        get() = _medAddedId
+
+    private val _navigationCheck = MutableLiveData<Boolean>()
+    val navigationCheck: LiveData<Boolean>
+        get() = _navigationCheck
 
     fun searchMedName(medName: String) {
         viewModelScope.launch {
@@ -102,7 +109,7 @@ class AddMedViewModel(
                     checkInteraction(medId, userId, context)
                     waitUntilAddMedCheck()
                     if (addMedCheck.value != null && addMedCheck.value == true) {
-                        withContext(Dispatchers.IO) {
+                        _medAddedId.value =withContext(Dispatchers.IO) {
                             userMedsRepository.insert(
                                 UserMedsEntity(
                                     0L,
@@ -113,15 +120,17 @@ class AddMedViewModel(
                                 )
                             )
                         }
-                        medDbSaveStatus.value = true
+                        if(_medAddedId.value != null) {
+                            _navigationCheck.value = true
+                        }
                     } else {
                         addMedCheck.value = null
                     }
                 }
             }
         }
-        if(medName.value!=null) {
-            withContext(Dispatchers.IO) {
+        if(medName.value!="") {
+            _medAddedId.value = withContext(Dispatchers.IO) {
                 userMedsRepository.insert(
                     UserMedsEntity(
                         0L,
@@ -132,7 +141,9 @@ class AddMedViewModel(
                     )
                 )
             }
-            medDbSaveStatus.value = true
+            if(_medAddedId.value != null) {
+                _navigationCheck.value = true
+            }
         }
     }
 
@@ -148,11 +159,13 @@ class AddMedViewModel(
         addMedCheck.observeForever(observer)
     }
 
-    private suspend fun getRxCuiList(list: List<Long>): List<String> {
+    private suspend fun getRxCuiList(list: List<Long?>): List<String> {
         val rxCuiList = mutableListOf<String>()
         list.map {
-            val rxCui = withContext(Dispatchers.IO) { medsRepository.getRxCuiForMed(it) }
-            rxCuiList.add(rxCui)
+            it?.let {
+                val rxCui = withContext(Dispatchers.IO) { medsRepository.getRxCuiForMed(it) }
+                rxCuiList.add(rxCui)
+            }
         }
         return rxCuiList
     }
@@ -266,9 +279,9 @@ class AddMedViewModel(
         return  Pair(builder.toString(), count)
     }
 
-    fun navigateAfterAdd(navController: NavController) {
-        medDbSaveStatus.value = false
-        navController.navigate(R.id.action_addMedFragment_to_medicationFragment)
+    fun navigationCompleteToAlarmFrequency() {
+        _navigationCheck.value= false
+        _medAddedId.value = null
     }
 
 }

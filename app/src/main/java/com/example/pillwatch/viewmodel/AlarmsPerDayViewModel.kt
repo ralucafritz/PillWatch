@@ -2,5 +2,7 @@ package com.example.pillwatch.viewmodel
 
 import androidx.lifecycle.ViewModel
 
-class SetAlarmsViewModel: ViewModel() {
+class AlarmsPerDayViewModel: ViewModel() {
+
+    var everyXHours: Int = 0
 }

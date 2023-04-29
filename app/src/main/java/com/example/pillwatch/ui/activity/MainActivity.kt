@@ -77,8 +77,8 @@ class MainActivity : AppCompatActivity() {
              *      Toolbar initialization
              *      Toolbar title changed to the username saved in SharedPreferences
              */
+            binding.toolbarUsername.text = getPreference("username")
             setSupportActionBar(toolbar)
-            toolbar.title = getPreference("username")
 
             /**
              *      This function sets the @currentFragmentId MutableLiveData value in the ViewModel

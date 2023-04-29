@@ -101,6 +101,9 @@
         <action
             android:id="@+id/action_medicationFragment_to_addMedFragment"
             app:destination="@id/addMedFragment" />
+        <action
+            android:id="@+id/action_medicationFragment_to_userMedFragment"
+            app:destination="@id/userMedFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -111,26 +114,44 @@
         android:name="com.example.pillwatch.ui.fragment.AddMedFragment"
         android:label="AddMedFragment" >
         <action
-            android:id="@+id/action_addMedFragment_to_medicationFragment"
+            android:id="@+id/action_addMedFragment_to_alarmFrequencyFragment"
+            app:destination="@id/alarmFrequencyFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/alarmFrequencyFragment"
+        android:name="com.example.pillwatch.ui.fragment.AlarmFrequencyFragment"
+        android:label="AlarmFrequencyFragment" >
+        <action
+            android:id="@+id/action_alarmFrequencyFragment_to_alarmsPerDayFragment"
+            app:destination="@id/alarmsPerDayFragment" />
+        <action
+            android:id="@+id/action_alarmFrequencyFragment_to_medicationFragment"
             app:destination="@id/medicationFragment" />
-        <action
-            android:id="@+id/action_addMedFragment_to_chooseAlarmFragment"
-            app:destination="@id/chooseAlarmFragment" />
+        <argument
+            android:name="id"
+            app:argType="long" />
     </fragment>
     <fragment
-        android:id="@+id/chooseAlarmFragment"
-        android:name="com.example.pillwatch.ui.fragment.ChooseAlarmFragment"
-        android:label="ChooseAlarmFragment" >
+        android:id="@+id/alarmsPerDayFragment"
+        android:name="com.example.pillwatch.ui.fragment.AlarmsPerDayFragment"
+        android:label="AlarmsPerDayFragment" >
         <action
-            android:id="@+id/action_chooseAlarmFragment_to_setAlarmsFragment"
-            app:destination="@id/setAlarmsFragment" />
+            android:id="@+id/action_alarmsPerDayFragment_to_userMedFragment"
+            app:destination="@id/userMedFragment" />
+        <argument
+            android:name="alarmTiming"
+            app:argType="com.example.pillwatch.utils.AlarmTiming"
+            android:defaultValue="NO_REMINDERS" />
+        <argument
+            android:name="id"
+            app:argType="long" />
     </fragment>
     <fragment
-        android:id="@+id/setAlarmsFragment"
-        android:name="com.example.pillwatch.ui.fragment.SetAlarmsFragment"
-        android:label="SetAlarmsFragment" >
+        android:id="@+id/userMedFragment"
+        android:name="com.example.pillwatch.ui.fragment.UserMedFragment"
+        android:label="UserMedFragment" >
         <action
-            android:id="@+id/action_setAlarmsFragment_to_medicationFragment"
+            android:id="@+id/action_userMedFragment_to_medicationFragment"
             app:destination="@id/medicationFragment" />
     </fragment>
 </navigation>

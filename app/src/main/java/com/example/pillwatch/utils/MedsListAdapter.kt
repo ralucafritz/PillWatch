@@ -5,8 +5,10 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewStub
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pillwatch.R
 import com.example.pillwatch.data.model.UserMedsEntity
@@ -24,21 +26,21 @@ class MedsListAdapter(private val context: Context, private val medList: List<Us
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.medItemName.text = medList[position].tradeName
-        holder.medItemConc.text = medList[position].concentration
-        val color: Int
-        val fab: Drawable?
-        if(medList[position].medId != null) {
+        val med = medList[position]
+        holder.img.inflate()
+        holder.medItemName.text = med.tradeName
+        holder.medItemConc.text = med.concentration
+        if(med.medId != null) {
             holder.medItemFab.setImageResource(R.drawable.ic_check)
-            holder.medItemFab.setColorFilter(R.color.green)
+            holder.medItemFab.setColorFilter(ContextCompat.getColor(context, R.color.green))
         } else {
-            holder.medItemFab.setImageResource(R.drawable.ic_stop)
-            holder.medItemFab.setColorFilter(R.color.red)
+            holder.medItemFab.setImageResource(R.drawable.ic_close)
+            holder.medItemFab.setColorFilter(ContextCompat.getColor(context, R.color.red))
         }
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val img: ImageView
+        val img: ViewStub
         val medItemName: TextView
         val medItemConc: TextView
         val medItemFab: ImageView

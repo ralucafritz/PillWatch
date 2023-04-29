@@ -8,8 +8,8 @@ import com.example.pillwatch.data.model.UserMedsEntity
 
 class UserMedsRepository(private val userMedsDao: UserMedsDao) {
 
-    fun insert(userMed: UserMedsEntity) {
-        userMedsDao.insert(userMed)
+    fun insert(userMed: UserMedsEntity): Long{
+        return userMedsDao.insert(userMed)
     }
 
     fun insertAll(userMedsList: List<UserMedsEntity>) {
@@ -20,7 +20,7 @@ class UserMedsRepository(private val userMedsDao: UserMedsDao) {
         return userMedsDao.getMedsForUserId(userId)
     }
 
-    fun getMedIdForMedsForUser(userId: Long): List<Long> {
+    fun getMedIdForMedsForUser(userId: Long): List<Long?> {
         return userMedsDao.getMedIdForMedsForUser(userId)
     }
 
