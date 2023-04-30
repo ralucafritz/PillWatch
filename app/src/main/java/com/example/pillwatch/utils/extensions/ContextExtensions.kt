@@ -110,7 +110,6 @@ object ContextExtensions {
 
     fun Context.showProgressDialog(
         title: String,
-        isCancelable: Boolean = false
     ): AlertDialog {
         val progressDialog = AlertDialog.Builder(this)
             .setView(ProgressBar(this))

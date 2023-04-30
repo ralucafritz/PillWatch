@@ -5,13 +5,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.pillwatch.viewmodel.HomeViewModel" />
+            type="com.example.pillwatch.ui.home.HomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.fragment.HomeFragment">
+        tools:context=".ui.home.HomeFragment">
 
         <ImageView
             android:id="@+id/background"

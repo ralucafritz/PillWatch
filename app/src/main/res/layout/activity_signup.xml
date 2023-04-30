@@ -6,13 +6,13 @@
 
         <variable
             name="viewModel"
-            type="com.example.pillwatch.viewmodel.SignupViewModel" />
+            type="com.example.pillwatch.ui.signup.SignupViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.activity.SignupActivity">
+        tools:context=".ui.signup.SignupActivity">
 
         <View
             android:layout_width="1dp"

@@ -27,7 +27,7 @@ class AutoCompleteAdapter (private val context: Context, private val medsData: P
         }
 
         val medLabel: TextView = convertViewVar!!.findViewById(R.id.autocomplete_item_med_label)
-        val concLabel: TextView = convertViewVar!!.findViewById(R.id.autocomplete_item_conc_label)
+        val concLabel: TextView = convertViewVar.findViewById(R.id.autocomplete_item_conc_label)
 
         if(medNames.isNotEmpty() && medConcs.isNotEmpty()) {
             val medName = medNames.getOrNull(position)
@@ -38,7 +38,7 @@ class AutoCompleteAdapter (private val context: Context, private val medsData: P
 
         }
 
-        return convertViewVar!!
+        return convertViewVar
     }
 
     override fun getItem(position: Int): Any {

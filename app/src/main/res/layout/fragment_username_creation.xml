@@ -6,14 +6,14 @@
 
         <variable
             name="viewModel"
-            type="com.example.pillwatch.viewmodel.UsernameCreationViewModel" />
+            type="com.example.pillwatch.ui.username.UsernameCreationViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/colorPrimary"
-        tools:context=".ui.fragment.UsernameCreationFragment">
+        tools:context=".ui.username.UsernameCreationFragment">
 
 
         <TextView

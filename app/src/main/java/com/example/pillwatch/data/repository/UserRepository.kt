@@ -1,13 +1,9 @@
 package com.example.pillwatch.data.repository
 
-import android.provider.SyncStateContract.Helpers.insert
-import androidx.lifecycle.LiveData
-import androidx.room.Query
-import com.example.pillwatch.data.datasource.local.UserDao
+import com.example.pillwatch.data.source.local.UserDao
 import com.example.pillwatch.data.model.UserEntity
 import com.example.pillwatch.utils.Role
 import com.example.pillwatch.utils.hashPassword
-import com.example.pillwatch.utils.randomPassword
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

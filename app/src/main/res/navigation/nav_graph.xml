@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/welcomeFragment"
-        android:name="com.example.pillwatch.ui.fragment.WelcomeFragment"
+        android:name="com.example.pillwatch.ui.welcome.WelcomeFragment"
         android:label="WelcomeFragment"
         tools:layout="@layout/fragment_welcome" >
         <action
@@ -22,15 +22,15 @@
     </fragment>
     <activity
         android:id="@+id/signupActivity"
-        android:name="com.example.pillwatch.ui.activity.SignupActivity"
+        android:name="com.example.pillwatch.ui.signup.SignupActivity"
         android:label="SignupActivity"/>
     <activity
         android:id="@+id/loginActivity"
-        android:name="com.example.pillwatch.ui.activity.LoginActivity"
+        android:name="com.example.pillwatch.ui.login.LoginActivity"
         android:label="LoginActivity" />
     <fragment
         android:id="@+id/loadingFragment"
-        android:name="com.example.pillwatch.ui.fragment.LoadingFragment"
+        android:name="com.example.pillwatch.ui.loading.LoadingFragment"
         android:label="LoadingFragment" >
         <action
             android:id="@+id/action_loadingFragment_to_welcomeFragment"
@@ -50,7 +50,7 @@
     </fragment>
     <fragment
         android:id="@+id/usernameCreationFragment"
-        android:name="com.example.pillwatch.ui.fragment.UsernameCreationFragment"
+        android:name="com.example.pillwatch.ui.username.UsernameCreationFragment"
         android:label="UsernameCreationFragment" >
         <action
             android:id="@+id/action_usernameCreationFragment_to_homeFragment"
@@ -62,7 +62,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.pillwatch.ui.fragment.HomeFragment"
+        android:name="com.example.pillwatch.ui.home.HomeFragment"
         android:label="HomeFragment" >
         <action
             android:id="@+id/action_homeFragment_to_medicationFragment"
@@ -79,7 +79,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.pillwatch.ui.fragment.SettingsFragment"
+        android:name="com.example.pillwatch.ui.settings.SettingsFragment"
         android:label="SettingsFragment" >
         <action
             android:id="@+id/action_settingsFragment_to_profileFragment"
@@ -87,7 +87,7 @@
     </fragment>
     <fragment
         android:id="@+id/medicationFragment"
-        android:name="com.example.pillwatch.ui.fragment.MedicationFragment"
+        android:name="com.example.pillwatch.ui.medication.MedicationFragment"
         android:label="MedicationFragment" >
         <action
             android:id="@+id/action_medicationFragment_to_homeFragment"
@@ -107,11 +107,11 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.pillwatch.ui.fragment.ProfileFragment"
+        android:name="com.example.pillwatch.ui.profile.ProfileFragment"
         android:label="ProfileFragment" />
     <fragment
         android:id="@+id/addMedFragment"
-        android:name="com.example.pillwatch.ui.fragment.AddMedFragment"
+        android:name="com.example.pillwatch.ui.addmed.AddMedFragment"
         android:label="AddMedFragment" >
         <action
             android:id="@+id/action_addMedFragment_to_alarmFrequencyFragment"
@@ -119,7 +119,7 @@
     </fragment>
     <fragment
         android:id="@+id/alarmFrequencyFragment"
-        android:name="com.example.pillwatch.ui.fragment.AlarmFrequencyFragment"
+        android:name="com.example.pillwatch.ui.addmed.AlarmFrequencyFragment"
         android:label="AlarmFrequencyFragment" >
         <action
             android:id="@+id/action_alarmFrequencyFragment_to_alarmsPerDayFragment"
@@ -133,7 +133,7 @@
     </fragment>
     <fragment
         android:id="@+id/alarmsPerDayFragment"
-        android:name="com.example.pillwatch.ui.fragment.AlarmsPerDayFragment"
+        android:name="com.example.pillwatch.ui.addmed.AlarmsPerDayFragment"
         android:label="AlarmsPerDayFragment" >
         <action
             android:id="@+id/action_alarmsPerDayFragment_to_userMedFragment"
@@ -148,7 +148,7 @@
     </fragment>
     <fragment
         android:id="@+id/userMedFragment"
-        android:name="com.example.pillwatch.ui.fragment.UserMedFragment"
+        android:name="com.example.pillwatch.ui.medication.medpage.MedPageFragment"
         android:label="UserMedFragment" >
         <action
             android:id="@+id/action_userMedFragment_to_medicationFragment"

@@ -5,13 +5,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.pillwatch.viewmodel.LoadingViewModel" />
+            type="com.example.pillwatch.ui.loading.LoadingViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.fragment.LoadingFragment">
+        tools:context=".ui.loading.LoadingFragment">
 
         <View
             android:layout_width="1dp"

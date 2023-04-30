@@ -5,7 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.pillwatch.R
-import com.example.pillwatch.ui.activity.MainActivity
+import com.example.pillwatch.ui.main.MainActivity
 import com.example.pillwatch.utils.extensions.ContextExtensions.getLoggedInStatus
 import com.example.pillwatch.utils.extensions.ContextExtensions.getPreference
 import com.example.pillwatch.utils.extensions.ContextExtensions.setLoggedInStatus

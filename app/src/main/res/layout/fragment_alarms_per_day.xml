@@ -5,14 +5,14 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.pillwatch.viewmodel.AlarmsPerDayViewModel" />
+            type="com.example.pillwatch.ui.addmed.AlarmsPerDayViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/colorPrimary"
-        tools:context=".ui.fragment.AlarmsPerDayFragment">
+        tools:context=".ui.addmed.AlarmsPerDayFragment">
 
 
         <TextView
