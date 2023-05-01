@@ -22,7 +22,6 @@ import com.example.pillwatch.databinding.ActivityMainBinding
 import com.example.pillwatch.utils.extensions.ContextExtensions.dismissProgressDialog
 import com.example.pillwatch.utils.extensions.ContextExtensions.showProgressDialog
 import com.example.pillwatch.ui.MedsViewModel
-import com.example.pillwatch.ui.MedsViewModelFactory
 import com.example.pillwatch.ui.splash.SplashActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,7 +40,8 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var mainViewModel: MainViewModel
 
-    private lateinit var medsViewModel: MedsViewModel
+    @Inject
+    lateinit var medsViewModel: MedsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,15 +50,6 @@ class MainActivity : AppCompatActivity() {
 
         Timber.plant(Timber.DebugTree())
         binding = ActivityMainBinding.inflate(layoutInflater)
-
-        /**
-         *    DatabaseDao access
-         */
-        val medsDao = AppDatabase.getInstance(application).medsDao
-        val metadataDao = AppDatabase.getInstance(application).metadataDao
-
-        val medsViewModelFactory = MedsViewModelFactory(medsDao, metadataDao, application)
-        medsViewModel = ViewModelProvider(this, medsViewModelFactory)[MedsViewModel::class.java]
 
         setContentView(binding.root)
         binding.apply {

@@ -18,12 +18,8 @@ class SplashViewModel @Inject constructor(
 ) : ViewModel() {
 
     companion object {
-        const val TAG = "Loading"
+        const val TAG = "Splash"
     }
-
-    private val _loggedInStatus = MutableLiveData<Boolean>()
-    val loggedInStatus: LiveData<Boolean>
-        get() = _loggedInStatus
 
     private val _username = MutableLiveData<String>()
     val username: LiveData<String>
@@ -47,7 +43,7 @@ class SplashViewModel @Inject constructor(
         }
     }
 
-    fun delay() {
+    private fun delay() {
         viewModelScope.launch {
             delay(2000)
         }

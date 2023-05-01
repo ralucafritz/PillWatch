@@ -23,6 +23,7 @@ class SplashActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userManager = (application as PillWatchApplication).appComponent.userManager()
+
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.mainSplash.visibility = View.VISIBLE

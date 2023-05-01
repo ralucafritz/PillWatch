@@ -1,42 +1,38 @@
 package com.example.pillwatch.ui.addmed
 
-import android.app.Application
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pillwatch.data.source.local.MedsDao
-import com.example.pillwatch.data.source.local.UserMedsDao
 import com.example.pillwatch.data.model.MedsEntity
 import com.example.pillwatch.data.model.UserMedsEntity
 import com.example.pillwatch.data.repository.MedsRepository
 import com.example.pillwatch.data.repository.UserMedsRepository
+import com.example.pillwatch.di.LoggedUserScope
 import com.example.pillwatch.network.AppApi
+import com.example.pillwatch.user.UserManager
 import com.example.pillwatch.utils.InteractionProperty
-import com.example.pillwatch.utils.extensions.ContextExtensions.getPreference
 import com.example.pillwatch.utils.extensions.ContextExtensions.showAlert
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class AddMedViewModel(
-    medsDao: MedsDao,
-    userMedsDao: UserMedsDao,
-    application: Application
-) : AndroidViewModel(application) {
+@LoggedUserScope
+class AddMedViewModel @Inject constructor(
+    private val medsRepository: MedsRepository,
+    private val userMedsRepository: UserMedsRepository,
+    private val userManager: UserManager
+) : ViewModel() {
 
-    private val context: Context by lazy { application.applicationContext }
 
     val medName = MutableLiveData("")
-    val concentrationEditText = MutableLiveData ("")
-
-    private val medsRepository = MedsRepository(medsDao)
-    private val userMedsRepository = UserMedsRepository(userMedsDao)
+    val concentrationEditText = MutableLiveData("")
 
     private val _responseInteractionDataAPI = MutableLiveData<List<InteractionProperty>>()
     private val _selectedMedNumber = MutableLiveData<Int>()
@@ -48,9 +44,9 @@ class AddMedViewModel(
 
     val addMedCheck = MutableLiveData<Boolean?>()
 
-    val severityHigh: MutableList<Pair<String, String>> = mutableListOf()
-    val severityModerate: MutableList<Pair<String, String>> = mutableListOf()
-    val severityLow: MutableList<Pair<String, String>> = mutableListOf()
+    private val severityHigh: MutableList<Pair<String, String>> = mutableListOf()
+    private val severityModerate: MutableList<Pair<String, String>> = mutableListOf()
+    private val severityLow: MutableList<Pair<String, String>> = mutableListOf()
 
     private val _medAddedId = MutableLiveData<Long?>()
     val medAddedId: LiveData<Long?>
@@ -59,6 +55,10 @@ class AddMedViewModel(
     private val _navigationCheck = MutableLiveData<Boolean?>()
     val navigationCheck: LiveData<Boolean?>
         get() = _navigationCheck
+
+    private val _isAlertNeeded = MutableLiveData<Boolean>()
+    val isAlertNeeded: LiveData<Boolean>
+        get() = _isAlertNeeded
 
     fun searchMedName(medName: String) {
         viewModelScope.launch {
@@ -90,8 +90,8 @@ class AddMedViewModel(
         concentrationEditText.value = _selectedMed.value!!.concentration
     }
 
-    suspend fun addMedToUser(context: Context) {
-        val userId = context.getPreference("id", 0L).toString().toLong()
+    suspend fun addMedToUser() {
+        val userId = userManager.id
         val medId: Long?
         val name: String
         if (_selectedMed.value != null && medName.value != "") {
@@ -104,7 +104,7 @@ class AddMedViewModel(
             }
             if (medId != null) {
                 viewModelScope.launch {
-                    checkInteraction(medId, userId, context)
+                    checkInteraction(medId, userId)
                     waitUntilAddMedCheck()
                     if (addMedCheck.value != null && addMedCheck.value == true) {
                         _medAddedId.value = withContext(Dispatchers.IO) {
@@ -145,6 +145,7 @@ class AddMedViewModel(
             }
         }
     }
+
     private suspend fun waitUntilAddMedCheck(): Boolean = suspendCoroutine { continuation ->
         val observer = object : Observer<Boolean?> {
             override fun onChanged(value: Boolean?) {
@@ -157,28 +158,28 @@ class AddMedViewModel(
         addMedCheck.observeForever(observer)
     }
 
-    private suspend fun getRxCuiList(list: List<Long?>): List<String> {
+    private suspend fun getRxCuiList(list: List<Long>): List<String> {
         val rxCuiList = mutableListOf<String>()
         list.map {
-            it?.let {
-                val rxCui = withContext(Dispatchers.IO) { medsRepository.getRxCuiForMed(it) }
-                rxCuiList.add(rxCui)
-            }
+            val rxCui = withContext(Dispatchers.IO) { medsRepository.getRxCuiForMed(it) }
+            rxCuiList.add(rxCui)
         }
         return rxCuiList
     }
 
-    private fun checkInteraction(medId: Long, userId: Long, context: Context) {
+    private fun checkInteraction(medId: Long, userId: Long) {
         viewModelScope.launch {
+            // get rxcui based on the medId from Db
             val medIdRxCui = withContext(Dispatchers.IO) {
                 medsRepository.getRxCuiForMed(medId)
             }
+            // get rxcui's fror the rest of the meds in the user's list -> return only the values different than null
             val rxCuiList = withContext(Dispatchers.IO) {
-                val medIds = userMedsRepository.getMedIdForMedsForUser(userId)
+                val medIds = userMedsRepository.getMedIdForMedsForUser(userId).filterNotNull()
                 getRxCuiList(medIds)
             }
             if (rxCuiList.isNotEmpty()) {
-                getInteractionDataFromAPI(medIdRxCui, rxCuiList, context)
+                getInteractionDataFromAPI(medIdRxCui, rxCuiList)
             } else {
                 addMedCheck.value = true
             }
@@ -187,8 +188,7 @@ class AddMedViewModel(
 
     private fun getInteractionDataFromAPI(
         rxCui: String,
-        listRxCui: List<String>,
-        context: Context
+        listRxCui: List<String>
     ) {
         val interactionList = mutableListOf<InteractionProperty>()
         viewModelScope.launch {
@@ -225,14 +225,14 @@ class AddMedViewModel(
                 if (interactionList.isNotEmpty()) {
                     _responseInteractionDataAPI.value = interactionList
                 }
-                isAlertNeeded(context)
+                _isAlertNeeded.value = true
             } catch (e: Exception) {
                 Timber.tag("INTERACTION").e("Server error $e.printStackTrace().toString()")
             }
         }
     }
 
-    private fun isAlertNeeded(context: Context) {
+    fun isAlertNeeded(context: Context) {
         val highCount = severityHigh.size
         val moderateCount = severityModerate.size
         val lowCount = severityLow.size
@@ -247,10 +247,15 @@ class AddMedViewModel(
         } else {
             addMedCheck.value = true
         }
+        _isAlertNeeded.value = false
         Timber.tag("INTERACTION").d(addMedCheck.value.toString())
     }
 
-    private fun checkSeverity(lowCount: Int, moderateCount: Int, highCount: Int): Pair<String, Int> {
+    private fun checkSeverity(
+        lowCount: Int,
+        moderateCount: Int,
+        highCount: Int
+    ): Pair<String, Int> {
         val builder =
             StringBuilder("The following interaction/s have been detected between this medicine and the other medicine on your list: \n\n")
         var count = 0
@@ -274,7 +279,7 @@ class AddMedViewModel(
         }
         builder.append("\n\n Do you still wish to proceed?")
 
-        return  Pair(builder.toString(), count)
+        return Pair(builder.toString(), count)
     }
 
     fun navigationCompleteToAlarmFrequency() {

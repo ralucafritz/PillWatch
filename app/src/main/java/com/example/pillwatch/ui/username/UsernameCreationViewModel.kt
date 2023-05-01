@@ -27,7 +27,6 @@ class UsernameCreationViewModel @Inject constructor(
         const val EMPTY_FIELDS_ERR = "Please fill all the fields."
     }
 
-
     private val _username = MutableLiveData<String>()
     val username: LiveData<String>
         get() = _username

@@ -21,7 +21,6 @@ class UserMedsRepository(private val userMedsDao: UserMedsDao) {
         return userMedsDao.getMedIdForMedsForUser(userId)
     }
 
-
     fun clear() {
         userMedsDao.clear()
     }

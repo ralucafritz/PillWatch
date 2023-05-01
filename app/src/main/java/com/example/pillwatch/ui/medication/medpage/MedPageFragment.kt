@@ -11,10 +11,10 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentMedPageBinding
 import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
+import javax.inject.Inject
 
 class MedPageFragment: Fragment() {
         private lateinit var binding: FragmentMedPageBinding
-        private lateinit var navController: NavController
         private val viewModel: MedPageViewModel by lazy {
             ViewModelProvider(this)[MedPageViewModel::class.java]}
 
@@ -27,9 +27,6 @@ class MedPageFragment: Fragment() {
             binding = FragmentMedPageBinding.inflate(inflater)
 
             toolbarBottomNavVisibility(requireActivity(), R.id.userMedFragment)
-
-            // NavController
-            navController = NavHostFragment.findNavController(this)
 
             // ViewModel
             binding.viewModel = viewModel

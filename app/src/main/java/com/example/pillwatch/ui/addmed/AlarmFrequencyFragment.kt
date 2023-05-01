@@ -9,7 +9,6 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentAlarmFrequencyBinding
@@ -19,7 +18,7 @@ import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNa
 class AlarmFrequencyFragment: Fragment() {
 
     private lateinit var binding: FragmentAlarmFrequencyBinding
-    private lateinit var navController: NavController
+
     private val viewModel: AlarmFrequencyViewModel by lazy {
         ViewModelProvider(this)[AlarmFrequencyViewModel::class.java]}
 

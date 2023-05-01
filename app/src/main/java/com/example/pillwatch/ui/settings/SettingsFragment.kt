@@ -1,22 +1,31 @@
 package com.example.pillwatch.ui.settings
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentSettingsBinding
 import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
+import javax.inject.Inject
 
 class SettingsFragment : Fragment(){
 
     private lateinit var binding: FragmentSettingsBinding
     private lateinit var navController: NavController
-    private lateinit var viewModel: SettingsViewModel
+
+    @Inject
+    lateinit var viewModel: SettingsViewModel
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as PillWatchApplication).appComponent.userManager().userComponent!!.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,10 +41,6 @@ class SettingsFragment : Fragment(){
         navController = NavHostFragment.findNavController(this)
 
         // ViewModel
-        val application = requireNotNull(this.activity).application
-
-        val viewModelFactory = SettingsViewModelFactory(application)
-        viewModel = ViewModelProvider(this, viewModelFactory)[SettingsViewModel::class.java]
         binding.viewModel = viewModel
 
         // Lifecycle
