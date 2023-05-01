@@ -1,5 +1,6 @@
 package com.example.pillwatch.ui.medication
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,21 +10,29 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.data.source.local.AppDatabase
 import com.example.pillwatch.databinding.FragmentMedicationBinding
 import com.example.pillwatch.utils.MedsListAdapter
-import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarVisibilityState
-import com.example.pillwatch.utils.extensions.FragmentExtensions.navBarVisibilityState
+import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class MedicationFragment : Fragment(){
+class MedicationFragment : Fragment() {
 
     private lateinit var binding: FragmentMedicationBinding
-    private lateinit var navController: NavController
-    private lateinit var viewModel: MedicationViewModel
+
+    @Inject
+    lateinit var viewModel: MedicationViewModel
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as PillWatchApplication).appComponent.userManager().userComponent!!.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,35 +41,28 @@ class MedicationFragment : Fragment(){
     ): View {
         // Binding
         binding = FragmentMedicationBinding.inflate(inflater)
-
-        navBarVisibilityState(requireActivity(), R.id.medicationFragment)
-        toolbarVisibilityState(requireActivity(), R.id.medicationFragment)
-
-        // NavController
-        navController = NavHostFragment.findNavController(this)
+        toolbarBottomNavVisibility(requireActivity(), R.id.medicationFragment)
 
         // ViewModel
-        val application = requireNotNull(this.activity).application
-
-        val userMedsDao = AppDatabase.getInstance(application).userMedsDao
-
-        val viewModelFactory = MedicationViewModelFactory(userMedsDao, application)
-        viewModel = ViewModelProvider(this, viewModelFactory)[MedicationViewModel::class.java]
         binding.viewModel = viewModel
 
         val recyclerView = binding.medsList
 
         recyclerView.layoutManager = LinearLayoutManager(context)
-        // next button
-        binding.btnAdd.setOnClickListener {
-          viewModel.navigateToAddAMed(navController)
-        }
-        lifecycleScope .launch {
+
+        lifecycleScope.launch {
             val medsList = viewModel.getMedsList()
-            if(medsList != null) {
+            if (medsList != null) {
                 val adapter = MedsListAdapter(requireContext(), medsList)
                 recyclerView.adapter = adapter
             }
+        }
+
+        // next button
+        binding.btnAdd.setOnClickListener {
+            this@MedicationFragment.findNavController().navigate(
+                MedicationFragmentDirections.actionMedicationFragmentToAddMedFragment()
+            )
         }
 
         // Lifecycle

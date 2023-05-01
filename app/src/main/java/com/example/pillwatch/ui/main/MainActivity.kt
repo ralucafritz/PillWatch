@@ -1,5 +1,6 @@
 package com.example.pillwatch.ui.main
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
@@ -14,18 +15,19 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.data.source.local.AppDatabase
 import com.example.pillwatch.databinding.ActivityMainBinding
 import com.example.pillwatch.utils.extensions.ContextExtensions.dismissProgressDialog
-import com.example.pillwatch.utils.extensions.ContextExtensions.getPreference
 import com.example.pillwatch.utils.extensions.ContextExtensions.showProgressDialog
 import com.example.pillwatch.ui.MedsViewModel
-import com.example.pillwatch.ui.MedsViewModelFactory
+import com.example.pillwatch.ui.splash.SplashActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,32 +36,20 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfigurationNavBottom: AppBarConfiguration
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var binding: ActivityMainBinding
-    private lateinit var mainViewModel: MainViewModel
-    private lateinit var medsViewModel: MedsViewModel
+
+    @Inject
+    lateinit var mainViewModel: MainViewModel
+
+    @Inject
+    lateinit var medsViewModel: MedsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val userManager = (application as PillWatchApplication).appComponent.userManager()
+        userManager.userComponent!!.inject(this)
+
         Timber.plant(Timber.DebugTree())
         binding = ActivityMainBinding.inflate(layoutInflater)
-
-        /**
-         *    DatabaseDao access
-         */
-        val userDao = AppDatabase.getInstance(application).userDao
-        val medsDao = AppDatabase.getInstance(application).medsDao
-        val metadataDao = AppDatabase.getInstance(application).metadataDao
-        val userMedsDao = AppDatabase.getInstance(application).userMedsDao
-        val alarmDao = AppDatabase.getInstance(application).alarmDao
-        val medsLogDao = AppDatabase.getInstance(application).medsLogDao
-
-        /**
-         *    ViewModels initializations
-         */
-        val mainViewModelFactory = MainViewModelFactory(medsDao, metadataDao, userDao, userMedsDao, medsLogDao, alarmDao,application)
-        mainViewModel = ViewModelProvider(this, mainViewModelFactory)[MainViewModel::class.java]
-
-        val medsViewModelFactory = MedsViewModelFactory(medsDao, metadataDao, application)
-        medsViewModel = ViewModelProvider(this, medsViewModelFactory)[MedsViewModel::class.java]
 
         setContentView(binding.root)
         binding.apply {
@@ -75,7 +65,7 @@ class MainActivity : AppCompatActivity() {
              *      Toolbar initialization
              *      Toolbar title changed to the username saved in SharedPreferences
              */
-            binding.toolbarUsername.text = getPreference("username")
+            binding.toolbarUsername.text = userManager.username
             setSupportActionBar(toolbar)
 
             /**
@@ -120,13 +110,15 @@ class MainActivity : AppCompatActivity() {
             drawerView.setNavigationItemSelectedListener { item ->
                 when (item.itemId) {
                     R.id.nav_logout -> {
-                        navController.navigate(R.id.loadingFragment)
                         mainViewModel.logout()
                         drawerLayout.closeDrawer(GravityCompat.START)
+                        val intent = Intent(this@MainActivity, SplashActivity::class.java)
+                        startActivity(intent)
+                        finish()
                     }
 
                     R.id.nav_clean -> {
-                        navController.navigate(R.id.loadingFragment)
+                        navController.navigate(R.id.homeFragment)
                         mainViewModel.clear()
                         drawerLayout.closeDrawer(GravityCompat.START)
                     }
@@ -139,7 +131,6 @@ class MainActivity : AppCompatActivity() {
                             dismissProgressDialog(progressDialog, medsViewModel.updateDialogTitle.value!!, medsViewModel.updateMessage.value!!)
                         }
                     }
-
                     else -> {
                         navController.popBackStack(mainViewModel.currentFragmentId.value!!, true)
                         navController.navigate(item.itemId)

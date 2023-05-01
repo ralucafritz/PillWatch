@@ -10,12 +10,11 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentMedPageBinding
-import com.example.pillwatch.utils.extensions.FragmentExtensions.navBarVisibilityState
-import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarVisibilityState
+import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
+import javax.inject.Inject
 
 class MedPageFragment: Fragment() {
         private lateinit var binding: FragmentMedPageBinding
-        private lateinit var navController: NavController
         private val viewModel: MedPageViewModel by lazy {
             ViewModelProvider(this)[MedPageViewModel::class.java]}
 
@@ -27,11 +26,7 @@ class MedPageFragment: Fragment() {
             // Binding
             binding = FragmentMedPageBinding.inflate(inflater)
 
-            navBarVisibilityState(requireActivity(), R.id.userMedFragment)
-            toolbarVisibilityState(requireActivity(), R.id.userMedFragment)
-
-            // NavController
-            navController = NavHostFragment.findNavController(this)
+            toolbarBottomNavVisibility(requireActivity(), R.id.userMedFragment)
 
             // ViewModel
             binding.viewModel = viewModel

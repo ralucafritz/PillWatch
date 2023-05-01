@@ -1,11 +1,11 @@
 package com.example.pillwatch.ui.signup
 
-import android.app.Application
-import android.content.Context
 import android.util.Patterns
 import androidx.lifecycle.*
 import com.example.pillwatch.data.source.local.UserDao
 import com.example.pillwatch.data.repository.UserRepository
+import com.example.pillwatch.di.ActivityScope
+import com.example.pillwatch.user.UserManager
 import com.example.pillwatch.utils.AuthResultProperty
 import com.example.pillwatch.utils.extensions.FirebaseUtils.firebaseUser
 import com.example.pillwatch.utils.ValidationProperty
@@ -23,23 +23,15 @@ import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.*
 import timber.log.Timber
 import java.lang.Exception
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class SignupViewModel(
-    userDao: UserDao,
-    application: Application
-) : AndroidViewModel(application) {
-
-    private val context: Context by lazy { application.applicationContext }
-
-    private val userRepository = UserRepository(userDao)
-
-    // start the job
-    private var viewModelJob = Job()
-
-    // coroutine scope for main thread
-    private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+@ActivityScope
+class SignupViewModel @Inject constructor(
+    private val userRepository: UserRepository,
+    private val userManager: UserManager
+) : ViewModel() {
 
     // SIGN UP WITH EMAIL AND PASSWORD
     companion object {
@@ -71,9 +63,24 @@ class SignupViewModel(
     val confirmPassword: LiveData<String>
         get() = _confirmPassword
 
+    val username: String
+        get() = userManager.username
+
     private val _firebaseListener = MutableLiveData<Boolean>()
     val firebaseListener: LiveData<Boolean>
         get() = _firebaseListener
+
+    private val _alertMsg = MutableLiveData<Pair<String, String>>()
+    val alertMsg: LiveData<Pair<String, String>>
+        get() = _alertMsg
+
+    private val _toastMsg = MutableLiveData<String>()
+    val toastMsg: LiveData<String>
+        get() = _toastMsg
+
+    val isConnected = MutableLiveData<Boolean>()
+
+    val _networkCheckStart = MutableLiveData<Boolean>()
 
     fun isValid(email: String, password: String, confirmPassword: String): ValidationProperty {
         return when {
@@ -107,34 +114,38 @@ class SignupViewModel(
     }
 
     fun signup() {
-        coroutineScope.launch {
+        viewModelScope.launch {
             // set local variables for email and password for easier use
             val email = _email.value!!
             val password = _password.value!!
-
+            _networkCheckStart.value = true
             // if there is internet connection => check firebase if the user can be created
-            if (context.isInternetConnected()) {
-                // create user in firebase
-                try {
-                    withContext(Dispatchers.IO) {
-                        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
-                            if (it.isSuccessful) {
-                                _firebaseListener.postValue(true)
-                                Timber.tag(TAG).d("$FIREBASE $SIGNUP_SUCCESS: $firebaseUser ")
-                            } else {
-                                _firebaseListener.postValue(false)
-                                Timber.tag(TAG).d("$FIREBASE $SIGNUP_FAIL")
-                            }
+            isConnected.value?.let {
+                if (isConnected.value == true) {
+                    // create user in firebase
+                    try {
+                        withContext(Dispatchers.IO) {
+                            firebaseAuth.createUserWithEmailAndPassword(email, password)
+                                .addOnCompleteListener {
+                                    if (it.isSuccessful) {
+                                        _firebaseListener.postValue(true)
+                                        Timber.tag(TAG)
+                                            .d("$FIREBASE $SIGNUP_SUCCESS: $firebaseUser ")
+                                    } else {
+                                        _firebaseListener.postValue(false)
+                                        Timber.tag(TAG).d("$FIREBASE $SIGNUP_FAIL")
+                                    }
+                                }
                         }
+                    } catch (e: Exception) {
+                        /**
+                         * failed -> log the error
+                         * depending on the error show an alert
+                         * set status to false
+                         * */
+                        val exceptionMessage = handleFirebaseException(e)
+                        errorSignup(FIREBASE, exceptionMessage)
                     }
-                } catch (e: Exception) {
-                    /**
-                     * failed -> log the error
-                     * depending on the error show an alert
-                     * set status to false
-                     * */
-                    val exceptionMessage = handleFirebaseException(e)
-                    errorSignup(FIREBASE, exceptionMessage)
                 }
             }
             // if the value of  @_signupResult is false => leave the coroutine  and function
@@ -155,7 +166,7 @@ class SignupViewModel(
              * save the id for easier use
              **/
             if (user != null) {
-                setLoggedInStatus(user.email, user.id)
+                userManager.loginUser(user.id,user.email, user.username)
                 _signupResult.postValue(true)
                 Timber.tag(TAG).d("$SIGNUP_SUCCESS: $user ")
             } else {
@@ -171,7 +182,7 @@ class SignupViewModel(
 
     // SIGN UP WITH GOOGLE
     fun signupWithGoogle(signInAccountTask: Task<GoogleSignInAccount>) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             try {
                 // Set the logged-in status and post the successful result
                 val account = signInAccountTask.getResult(ApiException::class.java)
@@ -185,7 +196,7 @@ class SignupViewModel(
     }
 
     private suspend fun insertWithGoogle(idToken: String): Boolean {
-        return withContext(Dispatchers.Main + viewModelJob) {
+        return withContext(Dispatchers.Main) {
             if (idToken == "") {
                 false
             } else {
@@ -205,16 +216,14 @@ class SignupViewModel(
                              * save the id for easier use
                              * save the username for easier use
                              **/
-                            setLoggedInStatus(email, user.id, user.username)
-                            Timber.tag(TAG).w("$GOOGLE $SIGNUP_SUCCESS")
+                            userManager.loginUser(user.id,user.email, user.username)
                             true
                         } else {
-                            context.toast("An error occurred.")
+                            _alertMsg.value = Pair("An error occurred", "Error")
                             false
                         }
-
                     } else {
-                        context.toast("An error occurred")
+                        _alertMsg.value = Pair("An error occurred", "Error")
                         false
                     }
                 }
@@ -237,15 +246,6 @@ class SignupViewModel(
         }
     }
 
-    private fun setLoggedInStatus(email: String, id: Long, username: String? = null) {
-        context.setLoggedInStatus(true)
-        context.setPreference("id", id)
-        context.setPreference("email", email)
-        if (username != null) {
-            context.setPreference("username", username)
-        }
-    }
-
     private fun handleFirebaseException(exception: Exception?): String {
         return when (exception) {
             is FirebaseAuthUserCollisionException -> {
@@ -260,7 +260,7 @@ class SignupViewModel(
 
 
     private fun errorSignup(str: String = "", error: String = "") {
-        context.toast(error)
+        _toastMsg.value = error
         _signupResult.postValue(false)
 
         var errMsg = "$str $SIGNUP_FAIL "
@@ -270,11 +270,6 @@ class SignupViewModel(
         }
 
         Timber.tag(TAG).e(errMsg)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
     }
 
 }

@@ -3,19 +3,7 @@ package com.example.pillwatch.ui.welcome
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.pillwatch.R
+import javax.inject.Inject
 
 class WelcomeViewModel : ViewModel(){
-
-    fun navigateToSignup(navController: NavController) {
-        navController.navigate(R.id.action_welcomeFragment_to_signupActivity)
-    }
-
-    fun navigateToLogin(navController: NavController) {
-        navController.navigate(R.id.action_welcomeFragment_to_loginActivity)
-    }
-
-    fun navigateBack(navController: NavController) {
-        navController.navigate(R.id.action_welcomeFragment_to_loadingFragment)
-    }
-
 }

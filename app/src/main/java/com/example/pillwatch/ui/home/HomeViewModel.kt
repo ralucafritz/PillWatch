@@ -1,14 +1,14 @@
 package com.example.pillwatch.ui.home
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
-import com.example.pillwatch.R
+import com.example.pillwatch.di.LoggedUserScope
+import com.example.pillwatch.user.UserManager
+import javax.inject.Inject
 
-class HomeViewModel(application: Application): AndroidViewModel(application){
+@LoggedUserScope
+class HomeViewModel @Inject constructor(
+    private val userManager: UserManager): ViewModel(){
 
-    fun navigateToAddAMed(navController: NavController) {
-        navController.navigate(R.id.action_homeFragment_to_addMedFragment)
-    }
+
+
 }

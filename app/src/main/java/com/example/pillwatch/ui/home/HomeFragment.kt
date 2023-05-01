@@ -1,5 +1,6 @@
 package com.example.pillwatch.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,16 +9,24 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentHomeBinding
-import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarVisibilityState
-import com.example.pillwatch.utils.extensions.FragmentExtensions.navBarVisibilityState
+import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
+import javax.inject.Inject
 
 class HomeFragment : Fragment(){
 
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var navController: NavController
-    private lateinit var viewModel: HomeViewModel
+
+    @Inject
+    lateinit var viewModel: HomeViewModel
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as PillWatchApplication).appComponent.userManager().userComponent!!.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,21 +36,15 @@ class HomeFragment : Fragment(){
         // Binding
         binding = FragmentHomeBinding.inflate(inflater)
 
-        navBarVisibilityState(requireActivity(), R.id.homeFragment)
-        toolbarVisibilityState(requireActivity(), R.id.homeFragment)
-
-        // NavController
-        navController = NavHostFragment.findNavController(this)
+        toolbarBottomNavVisibility(requireActivity(), R.id.homeFragment)
 
         // ViewModel
-        val application = requireNotNull(this.activity).application
-
-        val viewModelFactory = HomeViewModelFactory(application)
-        viewModel = ViewModelProvider(this, viewModelFactory)[HomeViewModel::class.java]
         binding.viewModel = viewModel
 
         binding.btnAdd.setOnClickListener {
-            viewModel.navigateToAddAMed(navController)
+            this@HomeFragment.findNavController().navigate(
+                HomeFragmentDirections.actionHomeFragmentToAddMedFragment()
+            )
         }
 
         // Lifecycle
@@ -49,5 +52,4 @@ class HomeFragment : Fragment(){
 
         return binding.root
     }
-
 }
