@@ -15,8 +15,7 @@ import com.example.pillwatch.R
 import com.example.pillwatch.data.source.local.AppDatabase
 import com.example.pillwatch.databinding.FragmentAddMedBinding
 import com.example.pillwatch.utils.AutoCompleteAdapter
-import com.example.pillwatch.utils.extensions.FragmentExtensions.navBarVisibilityState
-import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarVisibilityState
+import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
 import kotlinx.coroutines.launch
 
 
@@ -34,8 +33,7 @@ class AddMedFragment : Fragment() {
         // Binding
         binding = FragmentAddMedBinding.inflate(inflater)
 
-        navBarVisibilityState(requireActivity(), R.id.addMedFragment)
-        toolbarVisibilityState(requireActivity(), R.id.addMedFragment)
+        toolbarBottomNavVisibility(requireActivity(), R.id.addMedFragment)
 
         // ViewModel
         val application = requireNotNull(this.activity).application

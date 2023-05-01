@@ -14,8 +14,7 @@ import com.example.pillwatch.R
 import com.example.pillwatch.data.source.local.AppDatabase
 import com.example.pillwatch.databinding.FragmentMedicationBinding
 import com.example.pillwatch.utils.MedsListAdapter
-import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarVisibilityState
-import com.example.pillwatch.utils.extensions.FragmentExtensions.navBarVisibilityState
+import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
 import kotlinx.coroutines.launch
 
 
@@ -33,8 +32,7 @@ class MedicationFragment : Fragment(){
         // Binding
         binding = FragmentMedicationBinding.inflate(inflater)
 
-        navBarVisibilityState(requireActivity(), R.id.medicationFragment)
-        toolbarVisibilityState(requireActivity(), R.id.medicationFragment)
+        toolbarBottomNavVisibility(requireActivity(), R.id.medicationFragment)
 
         // NavController
         navController = NavHostFragment.findNavController(this)

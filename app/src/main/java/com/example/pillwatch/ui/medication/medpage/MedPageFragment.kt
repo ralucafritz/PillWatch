@@ -10,8 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentMedPageBinding
-import com.example.pillwatch.utils.extensions.FragmentExtensions.navBarVisibilityState
-import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarVisibilityState
+import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
 
 class MedPageFragment: Fragment() {
         private lateinit var binding: FragmentMedPageBinding
@@ -27,8 +26,7 @@ class MedPageFragment: Fragment() {
             // Binding
             binding = FragmentMedPageBinding.inflate(inflater)
 
-            navBarVisibilityState(requireActivity(), R.id.userMedFragment)
-            toolbarVisibilityState(requireActivity(), R.id.userMedFragment)
+            toolbarBottomNavVisibility(requireActivity(), R.id.userMedFragment)
 
             // NavController
             navController = NavHostFragment.findNavController(this)

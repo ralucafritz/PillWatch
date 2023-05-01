@@ -1,23 +1,18 @@
 package com.example.pillwatch.ui.login
 
-import android.app.Application
-import android.content.Context
 import android.util.Patterns
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.pillwatch.data.source.local.UserDao
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.pillwatch.data.repository.UserRepository
+import com.example.pillwatch.di.ActivityScope
 import com.example.pillwatch.utils.AuthResultProperty
 import com.example.pillwatch.utils.extensions.FirebaseUtils.firebaseAuth
 import com.example.pillwatch.utils.ValidationProperty
 import com.example.pillwatch.utils.checkPassword
-import com.example.pillwatch.utils.extensions.ContextExtensions.isInternetConnected
-import com.example.pillwatch.utils.extensions.ContextExtensions.setLoggedInStatus
-import com.example.pillwatch.utils.extensions.ContextExtensions.setPreference
-import com.example.pillwatch.utils.extensions.ContextExtensions.showAlert
-import com.example.pillwatch.utils.extensions.ContextExtensions.toast
 import com.example.pillwatch.ui.signup.SignupViewModel
+import com.example.pillwatch.user.UserManager
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
@@ -29,22 +24,16 @@ import kotlinx.coroutines.*
 import timber.log.Timber
 import java.lang.Exception
 import java.lang.NullPointerException
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class LoginViewModel(userDao: UserDao, application: Application) :
-    AndroidViewModel(application) {
-
-    private val context: Context by lazy { application.applicationContext }
-
-    private val userRepository = UserRepository(userDao)
-
-    // start the job
-    private var viewModelJob = Job()
-
-    // coroutine scope for main thread
-    private val coroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-
+@ActivityScope
+class LoginViewModel @Inject constructor(
+    private val userRepository: UserRepository,
+    private val userManager: UserManager
+) :
+    ViewModel() {
 
     companion object {
         const val TAG = "Auth"
@@ -71,9 +60,24 @@ class LoginViewModel(userDao: UserDao, application: Application) :
     val password: LiveData<String>
         get() = _password
 
+    val username: String
+        get() = userManager.username
+
     private val _firebaseListener = MutableLiveData<Boolean>()
     val firebaseListener: LiveData<Boolean>
         get() = _firebaseListener
+
+    private val _alertMsg = MutableLiveData<Pair<String, String>>()
+    val alertMsg: LiveData<Pair<String, String>>
+        get() = _alertMsg
+
+    private val _toastMsg = MutableLiveData<String>()
+    val toastMsg: LiveData<String>
+        get() = _toastMsg
+
+    val isConnected = MutableLiveData<Boolean>()
+
+    val _networkCheckStart = MutableLiveData<Boolean>()
 
     fun isValid(email: String, password: String): ValidationProperty {
         return when {
@@ -101,47 +105,49 @@ class LoginViewModel(userDao: UserDao, application: Application) :
     }
 
     fun login() {
-        coroutineScope.launch {
+        viewModelScope.launch {
             // set local variables for email and password for easier use
             val email = _email.value!!
             val password = _password.value!!
-
+            _networkCheckStart.value = true
             // if there is internet connection => check firebase if the user exists and if it can be logged in
-            if (context.isInternetConnected()) {
-                // get user from firebase
-                try {
-                    withContext(Dispatchers.IO) {
-                        // find user in firebase
-                        signInWithEmailAndPassword(email, password)
-                    }
-                    if (_firebaseListener.value!!) {
-                        // successful -> get user from local db
-                        val user = userRepository.getUserByEmail(email)
-                        if (user != null) {
-                            /**
-                             * if found
-                             * set the login status to true
-                             * save the email for easier use
-                             * save the id for easier use
-                             * save the username for easier use
-                             * */
-                            setLoggedInStatus(user.email, user.id, user.username)
-                            _loginResult.postValue(true)
-                            Timber.tag("$FIREBASE $TAG").d("$FIREBASE $LOGIN_SUCCESS $user")
-                        } else {
-                            errorLogin(FIREBASE, NO_USER)
-                            Timber.tag("$FIREBASE $TAG").d("$FIREBASE $NO_USER")
-                            TODO("IMPLEMENT WHEN REALTIME DB WORKS")
+            isConnected.value?.let {
+                if (isConnected.value == true) {
+                    // get user from firebase
+                    try {
+                        withContext(Dispatchers.IO) {
+                            // find user in firebase
+                            signInWithEmailAndPassword(email, password)
                         }
+                        if (_firebaseListener.value!!) {
+                            // successful -> try to get user from local db
+                            val user = userRepository.getUserByEmail(email)
+                            if (user != null) {
+                                /**
+                                 * if found
+                                 * set the login status to true
+                                 * save the email for easier use
+                                 * save the id for easier use
+                                 * save the username for easier use
+                                 * */
+                                userManager.loginUser(user.id, user.email, user.username)
+                                _loginResult.postValue(true)
+                                Timber.tag("$FIREBASE $TAG").d("$FIREBASE $LOGIN_SUCCESS $user")
+                            } else {
+                                errorLogin(FIREBASE, NO_USER)
+                                Timber.tag("$FIREBASE $TAG").d("$FIREBASE $NO_USER")
+                                TODO("IMPLEMENT WHEN REALTIME DB WORKS")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        /**
+                         * failed -> log the error
+                         * depending on the error show an alert
+                         * set status to false
+                         * */
+                        val exceptionMessage = handleFirebaseException(e)
+                        errorLogin(SignupViewModel.FIREBASE, exceptionMessage)
                     }
-                } catch (e: Exception) {
-                    /**
-                     * failed -> log the error
-                     * depending on the error show an alert
-                     * set status to false
-                     * */
-                    val exceptionMessage = handleFirebaseException(e)
-                    errorLogin(SignupViewModel.FIREBASE, exceptionMessage)
                 }
             }
             if (_loginResult.value == null) {
@@ -163,7 +169,7 @@ class LoginViewModel(userDao: UserDao, application: Application) :
                      * save the id for easier use
                      * save the username for easier use -> in this case is null cause it's a new user
                      **/
-                    setLoggedInStatus(user.email, user.id, user.username)
+                    userManager.loginUser(user.id,user.email, user.username)
                     _loginResult.postValue(true)
                 } else {
                     /**
@@ -179,7 +185,7 @@ class LoginViewModel(userDao: UserDao, application: Application) :
     }
 
     fun loginWithGoogle(signInAccountTask: Task<GoogleSignInAccount>) {
-        coroutineScope.launch {
+        viewModelScope.launch {
             try {
                 // get the Google account from the sign in task
                 val account = signInAccountTask.getResult(ApiException::class.java)
@@ -193,7 +199,7 @@ class LoginViewModel(userDao: UserDao, application: Application) :
     }
 
     private suspend fun insertWithGoogle(idToken: String): Boolean {
-        return withContext(Dispatchers.Main + viewModelJob) {
+        return withContext(Dispatchers.Main) {
             if (idToken == "") {
                 false
             } else {
@@ -213,16 +219,16 @@ class LoginViewModel(userDao: UserDao, application: Application) :
                              * save the id for easier use
                              * save the username for easier use
                              **/
-                            setLoggedInStatus(email, user.id, user.username)
+                            userManager.loginUser(user.id, user.email, user.username)
                             Timber.tag(TAG).w("$GOOGLE $LOGIN_SUCCESS")
                             true
                         } else {
-                            context.showAlert("An error occurred", "Error")
+                            _alertMsg.value = Pair("An error occurred", "Error")
                             false
                         }
 
                     } else {
-                        context.showAlert("An error occurred", "Error")
+                        _alertMsg.value = Pair("An error occurred", "Error")
                         false
                     }
                 }
@@ -295,7 +301,7 @@ class LoginViewModel(userDao: UserDao, application: Application) :
     }
 
     private fun errorLogin(str: String = "", error: String = "") {
-        context.toast(error)
+        _toastMsg.value = error
         _loginResult.postValue(false)
 
         var errMsg = "$str $LOGIN_FAIL "
@@ -307,17 +313,4 @@ class LoginViewModel(userDao: UserDao, application: Application) :
         Timber.tag(TAG).e(errMsg)
     }
 
-    private fun setLoggedInStatus(email: String, id: Long, username: String? = null) {
-        context.setLoggedInStatus(true)
-        context.setPreference("id", id)
-        context.setPreference("email", email)
-        if (username != null) {
-            context.setPreference("username", username)
-        }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
-    }
 }

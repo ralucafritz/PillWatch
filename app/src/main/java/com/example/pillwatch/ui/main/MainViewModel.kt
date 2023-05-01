@@ -1,65 +1,51 @@
 package com.example.pillwatch.ui.main
 
-import android.app.Application
-import android.content.Context
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pillwatch.data.source.local.AlarmDao
-import com.example.pillwatch.data.source.local.MedsDao
-import com.example.pillwatch.data.source.local.MedsLogDao
-import com.example.pillwatch.data.source.local.MetadataDao
-import com.example.pillwatch.data.source.local.UserDao
-import com.example.pillwatch.data.source.local.UserMedsDao
 import com.example.pillwatch.data.repository.AlarmRepository
 import com.example.pillwatch.data.repository.MedsRepository
 import com.example.pillwatch.data.repository.MedsLogRepository
 import com.example.pillwatch.data.repository.MetadataRepository
 import com.example.pillwatch.data.repository.UserMedsRepository
 import com.example.pillwatch.data.repository.UserRepository
-import com.example.pillwatch.utils.extensions.ContextExtensions.setLoggedInStatus
-import com.example.pillwatch.utils.extensions.ContextExtensions.setPreference
+import com.example.pillwatch.di.LoggedUserScope
+import com.example.pillwatch.user.UserManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class MainViewModel(
-    medsDao: MedsDao,
-    metadataDao: MetadataDao,
-    userDao: UserDao,
-    userMedsDao: UserMedsDao,
-    medsLogDao: MedsLogDao,
-    alarmDao: AlarmDao,
-    application: Application)
-    : AndroidViewModel(application) {
-
-    private val medsRepository = MedsRepository(medsDao)
-    private val metadataRepository = MetadataRepository(metadataDao)
-    private val userRepository = UserRepository(userDao)
-    private val userMedsRepository = UserMedsRepository(userMedsDao)
-    private val medsLogRepository = MedsLogRepository(medsLogDao)
-    private val alarmRepository = AlarmRepository(alarmDao)
+@LoggedUserScope
+class MainViewModel @Inject constructor(
+    private val medsRepository: MedsRepository,
+    private val metadataRepository: MetadataRepository,
+    private val userRepository: UserRepository,
+    private val userMedsRepository: UserMedsRepository,
+    private val medsLogRepository: MedsLogRepository,
+    private val alarmRepository: AlarmRepository,
+    private val userManager: UserManager
+) : ViewModel() {
 
     private val _currentFragmentId = MutableLiveData<Int>()
     val currentFragmentId: LiveData<Int>
         get() = _currentFragmentId
-
-    private val context: Context by lazy { application.applicationContext }
 
     fun setCurrentFragmentId(id: Int) {
         _currentFragmentId.value = id
     }
 
     fun logout() {
-        context.setLoggedInStatus(false)
-        context.setPreference("email", "")
-        context.setPreference("id", 0L)
-        context.setPreference("username", "")
+        viewModelScope.launch {
+        userManager.logout()
+            delay(2000)
+        }
     }
 
     fun clear() {
-        viewModelScope.launch{
+        viewModelScope.launch {
 //            cleanMedsData()
 //            cleanMetadata()
 //            cleanUsers()
@@ -94,11 +80,13 @@ class MainViewModel(
             userMedsRepository.clear()
         }
     }
+
     private suspend fun cleanAlarms() {
         withContext(Dispatchers.IO) {
             alarmRepository.clear()
         }
     }
+
     private suspend fun cleanMedsLog() {
         withContext(Dispatchers.IO) {
             medsLogRepository.clear()

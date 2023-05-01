@@ -1,5 +1,6 @@
 package com.example.pillwatch.data.repository
 
+import android.provider.SyncStateContract.Helpers.insert
 import com.example.pillwatch.data.source.local.UserDao
 import com.example.pillwatch.data.model.UserEntity
 import com.example.pillwatch.utils.Role

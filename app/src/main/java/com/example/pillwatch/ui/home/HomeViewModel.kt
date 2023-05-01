@@ -6,9 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.pillwatch.R
 
-class HomeViewModel(application: Application): AndroidViewModel(application){
+class HomeViewModel(): ViewModel(){
 
-    fun navigateToAddAMed(navController: NavController) {
-        navController.navigate(R.id.action_homeFragment_to_addMedFragment)
-    }
 }

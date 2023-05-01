@@ -10,8 +10,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentSettingsBinding
-import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarVisibilityState
-import com.example.pillwatch.utils.extensions.FragmentExtensions.navBarVisibilityState
+import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
 
 class SettingsFragment : Fragment(){
 
@@ -27,8 +26,7 @@ class SettingsFragment : Fragment(){
         // Binding
         binding = FragmentSettingsBinding.inflate(inflater)
 
-        navBarVisibilityState(requireActivity(), R.id.settingsFragment)
-        toolbarVisibilityState(requireActivity(), R.id.settingsFragment)
+        toolbarBottomNavVisibility(requireActivity(), R.id.settingsFragment)
 
         // NavController
         navController = NavHostFragment.findNavController(this)

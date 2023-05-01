@@ -13,8 +13,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentAlarmsPerDayBinding
 import com.example.pillwatch.utils.AlarmTiming
-import com.example.pillwatch.utils.extensions.FragmentExtensions.navBarVisibilityState
-import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarVisibilityState
+import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
 import timber.log.Timber
 
 class AlarmsPerDayFragment: Fragment() {
@@ -31,8 +30,7 @@ class AlarmsPerDayFragment: Fragment() {
         // Binding
         binding = FragmentAlarmsPerDayBinding.inflate(inflater)
 
-        navBarVisibilityState(requireActivity(), R.id.alarmsPerDayFragment)
-        toolbarVisibilityState(requireActivity(), R.id.alarmsPerDayFragment)
+        toolbarBottomNavVisibility(requireActivity(), R.id.alarmsPerDayFragment)
 
         val medId = AlarmsPerDayFragmentArgs.fromBundle(requireArguments()).id
         val alarmTiming = AlarmsPerDayFragmentArgs.fromBundle(requireArguments()).alarmTiming

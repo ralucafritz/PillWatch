@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loadingFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/welcomeFragment"
@@ -16,9 +16,6 @@
         <action
             android:id="@+id/action_welcomeFragment_to_loginActivity"
             app:destination="@id/loginActivity" />
-        <action
-            android:id="@+id/action_welcomeFragment_to_loadingFragment"
-            app:destination="@id/loadingFragment" />
     </fragment>
     <activity
         android:id="@+id/signupActivity"
@@ -29,37 +26,9 @@
         android:name="com.example.pillwatch.ui.login.LoginActivity"
         android:label="LoginActivity" />
     <fragment
-        android:id="@+id/loadingFragment"
-        android:name="com.example.pillwatch.ui.loading.LoadingFragment"
-        android:label="LoadingFragment" >
-        <action
-            android:id="@+id/action_loadingFragment_to_welcomeFragment"
-            app:destination="@id/welcomeFragment"
-            app:enterAnim="@anim/fui_slide_in_right"
-            app:exitAnim="@anim/fui_slide_out_left" />
-        <action
-            android:id="@+id/action_loadingFragment_to_usernameCreationFragment"
-            app:destination="@id/usernameCreationFragment"
-            app:enterAnim="@anim/fui_slide_in_right"
-            app:exitAnim="@anim/fui_slide_out_left"
-            app:popEnterAnim="@anim/fui_slide_in_right"
-            app:popExitAnim="@anim/fui_slide_out_left" />
-        <action
-            android:id="@+id/action_loadingFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/usernameCreationFragment"
         android:name="com.example.pillwatch.ui.username.UsernameCreationFragment"
-        android:label="UsernameCreationFragment" >
-        <action
-            android:id="@+id/action_usernameCreationFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-    </fragment>
+        android:label="UsernameCreationFragment" />
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.pillwatch.ui.home.HomeFragment"
@@ -154,4 +123,8 @@
             android:id="@+id/action_userMedFragment_to_medicationFragment"
             app:destination="@id/medicationFragment" />
     </fragment>
+    <activity
+        android:id="@+id/splashActivity"
+        android:name="com.example.pillwatch.ui.splash.SplashActivity"
+        android:label="SplashActivity" />
 </navigation>

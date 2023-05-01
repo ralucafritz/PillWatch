@@ -4,39 +4,43 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.ViewModelProvider
+import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
-import com.example.pillwatch.data.source.local.AppDatabase
 import com.example.pillwatch.databinding.ActivitySignupBinding
 import com.example.pillwatch.ui.login.LoginActivity
-import com.example.pillwatch.ui.main.MainActivity
+import com.example.pillwatch.ui.splash.SplashActivity
+import com.example.pillwatch.ui.username.UsernameCreationFragment
 import com.example.pillwatch.utils.extensions.ContextExtensions.toast
 import com.example.pillwatch.utils.extensions.Extensions.timber
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import javax.inject.Inject
 
 class SignupActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignupBinding
-    private lateinit var viewModel: SignupViewModel
+
+    @Inject
+    lateinit var viewModel: SignupViewModel
+
+    lateinit var signupComponent: SignupComponent
 
     private lateinit var gso: GoogleSignInOptions
     private lateinit var gsc: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        signupComponent =
+            (application as PillWatchApplication).appComponent.signupComponent().create()
+        signupComponent.inject(this)
         super.onCreate(savedInstanceState)
         timber()
 
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val userDao = AppDatabase.getInstance(application).userDao
-
-        val viewModelFactory = SignupViewModelFactory(userDao, application)
-        viewModel = ViewModelProvider(this, viewModelFactory)[SignupViewModel::class.java]
 
         binding.viewModel = viewModel
 
@@ -44,19 +48,26 @@ class SignupActivity : AppCompatActivity() {
 
         // signup btn on click
         binding.buttonSignup.setOnClickListener {
-            val email = binding.editTextEmailAddressSignup.text .toString() ?: ""
-            val password = binding.editTextPasswordSignup.text .toString() ?: ""
-            val confirmPassword = binding.editTextConfirmPasswordSignup.text .toString() ?: ""
+            val email = binding.editTextEmailAddressSignup.text.toString() ?: ""
+            val password = binding.editTextPasswordSignup.text.toString() ?: ""
+            val confirmPassword = binding.editTextConfirmPasswordSignup.text.toString() ?: ""
             val result = viewModel.isValid(email, password, confirmPassword)
             if (result.isValid) {
                 viewModel.signup()
                 viewModel.signupResult.observe(this) { res ->
                     if (res == true) {
-                        success()
+                        if (viewModel.username != "") {
+                            success()
+                        } else {
+                            supportFragmentManager.beginTransaction()
+                                .add(R.id.fragment_holder, UsernameCreationFragment())
+                                .commit()
+                            binding.mainSignup.visibility = View.GONE
+                        }
+                    } else {
+                        toast(result.message)
                     }
                 }
-            } else {
-                toast(result.message)
             }
         }
 
@@ -69,7 +80,7 @@ class SignupActivity : AppCompatActivity() {
         // back button callback
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                navigateToActivity(R.id.nav_host_fragment)
+                navigateToActivity(R.id.welcomeFragment)
                 finish()
             }
         }
@@ -91,7 +102,17 @@ class SignupActivity : AppCompatActivity() {
                         viewModel.signupWithGoogle(it)
                         viewModel.signupResult.observe(this) { res ->
                             if (res == true) {
-                                success()
+                                if (viewModel.username != "") {
+                                    success()
+                                } else {
+                                    supportFragmentManager.beginTransaction()
+                                        .add(
+                                            R.id.fragment_holder,
+                                            UsernameCreationFragment()
+                                        )
+                                        .commit()
+                                    binding.mainSignup.visibility = View.GONE
+                                }
                             } else {
                                 toast("Google sign up failed")
                             }
@@ -110,28 +131,25 @@ class SignupActivity : AppCompatActivity() {
     private fun navigateToActivity(activityId: Int): Intent {
         return Intent(
             this, when (activityId) {
-                R.id.nav_host_fragment -> {
-                    MainActivity::class.java
-                }
-
                 R.id.loginActivity -> {
                     LoginActivity::class.java
                 }
 
                 else -> {
-                    MainActivity::class.java
+                    SplashActivity::class.java
                 }
             }
         )
     }
 
-    private val getResult = registerForActivityResult( ActivityResultContracts.StartActivityForResult()) {
-        if(it.resultCode == Activity.RESULT_OK) {
-            success()
+    private val getResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                success()
+            }
         }
-    }
 
-    private fun success() {
+    fun success() {
         setResult(Activity.RESULT_OK)
         finish()
     }
