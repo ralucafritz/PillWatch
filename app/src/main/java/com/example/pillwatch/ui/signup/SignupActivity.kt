@@ -48,9 +48,9 @@ class SignupActivity : AppCompatActivity() {
 
         // signup btn on click
         binding.buttonSignup.setOnClickListener {
-            val email = binding.editTextEmailAddressSignup.text.toString() ?: ""
-            val password = binding.editTextPasswordSignup.text.toString() ?: ""
-            val confirmPassword = binding.editTextConfirmPasswordSignup.text.toString() ?: ""
+            val email = binding.editTextEmailAddressSignup.text.toString()
+            val password = binding.editTextPasswordSignup.text.toString()
+            val confirmPassword = binding.editTextConfirmPasswordSignup.text.toString()
             val result = viewModel.isValid(email, password, confirmPassword)
             if (result.isValid) {
                 viewModel.signup()

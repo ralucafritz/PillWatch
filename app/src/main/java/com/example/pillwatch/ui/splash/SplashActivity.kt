@@ -8,7 +8,7 @@ import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.ActivitySplashBinding
 import com.example.pillwatch.ui.main.MainActivity
-import com.example.pillwatch.ui.welcome.WelcomeFragment
+import com.example.pillwatch.ui.splash.welcome.WelcomeFragment
 import com.example.pillwatch.user.UserManager
 import javax.inject.Inject
 

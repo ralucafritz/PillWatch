@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pillwatch.di.LoggedUserScope
-import com.example.pillwatch.user.UserDataRepository
 import com.example.pillwatch.user.UserManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -38,14 +37,8 @@ class SplashViewModel @Inject constructor(
             _username.value = userManager.username
             Timber.tag(TAG).d(_username.value!!)
             _welcomeMessage.value = "Welcome ${_username.value}"
-            delay()
-            _navigationCheck.value = true
-        }
-    }
-
-    private fun delay() {
-        viewModelScope.launch {
             delay(2000)
+            _navigationCheck.value = true
         }
     }
 

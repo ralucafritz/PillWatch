@@ -8,7 +8,6 @@ import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -17,11 +16,9 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
-import com.example.pillwatch.data.source.local.AppDatabase
 import com.example.pillwatch.databinding.ActivityMainBinding
 import com.example.pillwatch.utils.extensions.ContextExtensions.dismissProgressDialog
 import com.example.pillwatch.utils.extensions.ContextExtensions.showProgressDialog
-import com.example.pillwatch.ui.MedsViewModel
 import com.example.pillwatch.ui.splash.SplashActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

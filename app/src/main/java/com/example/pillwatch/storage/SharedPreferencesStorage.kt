@@ -30,10 +30,10 @@ class SharedPreferencesStorage @Inject constructor(context: Context) : Storage {
     }
 
     override fun getLong(key: String): Long {
-        return sharedPreferences.getLong(key, 0L)!!
+        return sharedPreferences.getLong(key, 0L)
     }
 
     override fun getBoolean(key: String): Boolean {
-        return sharedPreferences.getBoolean(key, false)!!
+        return sharedPreferences.getBoolean(key, false)
     }
 }

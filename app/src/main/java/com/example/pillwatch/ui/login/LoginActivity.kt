@@ -49,8 +49,8 @@ class LoginActivity : AppCompatActivity() {
 
         // login btn on click
         binding.buttonLogin.setOnClickListener {
-            val email = binding.editTextEmailAddressLogin.text.toString() ?: ""
-            val password = binding.editTextPasswordLogin.text.toString() ?: ""
+            val email = binding.editTextEmailAddressLogin.text.toString()
+            val password = binding.editTextPasswordLogin.text.toString()
             val result = viewModel.isValid(email, password)
             if (result.isValid) {
                 viewModel.login()

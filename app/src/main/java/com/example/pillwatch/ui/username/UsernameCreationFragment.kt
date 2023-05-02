@@ -39,7 +39,7 @@ class UsernameCreationFragment : Fragment() {
 
         // next button
         binding.buttonNext.setOnClickListener {
-            val username = binding.usernameText.text .toString() ?: ""
+            val username = binding.usernameText.text .toString()
             val validationResult = viewModel.isValid(username)
             if (validationResult.isValid) {
                 viewModel.updateUsername()

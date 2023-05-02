@@ -1,4 +1,4 @@
-package com.example.pillwatch.ui.welcome
+package com.example.pillwatch.ui.splash.welcome
 
 import android.app.Activity
 import android.content.Intent

@@ -1,4 +1,4 @@
-package com.example.pillwatch.ui
+package com.example.pillwatch.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,7 +7,6 @@ import com.example.pillwatch.data.model.MedsEntity
 import com.example.pillwatch.data.model.MetadataEntity
 import com.example.pillwatch.data.repository.MedsRepository
 import com.example.pillwatch.data.repository.MetadataRepository
-import com.example.pillwatch.di.LoggedUserScope
 import com.example.pillwatch.network.AppApi
 import com.example.pillwatch.utils.MedsDataProperty
 import com.example.pillwatch.utils.MedsDataShaProperty

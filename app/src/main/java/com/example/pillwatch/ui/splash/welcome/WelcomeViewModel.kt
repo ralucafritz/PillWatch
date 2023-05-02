@@ -1,4 +1,4 @@
-package com.example.pillwatch.ui.welcome
+package com.example.pillwatch.ui.splash.welcome
 
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
