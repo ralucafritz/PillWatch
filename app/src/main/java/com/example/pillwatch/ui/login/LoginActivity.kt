@@ -13,7 +13,7 @@ import com.example.pillwatch.databinding.ActivityLoginBinding
 import com.example.pillwatch.ui.signup.SignupActivity
 import com.example.pillwatch.ui.splash.SplashActivity
 import com.example.pillwatch.ui.username.UsernameCreationFragment
-import com.example.pillwatch.utils.extensions.ContextExtensions.setLoggedInStatus
+import com.example.pillwatch.utils.extensions.ContextExtensions.isInternetConnected
 import com.example.pillwatch.utils.extensions.ContextExtensions.toast
 import com.example.pillwatch.utils.extensions.Extensions.timber
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -67,7 +67,6 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                setLoggedInStatus(false)
                 toast(result.message)
             }
         }
@@ -110,7 +109,6 @@ class LoginActivity : AppCompatActivity() {
                                     binding.mainLogin.visibility = View.INVISIBLE
                                 }
                             } else {
-                                setLoggedInStatus(false)
                                 toast("Google sign in failed")
                             }
                         }
@@ -121,7 +119,12 @@ class LoginActivity : AppCompatActivity() {
         binding.btnGoogleSignIn.setOnClickListener {
             val signInIntent = gsc.signInIntent
             googleSignInLauncher.launch(signInIntent)
+        }
 
+        viewModel.networkCheckStart.observe(this) {
+            if(it != null && it) {
+                viewModel.isInternetConnected(this.isInternetConnected())
+            }
         }
     }
 

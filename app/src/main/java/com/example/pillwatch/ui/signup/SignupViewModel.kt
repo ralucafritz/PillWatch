@@ -2,17 +2,12 @@ package com.example.pillwatch.ui.signup
 
 import android.util.Patterns
 import androidx.lifecycle.*
-import com.example.pillwatch.data.source.local.UserDao
 import com.example.pillwatch.data.repository.UserRepository
 import com.example.pillwatch.di.ActivityScope
 import com.example.pillwatch.user.UserManager
 import com.example.pillwatch.utils.AuthResultProperty
 import com.example.pillwatch.utils.extensions.FirebaseUtils.firebaseUser
 import com.example.pillwatch.utils.ValidationProperty
-import com.example.pillwatch.utils.extensions.ContextExtensions.isInternetConnected
-import com.example.pillwatch.utils.extensions.ContextExtensions.setLoggedInStatus
-import com.example.pillwatch.utils.extensions.ContextExtensions.setPreference
-import com.example.pillwatch.utils.extensions.ContextExtensions.toast
 import com.example.pillwatch.utils.extensions.FirebaseUtils.firebaseAuth
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
@@ -78,9 +73,9 @@ class SignupViewModel @Inject constructor(
     val toastMsg: LiveData<String>
         get() = _toastMsg
 
-    val isConnected = MutableLiveData<Boolean>()
+    var isConnected = MutableLiveData<Boolean>()
 
-    val _networkCheckStart = MutableLiveData<Boolean>()
+    val networkCheckStart = MutableLiveData<Boolean>()
 
     fun isValid(email: String, password: String, confirmPassword: String): ValidationProperty {
         return when {
@@ -118,7 +113,7 @@ class SignupViewModel @Inject constructor(
             // set local variables for email and password for easier use
             val email = _email.value!!
             val password = _password.value!!
-            _networkCheckStart.value = true
+            networkCheckStart.value = true
             // if there is internet connection => check firebase if the user can be created
             isConnected.value?.let {
                 if (isConnected.value == true) {
@@ -257,7 +252,9 @@ class SignupViewModel @Inject constructor(
             }
         }
     }
-
+    fun isInternetConnected(bool: Boolean) {
+        isConnected.value = bool
+    }
 
     private fun errorSignup(str: String = "", error: String = "") {
         _toastMsg.value = error

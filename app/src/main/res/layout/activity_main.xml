@@ -62,7 +62,8 @@
                 tools:text="RaluTest"
                 android:textColor="?attr/colorOnPrimary"
                 android:textSize="@dimen/text_size_big"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_arrow_down"/>
 
         </FrameLayout>
 

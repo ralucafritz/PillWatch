@@ -6,17 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
-import com.example.pillwatch.data.source.local.AppDatabase
 import com.example.pillwatch.databinding.FragmentMedicationBinding
-import com.example.pillwatch.utils.MedsListAdapter
 import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
 import kotlinx.coroutines.launch
 import javax.inject.Inject

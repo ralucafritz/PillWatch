@@ -26,43 +26,6 @@ object ContextExtensions {
         val toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
         toast.setGravity(Gravity.TOP, 0, 0)
         toast.show()
-
-    }
-
-
-    /**
-     *      Extension function to set the value of the `isLoggedIn` preference from SharedPreferences
-     */
-    fun Context.setLoggedInStatus(value: Boolean) {
-        SharedPreferencesExtensions.setPreference(this, "isLoggedIn", value)
-    }
-
-    /**
-     *      Extension function to get the value of the 'isLoggedIn` preference from SharedPreferences
-     */
-    fun Context.getLoggedInStatus(): Boolean {
-        return SharedPreferencesExtensions.getPreference(this, "isLoggedIn", false)
-    }
-
-    /**
-     *      Extension function to set a preference value from SharedPreferences
-     */
-    fun Context.setPreference(key: String, value: Any) {
-        SharedPreferencesExtensions.setPreference(this, key, value)
-    }
-
-    /**
-     *      Extension function to get a preference value from SharedPreferences by providing a random value of the type of the preference
-     */
-    fun Context.getPreference(key: String, type: Any): Any {
-        return SharedPreferencesExtensions.getPreference(this, key, type)
-    }
-
-    /**
-     *      Extension function to get a string preference value from SharedPreferences
-     */
-    fun Context.getPreference(key: String): String {
-        return SharedPreferencesExtensions.getPreference(this, key, "")
     }
 
     /**

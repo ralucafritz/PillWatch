@@ -75,9 +75,9 @@ class LoginViewModel @Inject constructor(
     val toastMsg: LiveData<String>
         get() = _toastMsg
 
-    val isConnected = MutableLiveData<Boolean>()
+    var isConnected = MutableLiveData<Boolean>()
 
-    val _networkCheckStart = MutableLiveData<Boolean>()
+    val networkCheckStart = MutableLiveData<Boolean>()
 
     fun isValid(email: String, password: String): ValidationProperty {
         return when {
@@ -109,7 +109,7 @@ class LoginViewModel @Inject constructor(
             // set local variables for email and password for easier use
             val email = _email.value!!
             val password = _password.value!!
-            _networkCheckStart.value = true
+            networkCheckStart.value = true
             // if there is internet connection => check firebase if the user exists and if it can be logged in
             isConnected.value?.let {
                 if (isConnected.value == true) {
@@ -298,6 +298,9 @@ class LoginViewModel @Inject constructor(
                 exception!!.stackTraceToString()
             }
         }
+    }
+    fun isInternetConnected(bool: Boolean) {
+        isConnected.value = bool
     }
 
     private fun errorLogin(str: String = "", error: String = "") {
