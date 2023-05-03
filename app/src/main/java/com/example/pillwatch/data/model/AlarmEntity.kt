@@ -19,6 +19,7 @@ data class AlarmEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val medId: Long,
-    val hour: Int
+    var timeInMillis: Long,
+    var isEnabled: Boolean
 ) {
 }

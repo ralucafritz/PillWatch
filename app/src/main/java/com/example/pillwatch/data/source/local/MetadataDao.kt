@@ -6,7 +6,7 @@ import com.example.pillwatch.data.model.MetadataEntity
 
 @Dao
 interface MetadataDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert()
     fun insert(metadata: MetadataEntity)
 
     @Update

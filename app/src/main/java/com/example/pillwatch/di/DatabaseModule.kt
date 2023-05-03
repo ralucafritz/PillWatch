@@ -2,6 +2,8 @@ package com.example.pillwatch.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.pillwatch.data.source.local.AlarmDao
 import com.example.pillwatch.data.source.local.AppDatabase
 import com.example.pillwatch.data.source.local.MedsDao
@@ -19,7 +21,7 @@ class DatabaseModule {
     @Singleton
     @Provides
     fun provideDatabase(context: Context) : AppDatabase {
-        return Room.databaseBuilder(context, AppDatabase::class.java, "PillWatchDatabase").build()
+        return AppDatabase.getInstance(context)
     }
 
     @Singleton

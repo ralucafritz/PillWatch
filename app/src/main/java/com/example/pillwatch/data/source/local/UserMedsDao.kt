@@ -8,10 +8,10 @@ import com.example.pillwatch.data.model.UserMedsEntity
 
 @Dao
 interface UserMedsDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert()
     fun insert(userMed: UserMedsEntity): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert()
     fun insertAll(userMedList : List<UserMedsEntity>)
 
     @Query("SELECT * FROM user_meds_table WHERE userId = :userId")

@@ -1,6 +1,7 @@
 package com.example.pillwatch.di
 
 import android.content.Context
+import com.example.pillwatch.ui.addmed.AlarmsPerDayFragment
 import com.example.pillwatch.ui.login.LoginComponent
 import com.example.pillwatch.ui.signup.SignupComponent
 import com.example.pillwatch.user.UserManager
@@ -20,4 +21,6 @@ interface AppComponent {
     fun signupComponent(): SignupComponent.Factory
     fun loginComponent(): LoginComponent.Factory
     fun userManager(): UserManager
+
+    fun inject(fragment: AlarmsPerDayFragment)
 }

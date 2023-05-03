@@ -9,7 +9,7 @@ import com.example.pillwatch.data.model.MedsLogEntity
 
 @Dao
 interface MedsLogDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert()
     fun insert(medsLog: MedsLogEntity): Long
 
     @Query("SELECT * FROM meds_log_table WHERE medId = :medId")

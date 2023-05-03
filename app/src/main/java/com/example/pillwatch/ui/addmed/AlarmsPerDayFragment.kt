@@ -1,5 +1,6 @@
 package com.example.pillwatch.ui.addmed
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,19 +9,35 @@ import android.widget.SeekBar
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
+import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.databinding.FragmentAlarmsPerDayBinding
+import com.example.pillwatch.ui.login.LoginActivity
+import com.example.pillwatch.ui.main.MainActivity
+import com.example.pillwatch.ui.medication.MedsListAdapter
+import com.example.pillwatch.ui.signup.SignupActivity
 import com.example.pillwatch.utils.AlarmTiming
 import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class AlarmsPerDayFragment: Fragment() {
+class AlarmsPerDayFragment: Fragment(), OnAlarmUpdatedListener {
     private lateinit var binding: FragmentAlarmsPerDayBinding
-    private lateinit var navController: NavController
-    private val viewModel: AlarmsPerDayViewModel by lazy {
-        ViewModelProvider(this)[AlarmsPerDayViewModel::class.java]}
+
+    @Inject
+    lateinit var viewModel: AlarmsPerDayViewModel
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        (requireActivity().application as PillWatchApplication).appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,19 +52,20 @@ class AlarmsPerDayFragment: Fragment() {
         val medId = AlarmsPerDayFragmentArgs.fromBundle(requireArguments()).id
         val alarmTiming = AlarmsPerDayFragmentArgs.fromBundle(requireArguments()).alarmTiming
 
-        // NavController
-        navController = NavHostFragment.findNavController(this)
+        // ViewModel
+        binding.viewModel = viewModel
 
         binding.slider.isVisible = false
         if(alarmTiming == AlarmTiming.EVERY_X_HOURS) {
             binding.slider.isVisible = true
+            binding.slider.progress = 12
+            changeValueText( binding.slider.progress)
         }
 
         binding.slider.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 viewModel.everyXHours = progress
-                val newText = "Every ${progress+1} hours"
-                binding.valueText.text = newText
+                changeValueText(progress)
                 Timber.tag("alarm").d(viewModel.everyXHours.toString())
             }
 
@@ -58,8 +76,17 @@ class AlarmsPerDayFragment: Fragment() {
             }
         })
 
-        // ViewModel
-        binding.viewModel = viewModel
+        val recyclerView = binding.alarmsList
+
+        recyclerView.layoutManager = LinearLayoutManager(context)
+
+        lifecycleScope.launch {
+            val alarmsList = viewModel.generateAlarms(medId, alarmTiming)
+            if (alarmsList != null) {
+                val adapter = AlarmsListAdapter(requireContext(), alarmsList, this@AlarmsPerDayFragment)
+                recyclerView.adapter = adapter
+            }
+        }
 
         // Lifecycle
         binding.lifecycleOwner = this
@@ -67,4 +94,14 @@ class AlarmsPerDayFragment: Fragment() {
         return binding.root
     }
 
+    override fun onAlarmUpdated(alarm: AlarmEntity) {
+        lifecycleScope.launch {
+            viewModel.updateAlarm(alarm)
+        }
+    }
+
+    private fun changeValueText(value: Int) {
+        val newText  = "Every $value hours"
+        binding.valueText.text =newText
+    }
 }

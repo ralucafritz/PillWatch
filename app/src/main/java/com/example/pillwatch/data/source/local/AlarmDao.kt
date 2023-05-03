@@ -10,11 +10,14 @@ import com.example.pillwatch.data.model.AlarmEntity
 @Dao
 interface AlarmDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert()
     fun insert(alarm: AlarmEntity): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert()
     fun insertAll(alarmList: List<AlarmEntity>)
+
+    @Query("UPDATE alarms_table SET timeInMillis = :timeInMillis, isEnabled = :isEnabled  WHERE id = :id ")
+    fun updateAlarm(id: Long, timeInMillis: Long, isEnabled: Boolean)
 
     @Query("SELECT * FROM alarms_table WHERE medId = :medId")
     fun getAlarmsByMedId(medId: Long) : LiveData<List<AlarmEntity?>>

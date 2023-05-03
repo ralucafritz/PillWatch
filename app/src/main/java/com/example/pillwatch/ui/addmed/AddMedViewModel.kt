@@ -173,7 +173,7 @@ class AddMedViewModel @Inject constructor(
             val medIdRxCui = withContext(Dispatchers.IO) {
                 medsRepository.getRxCuiForMed(medId)
             }
-            // get rxcui's fror the rest of the meds in the user's list -> return only the values different than null
+            // get rxcui's for the rest of the meds in the user's list -> return only the values different than null
             val rxCuiList = withContext(Dispatchers.IO) {
                 val medIds = userMedsRepository.getMedIdForMedsForUser(userId).filterNotNull()
                 getRxCuiList(medIds)
@@ -199,33 +199,36 @@ class AddMedViewModel @Inject constructor(
                 // call the API
                 val responseInteractionDataAPI =
                     AppApi.retrofitService.getInteractionData(rxCui, listRxCui)
+                if(responseInteractionDataAPI.interaction != null) {
+                    for (lists in responseInteractionDataAPI.interaction) {
+                        lists.forEach {
+                            when (it.severity.lowercase()) {
+                                "low" -> {
+                                    severityLow.add(Pair(it.rxCui1, it.rxCui2))
+                                }
 
-                for (lists in responseInteractionDataAPI.interaction) {
-                    lists.forEach {
-                        when (it.severity.lowercase()) {
-                            "low" -> {
-                                severityLow.add(Pair(it.rxCui1, it.rxCui2))
-                            }
+                                "medium", "moderate" -> {
+                                    severityModerate.add(Pair(it.rxCui1, it.rxCui2))
+                                }
 
-                            "medium", "moderate" -> {
-                                severityModerate.add(Pair(it.rxCui1, it.rxCui2))
-                            }
+                                "high" -> {
+                                    severityHigh.add(Pair(it.rxCui1, it.rxCui2))
+                                }
 
-                            "high" -> {
-                                severityHigh.add(Pair(it.rxCui1, it.rxCui2))
+                                else -> {
+                                    //
+                                }
                             }
-
-                            else -> {
-                                //
-                            }
+                            interactionList.add(it)
                         }
-                        interactionList.add(it)
                     }
+                    if (interactionList.isNotEmpty()) {
+                        _responseInteractionDataAPI.value = interactionList
+                    }
+                    _isAlertNeeded.value = true
+                } else {
+                    addMedCheck.value = true
                 }
-                if (interactionList.isNotEmpty()) {
-                    _responseInteractionDataAPI.value = interactionList
-                }
-                _isAlertNeeded.value = true
             } catch (e: Exception) {
                 Timber.tag("INTERACTION").e("Server error $e.printStackTrace().toString()")
             }
