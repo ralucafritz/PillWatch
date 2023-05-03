@@ -19,7 +19,7 @@ class AlarmsPerDayViewModel @Inject constructor(private val alarmRepository: Ala
     suspend fun generateAlarms(medId: Long, alarmTiming: AlarmTiming) : MutableList<AlarmEntity> {
         val frequency = when (alarmTiming) {
             AlarmTiming.EVERY_X_HOURS -> {
-                everyXHours
+               24 / everyXHours
             }
             AlarmTiming.ONCE_A_DAY -> 1
             AlarmTiming.TWICE_A_DAY -> 2
@@ -34,7 +34,7 @@ class AlarmsPerDayViewModel @Inject constructor(private val alarmRepository: Ala
 
         for (i in 0 until frequency) {
             val calendar = Calendar.getInstance().apply {
-                add(Calendar.MILLISECOND, intervalMillis * i)
+                add(Calendar.MILLISECOND, (intervalMillis * i).toInt())
             }
             val alarm = AlarmEntity(0L, medId, calendar.timeInMillis, true)
             alarmList.add(alarm)
