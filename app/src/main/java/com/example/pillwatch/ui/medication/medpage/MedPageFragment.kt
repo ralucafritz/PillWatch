@@ -2,19 +2,20 @@ package com.example.pillwatch.ui.medication.medpage
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentMedPageBinding
-import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
+import com.example.pillwatch.ui.main.MainActivity
 import javax.inject.Inject
 
 class MedPageFragment: Fragment() {
         private lateinit var binding: FragmentMedPageBinding
+
         private val viewModel: MedPageViewModel by lazy {
             ViewModelProvider(this)[MedPageViewModel::class.java]}
 
@@ -26,7 +27,7 @@ class MedPageFragment: Fragment() {
             // Binding
             binding = FragmentMedPageBinding.inflate(inflater)
 
-            toolbarBottomNavVisibility(requireActivity(), R.id.userMedFragment)
+            (requireActivity() as MainActivity).medPageToolbar( true, R.id.medPageFragment)
 
             // ViewModel
             binding.viewModel = viewModel

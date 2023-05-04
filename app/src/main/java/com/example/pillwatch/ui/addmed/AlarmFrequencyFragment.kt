@@ -12,8 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentAlarmFrequencyBinding
+import com.example.pillwatch.ui.main.MainActivity
 import com.example.pillwatch.utils.AlarmTiming
-import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
 
 class AlarmFrequencyFragment: Fragment() {
 
@@ -30,7 +30,7 @@ class AlarmFrequencyFragment: Fragment() {
         // Binding
         binding = FragmentAlarmFrequencyBinding.inflate(inflater)
 
-        toolbarBottomNavVisibility(requireActivity(), R.id.alarmFrequencyFragment)
+        (requireActivity() as MainActivity).navBarToolbarBottomNav( false, R.id.alarmFrequencyFragment)
 
         // ViewModel
         binding.viewModel = viewModel

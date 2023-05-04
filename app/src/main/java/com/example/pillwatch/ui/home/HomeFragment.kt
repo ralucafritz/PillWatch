@@ -6,14 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentHomeBinding
-import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
+import com.example.pillwatch.ui.main.MainActivity
 import javax.inject.Inject
 
 class HomeFragment : Fragment(){
@@ -36,7 +33,7 @@ class HomeFragment : Fragment(){
         // Binding
         binding = FragmentHomeBinding.inflate(inflater)
 
-        toolbarBottomNavVisibility(requireActivity(), R.id.homeFragment)
+        (requireActivity() as MainActivity).navBarToolbarBottomNav( true, R.id.homeFragment)
 
         // ViewModel
         binding.viewModel = viewModel

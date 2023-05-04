@@ -3,6 +3,7 @@ package com.example.pillwatch.ui.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -17,6 +18,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.ActivityMainBinding
+import com.example.pillwatch.ui.medication.MedicationFragment
+import com.example.pillwatch.ui.medication.medpage.MedPageFragment
 import com.example.pillwatch.utils.extensions.ContextExtensions.dismissProgressDialog
 import com.example.pillwatch.utils.extensions.ContextExtensions.showProgressDialog
 import com.example.pillwatch.ui.splash.SplashActivity
@@ -94,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             /**
              *      HamburgerIcon click listener for opening and closing the drawer
              */
-            hamburgerIcon.setOnClickListener {
+            openDrawer.setOnClickListener {
                 if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     drawerLayout.closeDrawer(GravityCompat.START)
                 } else {
@@ -151,16 +154,33 @@ class MainActivity : AppCompatActivity() {
      *      This function sets the @currentFragmentId MutableLiveData value in the ViewModel
      *      @param bool is used to determine if the ToolbarFrame should be visible or not
      */
-    fun isVisible(bool: Boolean, fragmentId: Int) {
+    fun navBarToolbarBottomNav(bool: Boolean, fragmentId: Int) {
         mainViewModel.setCurrentFragmentId(fragmentId)
         if (bool) {
             binding.toolbarFrame.visibility = View.VISIBLE
+            binding.bottomNavigationView.visibility = View.VISIBLE
             binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         } else {
             binding.toolbarFrame.visibility = View.GONE
+            binding.bottomNavigationView.visibility = View.GONE
             binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
     }
 
+    fun medPageToolbar(bool: Boolean, fragmentId: Int) {
+        mainViewModel.setCurrentFragmentId(fragmentId)
+        if (bool) {
+            binding.toolbarFrame.visibility = View.VISIBLE
+            binding.hamburgerIcon.visibility = View.GONE
+            binding.backButton.visibility = View.VISIBLE
+        } else {
+            binding.toolbarFrame.visibility = View.GONE
+            binding.hamburgerIcon.visibility = View.VISIBLE
+            binding.backButton.visibility = View.GONE
+        }
+
+        binding.bottomNavigationView.visibility = View.GONE
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+    }
 
 }

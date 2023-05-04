@@ -1,6 +1,7 @@
 package com.example.pillwatch.ui.medication
 
 import android.content.Context
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +31,12 @@ class MedsListAdapter(private val context: Context, private val medList: List<Us
 
     class MedsViewHolder(private val binding:  CardViewDesignBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(med: UserMedsEntity, context: Context){
-            binding.medItemName.text = med.tradeName
+            if (med.tradeName.length >= 15) {
+                val truncated = med.tradeName.substring(0, 14) + "..."
+                binding.medItemName.text = truncated
+            } else {
+                binding.medItemName.text = med.tradeName
+            }
             binding.medItemConc.text = med.concentration
             if(med.medId != null) {
                 binding.medItemFab.setImageResource(R.drawable.ic_check)

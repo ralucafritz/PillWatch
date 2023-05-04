@@ -13,6 +13,16 @@
         android:layout_height="match_parent"
         tools:context=".ui.medication.medpage.MedPageFragment">
 
+        <ImageView
+            android:id="@+id/toolbar_background"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription,VisualLintBounds"
+            android:src="@drawable/toolbar_rectangle" />
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"

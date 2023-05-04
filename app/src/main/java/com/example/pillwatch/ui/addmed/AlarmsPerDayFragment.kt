@@ -9,23 +9,15 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.databinding.FragmentAlarmsPerDayBinding
-import com.example.pillwatch.ui.login.LoginActivity
 import com.example.pillwatch.ui.main.MainActivity
-import com.example.pillwatch.ui.medication.MedsListAdapter
-import com.example.pillwatch.ui.signup.SignupActivity
 import com.example.pillwatch.utils.AlarmTiming
-import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -51,7 +43,7 @@ class AlarmsPerDayFragment: Fragment(), OnAlarmUpdatedListener {
         // Binding
         binding = FragmentAlarmsPerDayBinding.inflate(inflater)
 
-        toolbarBottomNavVisibility(requireActivity(), R.id.alarmsPerDayFragment)
+        (requireActivity() as MainActivity).navBarToolbarBottomNav( false, R.id.alarmsPerDayFragment)
 
         // ViewModel
         binding.viewModel = viewModel

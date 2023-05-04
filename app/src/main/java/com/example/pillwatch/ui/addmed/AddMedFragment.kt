@@ -13,8 +13,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentAddMedBinding
+import com.example.pillwatch.ui.main.MainActivity
 import com.example.pillwatch.utils.AutoCompleteAdapter
-import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -41,7 +41,7 @@ class AddMedFragment : Fragment() {
         // Binding
         binding = FragmentAddMedBinding.inflate(inflater)
 
-        toolbarBottomNavVisibility(requireActivity(), R.id.addMedFragment)
+        (requireActivity() as MainActivity).navBarToolbarBottomNav( false, R.id.addMedFragment)
 
         // ViewModel
         binding.viewModel = viewModel
