@@ -103,7 +103,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="64dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/slightly_rounded_button"
             android:paddingStart="10dp"
             android:paddingEnd="5dp"

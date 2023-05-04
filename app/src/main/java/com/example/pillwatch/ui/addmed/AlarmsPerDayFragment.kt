@@ -1,5 +1,6 @@
 package com.example.pillwatch.ui.addmed
 
+import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,6 +26,9 @@ import com.example.pillwatch.utils.AlarmTiming
 import com.example.pillwatch.utils.extensions.FragmentExtensions.toolbarBottomNavVisibility
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 class AlarmsPerDayFragment: Fragment(), OnAlarmUpdatedListener {
@@ -49,24 +53,28 @@ class AlarmsPerDayFragment: Fragment(), OnAlarmUpdatedListener {
 
         toolbarBottomNavVisibility(requireActivity(), R.id.alarmsPerDayFragment)
 
-        val medId = AlarmsPerDayFragmentArgs.fromBundle(requireArguments()).id
-        val alarmTiming = AlarmsPerDayFragmentArgs.fromBundle(requireArguments()).alarmTiming
-
         // ViewModel
         binding.viewModel = viewModel
 
+        viewModel.medId  = AlarmsPerDayFragmentArgs.fromBundle(requireArguments()).id
+        viewModel.alarmTiming = AlarmsPerDayFragmentArgs.fromBundle(requireArguments()).alarmTiming
+
         binding.slider.isVisible = false
-        if(alarmTiming == AlarmTiming.EVERY_X_HOURS) {
+        if(viewModel.alarmTiming  == AlarmTiming.EVERY_X_HOURS) {
             binding.slider.isVisible = true
-            binding.slider.progress = 12
+            binding.slider.max  = viewModel.values.size - 1
+            val defaultValue = 3  // aka values[3] = 4
+            binding.slider.progress = defaultValue
+            viewModel.everyXHours.value =  viewModel.values[defaultValue]
             changeValueText( binding.slider.progress)
         }
 
+        setupStartHour()
+
         binding.slider.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                viewModel.everyXHours = progress
-                changeValueText(progress)
-                Timber.tag("alarm").d(viewModel.everyXHours.toString())
+                viewModel.everyXHours.value = viewModel.values[progress]
+                changeValueText(viewModel.values[progress])
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
@@ -79,12 +87,15 @@ class AlarmsPerDayFragment: Fragment(), OnAlarmUpdatedListener {
         val recyclerView = binding.alarmsList
 
         recyclerView.layoutManager = LinearLayoutManager(context)
+        val adapter = AlarmsListAdapter(requireContext(), this@AlarmsPerDayFragment)
+        recyclerView.adapter = adapter
 
-        lifecycleScope.launch {
-            val alarmsList = viewModel.generateAlarms(medId, alarmTiming)
-            if (alarmsList != null) {
-                val adapter = AlarmsListAdapter(requireContext(), alarmsList, this@AlarmsPerDayFragment)
-                recyclerView.adapter = adapter
+       viewModel.alarmsList.observe(viewLifecycleOwner) {
+           adapter.updateAlarms(viewModel.alarmsList.value!!)
+        }
+        viewModel.everyXHours.observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+                viewModel.generateAlarms()
             }
         }
 
@@ -97,6 +108,38 @@ class AlarmsPerDayFragment: Fragment(), OnAlarmUpdatedListener {
     override fun onAlarmUpdated(alarm: AlarmEntity) {
         lifecycleScope.launch {
             viewModel.updateAlarm(alarm)
+        }
+    }
+
+    private fun setupStartHour() {
+        viewModel.startHour.observe(viewLifecycleOwner) { startHour ->
+            val startHourText = SimpleDateFormat("HH:mm", Locale.getDefault()).format(startHour.time)
+            binding.startHour.text = startHourText
+        }
+
+        val now = Calendar.getInstance()
+        val minute = now.get(Calendar.MINUTE)
+        val hour = now.get(Calendar.HOUR_OF_DAY)
+        val closestMinute = when (minute % 5) {
+            0 -> minute
+            else -> minute + (5 - (minute % 5))
+        }
+        viewModel.updateStartHour(hour, closestMinute)
+
+        binding.startHour.setOnClickListener {
+            val calendar = viewModel.startHour.value ?: Calendar.getInstance()
+            val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
+            val minute = calendar.get(Calendar.MINUTE)
+            val timePickerDialog = TimePickerDialog(
+                requireContext(),
+                { _, hourOfDay, minute ->
+                    viewModel.updateStartHour(hourOfDay, minute)
+                },
+                hourOfDay,
+                minute,
+                true
+            )
+            timePickerDialog.show()
         }
     }
 

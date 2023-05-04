@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             tools:text="EVERY 12 HOURS"
             android:textSize="@dimen/text_size_medium"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="25dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/background"/>
@@ -53,10 +53,39 @@
             android:id="@+id/slider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="23"
-            android:progress="12"
+            android:max="12"
+            android:min="0"
+            android:progress="6"
             app:layout_constraintTop_toBottomOf="@id/value_text"
-            android:layout_margin="40dp"/>
+            android:layout_margin="20dp"/>
+
+        <LinearLayout
+            android:id="@+id/layout_start_hour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="20dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            app:layout_constraintTop_toBottomOf="@id/slider">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/starting_hour"
+                android:textSize="@dimen/text_size_medium"
+                />
+
+            <TextView
+                android:id="@+id/start_hour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textSize="@dimen/text_size_medium"
+                tools:text="00:00 "/>
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/alarms_list"
@@ -69,7 +98,7 @@
             app:layout_constraintBottom_toTopOf="@id/button_next"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/slider">
+            app:layout_constraintTop_toBottomOf="@id/layout_start_hour">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -78,7 +107,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="64dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/slightly_rounded_button"
             app:layout_constraintBottom_toBottomOf="@+id/background"
             app:layout_constraintEnd_toEndOf="parent"

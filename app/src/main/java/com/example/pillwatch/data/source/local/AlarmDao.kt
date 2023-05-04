@@ -19,8 +19,11 @@ interface AlarmDao {
     @Query("UPDATE alarms_table SET timeInMillis = :timeInMillis, isEnabled = :isEnabled  WHERE id = :id ")
     fun updateAlarm(id: Long, timeInMillis: Long, isEnabled: Boolean)
 
+    @Query("DELETE FROM alarms_table WHERE medId = :medId")
+    fun clearForMedId(medId: Long)
+
     @Query("SELECT * FROM alarms_table WHERE medId = :medId")
-    fun getAlarmsByMedId(medId: Long) : LiveData<List<AlarmEntity?>>
+    fun getAlarmsByMedId(medId: Long) : List<AlarmEntity>
 
     @Query("DELETE FROM alarms_table")
     fun clear()

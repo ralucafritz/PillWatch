@@ -41,6 +41,7 @@
     <string name="add_the_medicine_name">Add the medicine name:</string>
     <string name="medicine_name">Medicine name</string>
     <string name="concentration">concentration</string>
+    <string name="starting_hour">Starting hour:</string>
 
     <string-array name="concentration_measures">
         <item>-</item>

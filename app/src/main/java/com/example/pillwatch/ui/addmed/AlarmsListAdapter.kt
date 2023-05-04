@@ -13,11 +13,18 @@ import java.util.Locale
 
 class AlarmsListAdapter(
     private val context: Context,
-    private val alarms: MutableList<AlarmEntity>,
+
     private val onAlarmUpdatedListener: OnAlarmUpdatedListener
 ) : RecyclerView.Adapter<AlarmsListAdapter.AlarmViewHolder>() {
 
+    private val alarms: MutableList<AlarmEntity> = mutableListOf()
+
     private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+    fun updateAlarms(newAlarms: MutableList<AlarmEntity>) {
+        alarms.clear()
+        alarms.addAll(newAlarms)
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): AlarmViewHolder {
         val binding =
@@ -62,6 +69,7 @@ class AlarmsListAdapter(
 
             binding.enabledSwitch.setOnCheckedChangeListener { _, isChecked ->
                 alarm.isEnabled = isChecked
+               binding.timePicker.isEnabled = isChecked
                 onAlarmUpdatedListener.onAlarmUpdated(alarm)
             }
         }

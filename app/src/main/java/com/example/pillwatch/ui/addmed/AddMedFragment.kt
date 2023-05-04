@@ -28,9 +28,11 @@ class AddMedFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (requireActivity().application as PillWatchApplication).appComponent.userManager().userComponent!!.inject(this)
+        (requireActivity().application as PillWatchApplication).appComponent.userManager().userComponent!!.inject(
+            this
+        )
     }
-    
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,14 +53,15 @@ class AddMedFragment : Fragment() {
             lifecycleScope.launch {
                 viewModel.addMedToUser()
                 viewModel.navigationCheck.observe(viewLifecycleOwner) {
-                if(viewModel.navigationCheck.value != null && viewModel.navigationCheck.value!!) {
-                    this@AddMedFragment.findNavController().navigate(
-                        AddMedFragmentDirections.actionAddMedFragmentToAlarmFrequencyFragment(
-                        viewModel.medAddedId.value!!
-                    ))
-                    viewModel.navigationCompleteToAlarmFrequency()
+                    if (viewModel.navigationCheck.value != null && viewModel.navigationCheck.value!!) {
+                        this@AddMedFragment.findNavController().navigate(
+                            AddMedFragmentDirections.actionAddMedFragmentToAlarmFrequencyFragment(
+                                viewModel.medAddedId.value!!
+                            )
+                        )
+                        viewModel.navigationCompleteToAlarmFrequency()
+                    }
                 }
-            }
             }
         }
 
@@ -66,7 +69,10 @@ class AddMedFragment : Fragment() {
             lifecycleScope.launch {
                 if (viewModel.medName.value != null) {
                     viewModel.searchMedName(it)
-                    val adapter =  AutoCompleteAdapter(requireContext(),  Pair(viewModel.nameList, viewModel.concentrationList))
+                    val adapter = AutoCompleteAdapter(
+                        requireContext(),
+                        Pair(viewModel.nameList, viewModel.concentrationList)
+                    )
                     binding.medName.setAdapter(adapter)
                 }
             }
@@ -78,7 +84,7 @@ class AddMedFragment : Fragment() {
             }
 
         viewModel.isAlertNeeded.observe(viewLifecycleOwner) {
-            if(it != null && it) {
+            if (it != null && it) {
                 viewModel.isAlertNeeded(requireContext())
             }
         }

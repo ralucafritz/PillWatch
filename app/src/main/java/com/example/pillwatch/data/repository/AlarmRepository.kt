@@ -18,7 +18,11 @@ class AlarmRepository(private val alarmDao: AlarmDao){
         alarmDao.updateAlarm(alarm.id, alarm.timeInMillis, alarm.isEnabled)
     }
 
-    fun getAlarmsByMedId(medId: Long) : LiveData<List<AlarmEntity?>> {
+    fun clearForMedId(medId: Long) {
+        alarmDao.clearForMedId(medId)
+    }
+
+    fun getAlarmsByMedId(medId: Long) : List<AlarmEntity> {
         return alarmDao.getAlarmsByMedId(medId)
     }
 
