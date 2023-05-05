@@ -3,7 +3,6 @@ package com.example.pillwatch.ui.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -18,11 +17,10 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.ActivityMainBinding
-import com.example.pillwatch.ui.medication.MedicationFragment
-import com.example.pillwatch.ui.medication.medpage.MedPageFragment
 import com.example.pillwatch.utils.extensions.ContextExtensions.dismissProgressDialog
 import com.example.pillwatch.utils.extensions.ContextExtensions.showProgressDialog
 import com.example.pillwatch.ui.splash.SplashActivity
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -52,6 +50,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+
+        val firebaseMessaging = FirebaseMessaging.getInstance()
+        firebaseMessaging.getToken().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                Timber.tag("TOKEN").d(token)
+            }
+        }
+
         binding.apply {
 
             /**
