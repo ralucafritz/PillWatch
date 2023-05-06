@@ -14,7 +14,7 @@ import com.example.pillwatch.databinding.FragmentSettingsBinding
 import com.example.pillwatch.ui.main.MainActivity
 import javax.inject.Inject
 
-class SettingsFragment : Fragment(){
+class SettingsFragment : Fragment() {
 
     private lateinit var binding: FragmentSettingsBinding
     private lateinit var navController: NavController
@@ -24,7 +24,9 @@ class SettingsFragment : Fragment(){
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (requireActivity().application as PillWatchApplication).appComponent.userManager().userComponent!!.inject(this)
+        (requireActivity().application as PillWatchApplication).appComponent.userManager().userComponent!!.inject(
+            this
+        )
     }
 
     override fun onCreateView(
@@ -35,7 +37,7 @@ class SettingsFragment : Fragment(){
         // Binding
         binding = FragmentSettingsBinding.inflate(inflater)
 
-        (requireActivity() as MainActivity).navBarToolbarBottomNav( true, R.id.settingsFragment)
+        (requireActivity() as MainActivity).navBarToolbarBottomNav(true, R.id.settingsFragment)
 
         // NavController
         navController = NavHostFragment.findNavController(this)

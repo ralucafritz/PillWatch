@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.pillwatch.PillWatchApplication
@@ -41,7 +40,7 @@ class AddMedFragment : Fragment() {
         // Binding
         binding = FragmentAddMedBinding.inflate(inflater)
 
-        (requireActivity() as MainActivity).navBarToolbarBottomNav( false, R.id.addMedFragment)
+        (requireActivity() as MainActivity).navBarToolbarBottomNav(false, R.id.addMedFragment)
 
         // ViewModel
         binding.viewModel = viewModel
@@ -65,7 +64,7 @@ class AddMedFragment : Fragment() {
             }
         }
 
-        viewModel.medName.observe(viewLifecycleOwner, Observer {
+        viewModel.medName.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
                 if (viewModel.medName.value != null) {
                     viewModel.searchMedName(it)
@@ -76,7 +75,7 @@ class AddMedFragment : Fragment() {
                     binding.medName.setAdapter(adapter)
                 }
             }
-        })
+        }
 
         binding.medName.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, position, _ ->

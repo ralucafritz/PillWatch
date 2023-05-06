@@ -128,7 +128,7 @@ class SignupActivity : AppCompatActivity() {
         }
 
         viewModel.networkCheckStart.observe(this) {
-            if(it != null && it) {
+            if (it != null && it) {
                 viewModel.isInternetConnected(this.isInternetConnected())
             }
         }

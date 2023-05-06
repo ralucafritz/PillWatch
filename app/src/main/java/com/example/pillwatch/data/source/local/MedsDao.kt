@@ -6,7 +6,7 @@ import com.example.pillwatch.data.model.MedsEntity
 
 @Dao
 interface MedsDao {
-    @Insert()
+    @Insert
     fun insertAll(medDataList: List<MedsEntity>)
 
     @Update
@@ -19,11 +19,11 @@ interface MedsDao {
     fun getAllMeds(): LiveData<List<MedsEntity>>
 
     @Query("SELECT * FROM meds_table WHERE trade_name LIKE '%' ||  :medName || '%' ")
-    fun searchMedsWithName(medName: String):List<MedsEntity>
+    fun searchMedsWithName(medName: String): List<MedsEntity>
 
     @Query("SELECT rxcui FROM meds_table WHERE id = :medId")
     fun getRxCuiForMed(medId: Long): String
 
     @Query("SELECT * FROM meds_table WHERE trade_name LIKE :inputText")
-    fun getMedsWithSimilarName(inputText: String) : LiveData<List<MedsEntity>>
+    fun getMedsWithSimilarName(inputText: String): LiveData<List<MedsEntity>>
 }

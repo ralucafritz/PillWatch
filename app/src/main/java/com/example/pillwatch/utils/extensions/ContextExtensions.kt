@@ -8,8 +8,6 @@ import android.view.Gravity
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContentProviderCompat.requireContext
-import com.example.pillwatch.R
 
 object ContextExtensions {
     /**
@@ -53,7 +51,10 @@ object ContextExtensions {
         negativeButtonText: String? = null,
         callback: ((positiveButtonPressed: Boolean) -> Unit)? = null
     ) {
-        val builder = AlertDialog.Builder(this, com.google.android.material.R.style.Base_Theme_Material3_Dark_Dialog)
+        val builder = AlertDialog.Builder(
+            this,
+            com.google.android.material.R.style.Base_Theme_Material3_Dark_Dialog
+        )
             .setTitle(title)
             .setMessage(message)
             .setPositiveButton(positiveButtonText) { dialog, _ ->

@@ -6,7 +6,7 @@ import com.example.pillwatch.utils.Role
 
 @Dao
 interface UserDao {
-    @Insert()
+    @Insert
     fun insert(user: UserEntity): Long
 
     @Query("SELECT * FROM users_table WHERE email = :email LIMIT 1")

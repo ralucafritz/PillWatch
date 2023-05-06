@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pillwatch.data.source.local.UserDao
 import com.example.pillwatch.data.repository.UserRepository
 import com.example.pillwatch.di.ActivityScope
 import com.example.pillwatch.user.UserManager
@@ -12,7 +11,6 @@ import com.example.pillwatch.utils.ValidationProperty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import javax.inject.Inject
 
 @ActivityScope
@@ -22,7 +20,6 @@ class UsernameCreationViewModel @Inject constructor(
 ) : ViewModel() {
 
     companion object {
-        const val TAG = "UsernameCreationVM"
         const val SHORT_USERNAME = "Username is too short. Minimum 4 characters."
         const val EMPTY_FIELDS_ERR = "Please fill all the fields."
     }
@@ -50,11 +47,12 @@ class UsernameCreationViewModel @Inject constructor(
         viewModelScope.launch {
             val userId = userManager.id
             withContext(Dispatchers.IO) {
-                repository.updateUserName(userId,
-                    username.value!!)
+                repository.updateUserName(
+                    userId,
+                    username.value!!
+                )
             }
             userManager.setUsername(username.value!!)
-            Timber.tag("USERMANAGER").d(userManager.isUserLoggedIn().toString())
             _updateComplete.value = true
         }
     }

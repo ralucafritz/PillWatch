@@ -12,12 +12,14 @@ class SharedPreferencesStorage @Inject constructor(context: Context) : Storage {
             apply()
         }
     }
+
     override fun setLong(key: String, value: Long) {
         with(sharedPreferences.edit()) {
             putLong(key, value)
             apply()
         }
     }
+
     override fun setBoolean(key: String, value: Boolean) {
         with(sharedPreferences.edit()) {
             putBoolean(key, value)

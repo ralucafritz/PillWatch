@@ -6,5 +6,4 @@ import com.example.pillwatch.user.UserComponent
 import dagger.Module
 
 @Module(subcomponents = [SignupComponent::class, LoginComponent::class, UserComponent::class])
-class AppSubcomponents {
-}
+class AppSubcomponents

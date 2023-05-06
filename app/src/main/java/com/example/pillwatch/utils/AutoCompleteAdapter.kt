@@ -9,13 +9,14 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
 import com.example.pillwatch.R
-import java.util.Locale
 
-class AutoCompleteAdapter (private val context: Context, private val medsData: Pair<List<String>, List<String>>) :  BaseAdapter(), Filterable {
+class AutoCompleteAdapter(
+    private val context: Context,
+    private val medsData: Pair<List<String>, List<String>>
+) : BaseAdapter(), Filterable {
 
     private val medConcs = medsData.second
     private val medNames = medsData.first
-    private var filteredData: List<String> = medsData.first
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var convertViewVar = convertView
@@ -29,7 +30,7 @@ class AutoCompleteAdapter (private val context: Context, private val medsData: P
         val medLabel: TextView = convertViewVar!!.findViewById(R.id.autocomplete_item_med_label)
         val concLabel: TextView = convertViewVar.findViewById(R.id.autocomplete_item_conc_label)
 
-        if(medNames.isNotEmpty() && medConcs.isNotEmpty()) {
+        if (medNames.isNotEmpty() && medConcs.isNotEmpty()) {
             val medName = medNames.getOrNull(position)
             val medConc = medConcs.getOrNull(position)
 
@@ -55,7 +56,7 @@ class AutoCompleteAdapter (private val context: Context, private val medsData: P
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = super.getDropDownView(position, convertView, parent)
-        val dropDownHeight =  200
+        val dropDownHeight = 200
         parent.layoutParams.height = dropDownHeight
         return view
     }

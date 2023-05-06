@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val firebaseMessaging = FirebaseMessaging.getInstance()
-        firebaseMessaging.getToken().addOnCompleteListener { task ->
+        firebaseMessaging.token.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val token = task.result
                 Timber.tag("TOKEN").d(token)
@@ -132,12 +132,18 @@ class MainActivity : AppCompatActivity() {
 
                     R.id.nav_update -> {
                         val progressDialog = showProgressDialog("Checking for updates")
-                        lifecycleScope .launch {
-                            withContext(Dispatchers.IO) {medsViewModel.getMedsDataFromAPI()
+                        lifecycleScope.launch {
+                            withContext(Dispatchers.IO) {
+                                medsViewModel.getMedsDataFromAPI()
                             }
-                            dismissProgressDialog(progressDialog, medsViewModel.updateDialogTitle.value!!, medsViewModel.updateMessage.value!!)
+                            dismissProgressDialog(
+                                progressDialog,
+                                medsViewModel.updateDialogTitle.value!!,
+                                medsViewModel.updateMessage.value!!
+                            )
                         }
                     }
+
                     else -> {
                         navController.popBackStack(mainViewModel.currentFragmentId.value!!, true)
                         navController.navigate(item.itemId)

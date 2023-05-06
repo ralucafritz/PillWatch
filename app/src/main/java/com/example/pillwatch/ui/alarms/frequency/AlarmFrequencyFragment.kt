@@ -1,4 +1,4 @@
-package com.example.pillwatch.ui.addmed
+package com.example.pillwatch.ui.alarms.frequency
 
 import android.os.Bundle
 import android.util.TypedValue
@@ -15,12 +15,13 @@ import com.example.pillwatch.databinding.FragmentAlarmFrequencyBinding
 import com.example.pillwatch.ui.main.MainActivity
 import com.example.pillwatch.utils.AlarmTiming
 
-class AlarmFrequencyFragment: Fragment() {
+class AlarmFrequencyFragment : Fragment() {
 
     private lateinit var binding: FragmentAlarmFrequencyBinding
 
     private val viewModel: AlarmFrequencyViewModel by lazy {
-        ViewModelProvider(this)[AlarmFrequencyViewModel::class.java]}
+        ViewModelProvider(this)[AlarmFrequencyViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,7 +31,10 @@ class AlarmFrequencyFragment: Fragment() {
         // Binding
         binding = FragmentAlarmFrequencyBinding.inflate(inflater)
 
-        (requireActivity() as MainActivity).navBarToolbarBottomNav( false, R.id.alarmFrequencyFragment)
+        (requireActivity() as MainActivity).navBarToolbarBottomNav(
+            false,
+            R.id.alarmFrequencyFragment
+        )
 
         // ViewModel
         binding.viewModel = viewModel
@@ -40,7 +44,7 @@ class AlarmFrequencyFragment: Fragment() {
 
         val medId = AlarmFrequencyFragmentArgs.fromBundle(requireArguments()).id
 
-        for(enumValue in AlarmTiming.values()) {
+        for (enumValue in AlarmTiming.values()) {
             val radioButton = RadioButton(requireContext())
             radioButton.text = enumValue.label
             radioButton.tag = enumValue
@@ -60,14 +64,17 @@ class AlarmFrequencyFragment: Fragment() {
         }
 
         binding.buttonNext.setOnClickListener {
-            if (medId != -1L && viewModel.selectedOption.value!= null ) {
+            if (medId != -1L && viewModel.selectedOption.value != null) {
                 if (viewModel.selectedOption.value != AlarmTiming.NO_REMINDERS) {
-                    this.findNavController().navigate(AlarmFrequencyFragmentDirections.actionAlarmFrequencyFragmentToAlarmsPerDayFragment(medId,
-                        viewModel.selectedOption.value!!
-                    )
+                    this.findNavController().navigate(
+                        AlarmFrequencyFragmentDirections.actionAlarmFrequencyFragmentToAlarmsPerDayFragment(
+                            medId,
+                            viewModel.selectedOption.value!!
+                        )
                     )
                 } else {
-                    this.findNavController().navigate(AlarmFrequencyFragmentDirections.actionAlarmFrequencyFragmentToMedicationFragment())
+                    this.findNavController()
+                        .navigate(AlarmFrequencyFragmentDirections.actionAlarmFrequencyFragmentToMedicationFragment())
                 }
             }
         }

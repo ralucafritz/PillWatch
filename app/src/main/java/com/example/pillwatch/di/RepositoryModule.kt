@@ -16,29 +16,34 @@ import dagger.Module
 import dagger.Provides
 
 @Module
- class RepositoryModule {
+class RepositoryModule {
     @Provides
-     fun provideUserRepository(userDao: UserDao): UserRepository {
-         return UserRepository(userDao)
-     }
+    fun provideUserRepository(userDao: UserDao): UserRepository {
+        return UserRepository(userDao)
+    }
+
     @Provides
-     fun provideMedsRepository(medsDao: MedsDao): MedsRepository{
+    fun provideMedsRepository(medsDao: MedsDao): MedsRepository {
         return MedsRepository(medsDao)
     }
+
     @Provides
-     fun provideMedsLogRepository(medsLogDao: MedsLogDao): MedsLogRepository{
+    fun provideMedsLogRepository(medsLogDao: MedsLogDao): MedsLogRepository {
         return MedsLogRepository(medsLogDao)
     }
+
     @Provides
-     fun provideMetadataRepository(metadataDao: MetadataDao): MetadataRepository{
+    fun provideMetadataRepository(metadataDao: MetadataDao): MetadataRepository {
         return MetadataRepository(metadataDao)
     }
+
     @Provides
-     fun provideAlarmRepository(alarmDao: AlarmDao): AlarmRepository{
+    fun provideAlarmRepository(alarmDao: AlarmDao): AlarmRepository {
         return AlarmRepository(alarmDao)
     }
+
     @Provides
-    fun provideUserMedsRepository(userMedsDao: UserMedsDao): UserMedsRepository{
+    fun provideUserMedsRepository(userMedsDao: UserMedsDao): UserMedsRepository {
         return UserMedsRepository(userMedsDao)
     }
 }

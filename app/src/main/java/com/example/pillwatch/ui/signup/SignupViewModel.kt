@@ -62,18 +62,12 @@ class SignupViewModel @Inject constructor(
         get() = userManager.username
 
     private val _firebaseListener = MutableLiveData<Boolean>()
-    val firebaseListener: LiveData<Boolean>
-        get() = _firebaseListener
 
     private val _alertMsg = MutableLiveData<Pair<String, String>>()
-    val alertMsg: LiveData<Pair<String, String>>
-        get() = _alertMsg
 
     private val _toastMsg = MutableLiveData<String>()
-    val toastMsg: LiveData<String>
-        get() = _toastMsg
 
-    var isConnected = MutableLiveData<Boolean>()
+    private var isConnected = MutableLiveData<Boolean>()
 
     val networkCheckStart = MutableLiveData<Boolean>()
 
@@ -161,7 +155,7 @@ class SignupViewModel @Inject constructor(
              * save the id for easier use
              **/
             if (user != null) {
-                userManager.loginUser(user.id,user.email, user.username)
+                userManager.loginUser(user.id, user.email, user.username)
                 _signupResult.postValue(true)
                 Timber.tag(TAG).d("$SIGNUP_SUCCESS: $user ")
             } else {
@@ -211,7 +205,7 @@ class SignupViewModel @Inject constructor(
                              * save the id for easier use
                              * save the username for easier use
                              **/
-                            userManager.loginUser(user.id,user.email, user.username)
+                            userManager.loginUser(user.id, user.email, user.username)
                             true
                         } else {
                             _alertMsg.value = Pair("An error occurred", "Error")
@@ -233,7 +227,13 @@ class SignupViewModel @Inject constructor(
             firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        continuation.resume(AuthResultProperty(true, task.result, task.result.user!!.email))
+                        continuation.resume(
+                            AuthResultProperty(
+                                true,
+                                task.result,
+                                task.result.user!!.email
+                            )
+                        )
                     } else {
                         continuation.resume(AuthResultProperty(false, null, null))
                     }
@@ -252,6 +252,7 @@ class SignupViewModel @Inject constructor(
             }
         }
     }
+
     fun isInternetConnected(bool: Boolean) {
         isConnected.value = bool
     }

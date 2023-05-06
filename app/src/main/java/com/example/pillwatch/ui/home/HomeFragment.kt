@@ -13,7 +13,7 @@ import com.example.pillwatch.databinding.FragmentHomeBinding
 import com.example.pillwatch.ui.main.MainActivity
 import javax.inject.Inject
 
-class HomeFragment : Fragment(){
+class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -22,7 +22,9 @@ class HomeFragment : Fragment(){
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (requireActivity().application as PillWatchApplication).appComponent.userManager().userComponent!!.inject(this)
+        (requireActivity().application as PillWatchApplication).appComponent.userManager().userComponent!!.inject(
+            this
+        )
     }
 
     override fun onCreateView(
@@ -33,7 +35,7 @@ class HomeFragment : Fragment(){
         // Binding
         binding = FragmentHomeBinding.inflate(inflater)
 
-        (requireActivity() as MainActivity).navBarToolbarBottomNav( true, R.id.homeFragment)
+        (requireActivity() as MainActivity).navBarToolbarBottomNav(true, R.id.homeFragment)
 
         // ViewModel
         binding.viewModel = viewModel

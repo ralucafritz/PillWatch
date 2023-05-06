@@ -64,18 +64,12 @@ class LoginViewModel @Inject constructor(
         get() = userManager.username
 
     private val _firebaseListener = MutableLiveData<Boolean>()
-    val firebaseListener: LiveData<Boolean>
-        get() = _firebaseListener
 
     private val _alertMsg = MutableLiveData<Pair<String, String>>()
-    val alertMsg: LiveData<Pair<String, String>>
-        get() = _alertMsg
 
     private val _toastMsg = MutableLiveData<String>()
-    val toastMsg: LiveData<String>
-        get() = _toastMsg
 
-    var isConnected = MutableLiveData<Boolean>()
+    private var isConnected = MutableLiveData<Boolean>()
 
     val networkCheckStart = MutableLiveData<Boolean>()
 

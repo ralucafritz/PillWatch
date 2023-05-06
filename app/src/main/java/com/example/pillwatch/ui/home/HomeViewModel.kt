@@ -7,8 +7,8 @@ import javax.inject.Inject
 
 @LoggedUserScope
 class HomeViewModel @Inject constructor(
-    private val userManager: UserManager): ViewModel(){
-
+    private val userManager: UserManager
+) : ViewModel() {
 
 
 }

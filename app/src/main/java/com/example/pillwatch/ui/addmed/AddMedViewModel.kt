@@ -199,7 +199,7 @@ class AddMedViewModel @Inject constructor(
                 // call the API
                 val responseInteractionDataAPI =
                     AppApi.retrofitService.getInteractionData(rxCui, listRxCui)
-                if(responseInteractionDataAPI.interaction != null) {
+                if (responseInteractionDataAPI.interaction != null) {
                     for (lists in responseInteractionDataAPI.interaction) {
                         lists.forEach {
                             when (it.severity.lowercase()) {

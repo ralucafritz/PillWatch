@@ -30,7 +30,9 @@ class MedicationFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (requireActivity().application as PillWatchApplication).appComponent.userManager().userComponent!!.inject(this)
+        (requireActivity().application as PillWatchApplication).appComponent.userManager().userComponent!!.inject(
+            this
+        )
     }
 
     override fun onCreateView(
@@ -41,7 +43,7 @@ class MedicationFragment : Fragment() {
         // Binding
         binding = FragmentMedicationBinding.inflate(inflater)
 
-        (requireActivity() as MainActivity).navBarToolbarBottomNav( true, R.id.medicationFragment)
+        (requireActivity() as MainActivity).navBarToolbarBottomNav(true, R.id.medicationFragment)
 
         // ViewModel
         binding.viewModel = viewModel
@@ -52,7 +54,7 @@ class MedicationFragment : Fragment() {
 
         lifecycleScope.launch {
             val medsList = viewModel.getMedsList()
-            if (medsList != null) {
+            if (medsList.isNotEmpty()) {
                 val adapter = MedsListAdapter(requireContext(), medsList)
                 recyclerView.adapter = adapter
             }
@@ -92,6 +94,7 @@ class MedicationFragment : Fragment() {
                 startActivity(Intent.createChooser(shareIntent, "Share using"))
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

@@ -3,8 +3,10 @@ package com.example.pillwatch.user
 import com.example.pillwatch.storage.Storage
 import javax.inject.Inject
 
-class UserManager @Inject constructor(private val storage: Storage,
-                                      private val userComponentFactory: UserComponent.Factory) {
+class UserManager @Inject constructor(
+    private val storage: Storage,
+    private val userComponentFactory: UserComponent.Factory
+) {
 
     var userComponent: UserComponent? = null
         private set
@@ -18,12 +20,12 @@ class UserManager @Inject constructor(private val storage: Storage,
     val id: Long
         get() = storage.getLong("id");
 
-   init{
-       checkLogin()
-   }
+    init {
+        checkLogin()
+    }
 
-    private fun checkLogin(){
-        if(id != -1L && email != "") {
+    private fun checkLogin() {
+        if (id != -1L && email != "") {
             loginUser(id, email, username)
         }
     }
@@ -33,7 +35,7 @@ class UserManager @Inject constructor(private val storage: Storage,
         return userComponent != null
     }
 
-    fun loginUser(id: Long, email:String, username: String?): Boolean {
+    fun loginUser(id: Long, email: String, username: String?): Boolean {
         storage.setLong("id", id)
         storage.setString("email", email)
         storage.setString("username", username ?: "")

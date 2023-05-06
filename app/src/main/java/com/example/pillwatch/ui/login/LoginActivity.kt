@@ -122,7 +122,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         viewModel.networkCheckStart.observe(this) {
-            if(it != null && it) {
+            if (it != null && it) {
                 viewModel.isInternetConnected(this.isInternetConnected())
             }
         }
@@ -134,6 +134,7 @@ class LoginActivity : AppCompatActivity() {
                 R.id.signupActivity -> {
                     SignupActivity::class.java
                 }
+
                 else -> {
                     SplashActivity::class.java
                 }

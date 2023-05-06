@@ -1,10 +1,7 @@
 package com.example.pillwatch.ui.medication
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
-import com.example.pillwatch.R
 import com.example.pillwatch.data.model.UserMedsEntity
 import com.example.pillwatch.data.repository.UserMedsRepository
 import com.example.pillwatch.di.LoggedUserScope
@@ -24,8 +21,6 @@ class MedicationViewModel @Inject constructor(
     ViewModel() {
 
     private val _userMedsList = MutableLiveData<List<UserMedsEntity>>(mutableListOf())
-    val userMedsList: LiveData<List<UserMedsEntity>>
-        get() = _userMedsList
 
     suspend fun getMedsList(): List<UserMedsEntity> {
         val medsList = withContext(Dispatchers.IO) {
@@ -52,7 +47,7 @@ class MedicationViewModel @Inject constructor(
         for (med in medsList) {
             builder.append("No. ${medsList.indexOf(med) + 1} ")
             builder.append(med.tradeName)
-            if(med.concentration != null && med.concentration != "") {
+            if (med.concentration != null && med.concentration != "") {
                 builder.append(" ")
                 builder.append(med.concentration)
             }

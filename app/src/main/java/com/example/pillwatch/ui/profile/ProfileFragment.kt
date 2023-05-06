@@ -12,12 +12,13 @@ import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentProfileBinding
 import com.example.pillwatch.ui.main.MainActivity
 
-class ProfileFragment : Fragment(){
+class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
     private lateinit var navController: NavController
     private val viewModel: ProfileViewModel by lazy {
-        ViewModelProvider(this)[ProfileViewModel::class.java]}
+        ViewModelProvider(this)[ProfileViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +28,7 @@ class ProfileFragment : Fragment(){
         // Binding
         binding = FragmentProfileBinding.inflate(inflater)
 
-        (requireActivity() as MainActivity).navBarToolbarBottomNav( true, R.id.profileFragment)
+        (requireActivity() as MainActivity).navBarToolbarBottomNav(true, R.id.profileFragment)
 
         // NavController
         navController = NavHostFragment.findNavController(this)

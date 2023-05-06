@@ -3,16 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
-            type="com.example.pillwatch.ui.addmed.AlarmFrequencyViewModel" />
+            type="com.example.pillwatch.ui.alarms.frequency.AlarmFrequencyViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/colorPrimary"
-        tools:context=".ui.addmed.AlarmFrequencyFragment">
+        tools:context=".ui.alarms.frequency.AlarmFrequencyFragment">
 
 
         <TextView
@@ -21,12 +22,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            android:text="Choose reminder frequency:"
+            android:text="@string/choose_reminder_frequency"
             android:textColor="?attr/colorPrimaryContainer"
             android:textSize="@dimen/text_size_big"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/background"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/background"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/background"
@@ -40,16 +41,15 @@
             app:srcCompat="@drawable/rounded_rectangle"
             tools:ignore="ContentDescription,VisualLintBounds" />
 
-            <RadioGroup
-                android:id="@+id/radio_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="60dp"
-                app:layout_constraintTop_toTopOf="@id/background"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
-            </RadioGroup>
+        <RadioGroup
+            android:id="@+id/radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="60dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/background" />
 
         <ImageButton
             android:id="@+id/button_next"
@@ -58,11 +58,11 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/slightly_rounded_button"
+            android:paddingStart="10dp"
+            android:paddingEnd="5dp"
             app:layout_constraintBottom_toBottomOf="@+id/background"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_right_double_arrow"
-            android:paddingStart="10dp"
-            android:paddingEnd="5dp"
             tools:ignore="ContentDescription,RtlSymmetry,SpeakableTextPresentCheck" />
 
 

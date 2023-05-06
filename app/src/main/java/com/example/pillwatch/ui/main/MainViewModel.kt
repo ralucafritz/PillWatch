@@ -39,7 +39,7 @@ class MainViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
-        userManager.logout()
+            userManager.logout()
             delay(2000)
         }
     }

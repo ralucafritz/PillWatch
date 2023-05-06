@@ -3,16 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
-            type="com.example.pillwatch.ui.addmed.AlarmsPerDayViewModel" />
+            type="com.example.pillwatch.ui.alarms.AlarmsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/colorPrimary"
-        tools:context=".ui.addmed.AlarmsPerDayFragment">
+        tools:context=".ui.alarms.AlarmsPerDayFragment">
 
         <TextView
             android:id="@+id/set_alarms_text"
@@ -42,29 +43,29 @@
             android:id="@+id/value_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="EVERY 12 HOURS"
-            android:textSize="@dimen/text_size_medium"
             android:layout_marginTop="25dp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="@dimen/text_size_medium"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/background"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/background"
+            tools:text="EVERY 12 HOURS" />
 
         <SeekBar
             android:id="@+id/slider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="20dp"
             android:max="12"
             android:min="0"
             android:progress="6"
-            app:layout_constraintTop_toBottomOf="@id/value_text"
-            android:layout_margin="20dp"/>
+            app:layout_constraintTop_toBottomOf="@id/value_text" />
 
         <LinearLayout
             android:id="@+id/layout_start_hour"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_margin="20dp"
+            android:orientation="horizontal"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             app:layout_constraintTop_toBottomOf="@id/slider">
@@ -73,8 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/starting_hour"
-                android:textSize="@dimen/text_size_medium"
-                />
+                android:textSize="@dimen/text_size_medium" />
 
             <TextView
                 android:id="@+id/start_hour"
@@ -83,7 +83,7 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:textSize="@dimen/text_size_medium"
-                tools:text="00:00 "/>
+                tools:text="00:00 " />
 
         </LinearLayout>
 
@@ -92,13 +92,13 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="40dp"
-            tools:itemCount="4"
-            tools:listitem="@layout/item_alarm_list"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/button_next"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_start_hour">
+            app:layout_constraintTop_toBottomOf="@id/layout_start_hour"
+            tools:itemCount="4"
+            tools:listitem="@layout/item_alarm_list">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -109,11 +109,11 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/slightly_rounded_button"
+            android:paddingStart="10dp"
+            android:paddingEnd="5dp"
             app:layout_constraintBottom_toBottomOf="@+id/background"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/ic_right_double_arrow"
-            android:paddingStart="10dp"
-            android:paddingEnd="5dp"
             tools:ignore="ContentDescription,RtlSymmetry,SpeakableTextPresentCheck" />
 
 

@@ -22,7 +22,7 @@ class UsernameCreationFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        if(activity is SignupActivity) {
+        if (activity is SignupActivity) {
             (activity as SignupActivity).signupComponent.inject(this)
         } else {
             (activity as LoginActivity).loginComponent.inject(this)
@@ -33,13 +33,13 @@ class UsernameCreationFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Binding
         binding = FragmentUsernameCreationBinding.inflate(inflater)
 
         // next button
         binding.buttonNext.setOnClickListener {
-            val username = binding.usernameText.text .toString()
+            val username = binding.usernameText.text.toString()
             val validationResult = viewModel.isValid(username)
             if (validationResult.isValid) {
                 viewModel.updateUsername()
@@ -51,9 +51,9 @@ class UsernameCreationFragment : Fragment() {
         binding.viewModel = viewModel
 
         viewModel.updateComplete.observe(viewLifecycleOwner) {
-            if(it) {
-                if(activity is SignupActivity) {
-                (activity as SignupActivity).success()
+            if (it) {
+                if (activity is SignupActivity) {
+                    (activity as SignupActivity).success()
                 } else {
                     (activity as LoginActivity).success()
                 }

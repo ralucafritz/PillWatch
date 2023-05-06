@@ -12,7 +12,7 @@ import com.example.pillwatch.ui.splash.welcome.WelcomeFragment
 import com.example.pillwatch.user.UserManager
 import javax.inject.Inject
 
-class SplashActivity: AppCompatActivity() {
+class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding
     private lateinit var userManager: UserManager
@@ -30,7 +30,7 @@ class SplashActivity: AppCompatActivity() {
         checkLoggedIn()
     }
 
-    fun checkLoggedIn(){
+    fun checkLoggedIn() {
         if (!userManager.isUserLoggedIn()) {
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragment_holder, WelcomeFragment())
@@ -44,9 +44,10 @@ class SplashActivity: AppCompatActivity() {
             binding.viewModel = viewModel
             viewModel.setMessage()
             viewModel.navigationCheck.observe(this) {
-                if(it!=null && it) {
+                if (it != null && it) {
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
+                    viewModel.navigationComplete()
                     finish()
                 }
             }

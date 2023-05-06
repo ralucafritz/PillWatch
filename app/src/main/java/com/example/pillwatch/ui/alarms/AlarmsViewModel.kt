@@ -1,9 +1,12 @@
-package com.example.pillwatch.ui.addmed
+package com.example.pillwatch.ui.alarms
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pillwatch.alarms.AlarmGenerator
+import com.example.pillwatch.alarms.AlarmReceiverCallback
+import com.example.pillwatch.alarms.AlarmScheduler
 import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.data.repository.AlarmRepository
 import com.example.pillwatch.utils.AlarmTiming
@@ -13,7 +16,11 @@ import kotlinx.coroutines.withContext
 import java.util.Calendar
 import javax.inject.Inject
 
-class AlarmsPerDayViewModel @Inject constructor(private val alarmRepository: AlarmRepository) :
+class AlarmsViewModel @Inject constructor(
+    private val alarmRepository: AlarmRepository,
+    private val alarmGenerator: AlarmGenerator,
+    private val alarmScheduler: AlarmScheduler
+) :
     ViewModel() {
 
     var everyXHours = MutableLiveData<Int>()
@@ -46,48 +53,30 @@ class AlarmsPerDayViewModel @Inject constructor(private val alarmRepository: Ala
         this.startHour.value = startHour
 
         viewModelScope.launch {
-            regenerateAlarms()
+            generateAlarms()
         }
-    }
-
-    private suspend fun regenerateAlarms() {
-        withContext(Dispatchers.IO) {
-            val x = medId
-            alarmRepository.clearForMedId(x)
-        }
-        generateAlarms()
     }
 
     suspend fun generateAlarms() {
-        val frequency = when (alarmTiming) {
-            AlarmTiming.EVERY_X_HOURS -> {
-                24 / everyXHours.value!!
-            }
+        val alarmsList = alarmGenerator.generateAlarms(
+            alarmTiming,
+            medId,
+            everyXHours.value!!,
+            startHourInMillis!!
+        )
 
-            AlarmTiming.ONCE_A_DAY -> 1
-            AlarmTiming.TWICE_A_DAY -> 2
-            AlarmTiming.THREE_TIMES -> 3
-            AlarmTiming.FOUR_TIMES -> 4
-            AlarmTiming.FIVE_TIMES -> 5
-            AlarmTiming.NO_REMINDERS -> 0
-        }
-
-        val alarmList = mutableListOf<AlarmEntity>()
-        val intervalMillis = (24 * 60 * 60 * 1000) / frequency
-
-        for (i in 0 until frequency) {
-            val calendar = Calendar.getInstance().apply {
-                timeInMillis = startHourInMillis!!
-                add(Calendar.MILLISECOND, (intervalMillis * i).toInt())
-            }
-            val alarm = AlarmEntity(0L, medId, calendar.timeInMillis, true)
-            alarmList.add(alarm)
-        }
         _alarmsList.value = withContext(Dispatchers.IO) {
+            _alarmsList.value!!.forEach { alarm ->
+                alarmScheduler.cancelAlarm(alarm)
+            }
             alarmRepository.clearForMedId(medId)
-            alarmRepository.insertAll(alarmList.toList())
+            alarmRepository.insertAll(alarmsList)
             alarmRepository.getAlarmsByMedId(medId).toMutableList()
         }!!
+
+        _alarmsList.value!!.forEach { alarm ->
+            alarmScheduler.scheduleAlarm(alarm)
+        }
     }
 
     suspend fun updateAlarm(alarm: AlarmEntity) {
@@ -95,6 +84,22 @@ class AlarmsPerDayViewModel @Inject constructor(private val alarmRepository: Ala
             val updatedAlarm = alarm.copy()
             alarmRepository.updateAlarm(updatedAlarm)
             sortAlarms(updatedAlarm)
+        }
+        if (!alarm.isEnabled) {
+            alarmScheduler.cancelAlarm(alarm)
+        } else {
+            alarmScheduler.scheduleAlarm(alarm)
+        }
+    }
+
+    fun getAlarmById(alarmId: Long, callback: AlarmReceiverCallback) {
+        viewModelScope.launch {
+            val alarm = withContext(Dispatchers.IO) {
+                alarmRepository.getAlarmById(alarmId)
+            }
+            alarm?.let {
+                callback.onAlarmFetched(it)
+            }
         }
     }
 
@@ -105,7 +110,6 @@ class AlarmsPerDayViewModel @Inject constructor(private val alarmRepository: Ala
             }
             _alarmsList.value?.let {
                 val updatedList = it.map { alarm ->
-                    val x = alarm.id
                     if (alarm.id == updatedAlarm.id) {
                         updatedAlarm
                     } else {

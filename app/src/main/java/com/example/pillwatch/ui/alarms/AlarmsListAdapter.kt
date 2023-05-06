@@ -1,4 +1,4 @@
-package com.example.pillwatch.ui.addmed
+package com.example.pillwatch.ui.alarms
 
 import android.app.TimePickerDialog
 import android.content.Context
@@ -69,7 +69,7 @@ class AlarmsListAdapter(
 
             binding.enabledSwitch.setOnCheckedChangeListener { _, isChecked ->
                 alarm.isEnabled = isChecked
-               binding.timePicker.isEnabled = isChecked
+                binding.timePicker.isEnabled = isChecked
                 onAlarmUpdatedListener.onAlarmUpdated(alarm)
             }
         }

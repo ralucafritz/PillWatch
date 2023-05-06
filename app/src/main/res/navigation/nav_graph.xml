@@ -88,7 +88,7 @@
     </fragment>
     <fragment
         android:id="@+id/alarmFrequencyFragment"
-        android:name="com.example.pillwatch.ui.addmed.AlarmFrequencyFragment"
+        android:name="com.example.pillwatch.ui.alarms.frequency.AlarmFrequencyFragment"
         android:label="AlarmFrequencyFragment" >
         <action
             android:id="@+id/action_alarmFrequencyFragment_to_alarmsPerDayFragment"
@@ -102,7 +102,7 @@
     </fragment>
     <fragment
         android:id="@+id/alarmsPerDayFragment"
-        android:name="com.example.pillwatch.ui.addmed.AlarmsPerDayFragment"
+        android:name="com.example.pillwatch.ui.alarms.AlarmsPerDayFragment"
         android:label="AlarmsPerDayFragment" >
         <action
             android:id="@+id/action_alarmsPerDayFragment_to_userMedFragment"
