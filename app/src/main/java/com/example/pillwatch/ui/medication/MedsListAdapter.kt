@@ -6,15 +6,19 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pillwatch.R
+import com.example.pillwatch.data.model.MedsEntity
 import com.example.pillwatch.data.model.UserMedsEntity
-import com.example.pillwatch.databinding.CardViewDesignBinding
+import com.example.pillwatch.databinding.ItemMedsListBinding
+import com.example.pillwatch.utils.OnItemClickListener
 
 class MedsListAdapter(private val context: Context, private val medList: List<UserMedsEntity>) :
     RecyclerView.Adapter<MedsListAdapter.MedsViewHolder>() {
 
+    var onItemClick: ((Long) -> Unit)? = null
+
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): MedsViewHolder {
         val binding =
-            CardViewDesignBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
+            ItemMedsListBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
 
         return MedsViewHolder(binding)
     }
@@ -25,10 +29,15 @@ class MedsListAdapter(private val context: Context, private val medList: List<Us
 
     override fun onBindViewHolder(holder: MedsViewHolder, position: Int) {
         holder.bind(medList[position], context)
+
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(medList[position].id)
+        }
     }
 
-    class MedsViewHolder(private val binding: CardViewDesignBinding) :
+    class MedsViewHolder(private val binding: ItemMedsListBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun bind(med: UserMedsEntity, context: Context) {
             if (med.tradeName.length >= 15) {
                 val truncated = med.tradeName.substring(0, 14) + "..."

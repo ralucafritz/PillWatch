@@ -20,6 +20,9 @@ interface UserMedsDao {
     @Query("SELECT medId FROM user_meds_table WHERE userId = :userId")
     fun getMedIdForMedsForUser(userId: Long): List<Long?>
 
+    @Query("SELECT * FROM user_meds_table WHERE id = :id")
+    fun getMedById(id: Long): UserMedsEntity
+
     @Query("DELETE FROM user_meds_table")
     fun clear()
 }

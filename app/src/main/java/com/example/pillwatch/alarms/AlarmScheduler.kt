@@ -12,6 +12,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.pillwatch.R
 import com.example.pillwatch.data.model.AlarmEntity
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 class AlarmScheduler(private val context: Context) {
 
@@ -69,12 +70,29 @@ class AlarmScheduler(private val context: Context) {
      *  show a notification using NotificationCompat
      * */
     fun showNotification(context: Context, alarm: AlarmEntity) {
+        // "Ok" action
+        val okIntent = Intent(context, AlarmReceiver::class.java).apply {
+            action = ACTION_TAKEN
+            putExtra(EXTRA_ALARM_ID, alarm.id)
+        }
+        val okPendingIntent = PendingIntent.getBroadcast(context, alarm.id.toInt(), okIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        // "Postpone" action
+        val postponeIntent = Intent(context, AlarmReceiver::class.java).apply {
+            action = ACTION_POSTPONED
+            putExtra(EXTRA_ALARM_ID, alarm.id)
+        }
+        val postponePendingIntent = PendingIntent.getBroadcast(context, alarm.id.toInt(), postponeIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
         val notification = NotificationCompat.Builder(context, "pill_watch_channel")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle("PillWatch Reminder")
             .setContentText("It's time to take your medication.")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
+            .setTimeoutAfter(TimeUnit.MINUTES.toMillis(5))
+            .addAction(0, "Ok", okPendingIntent)
+            .addAction(0, "Postpone", postponePendingIntent)
             .build()
 
         val notificationManager = NotificationManagerCompat.from(context)

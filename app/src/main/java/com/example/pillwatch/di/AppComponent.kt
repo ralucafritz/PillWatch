@@ -5,6 +5,7 @@ import com.example.pillwatch.alarms.AlarmReceiver
 import com.example.pillwatch.alarms.NotificationActionReceiver
 import com.example.pillwatch.ui.alarms.AlarmsPerDayFragment
 import com.example.pillwatch.ui.login.LoginComponent
+import com.example.pillwatch.ui.medication.medpage.MedPageFragment
 import com.example.pillwatch.ui.signup.SignupComponent
 import com.example.pillwatch.user.UserManager
 import dagger.BindsInstance
@@ -33,7 +34,7 @@ interface AppComponent {
     fun userManager(): UserManager
 
     fun inject(fragment: AlarmsPerDayFragment)
-
+    fun inject(fragment: MedPageFragment)
     fun inject(alarmReceiver: AlarmReceiver)
     fun inject(notificationActionReceiver: NotificationActionReceiver)
 }

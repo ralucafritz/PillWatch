@@ -184,11 +184,11 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.setCurrentFragmentId(fragmentId)
         if (bool) {
             binding.toolbarFrame.visibility = View.VISIBLE
-            binding.hamburgerIcon.visibility = View.GONE
+            binding.openDrawer.visibility = View.GONE
             binding.backButton.visibility = View.VISIBLE
         } else {
             binding.toolbarFrame.visibility = View.GONE
-            binding.hamburgerIcon.visibility = View.VISIBLE
+            binding.openDrawer.visibility = View.VISIBLE
             binding.backButton.visibility = View.GONE
         }
 

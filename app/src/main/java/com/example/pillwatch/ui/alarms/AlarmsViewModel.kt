@@ -5,8 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pillwatch.alarms.AlarmGenerator
-import com.example.pillwatch.alarms.AlarmReceiverCallback
-import com.example.pillwatch.alarms.AlarmScheduler
 import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.data.repository.AlarmRepository
 import com.example.pillwatch.utils.AlarmTiming
@@ -18,8 +16,7 @@ import javax.inject.Inject
 
 class AlarmsViewModel @Inject constructor(
     private val alarmRepository: AlarmRepository,
-    private val alarmGenerator: AlarmGenerator,
-    private val alarmScheduler: AlarmScheduler
+    private val alarmGenerator: AlarmGenerator
 ) :
     ViewModel() {
 
@@ -66,17 +63,10 @@ class AlarmsViewModel @Inject constructor(
         )
 
         _alarmsList.value = withContext(Dispatchers.IO) {
-            _alarmsList.value!!.forEach { alarm ->
-                alarmScheduler.cancelAlarm(alarm)
-            }
             alarmRepository.clearForMedId(medId)
             alarmRepository.insertAll(alarmsList)
             alarmRepository.getAlarmsByMedId(medId).toMutableList()
         }!!
-
-        _alarmsList.value!!.forEach { alarm ->
-            alarmScheduler.scheduleAlarm(alarm)
-        }
     }
 
     suspend fun updateAlarm(alarm: AlarmEntity) {
@@ -84,22 +74,6 @@ class AlarmsViewModel @Inject constructor(
             val updatedAlarm = alarm.copy()
             alarmRepository.updateAlarm(updatedAlarm)
             sortAlarms(updatedAlarm)
-        }
-        if (!alarm.isEnabled) {
-            alarmScheduler.cancelAlarm(alarm)
-        } else {
-            alarmScheduler.scheduleAlarm(alarm)
-        }
-    }
-
-    fun getAlarmById(alarmId: Long, callback: AlarmReceiverCallback) {
-        viewModelScope.launch {
-            val alarm = withContext(Dispatchers.IO) {
-                alarmRepository.getAlarmById(alarmId)
-            }
-            alarm?.let {
-                callback.onAlarmFetched(it)
-            }
         }
     }
 
@@ -123,4 +97,5 @@ class AlarmsViewModel @Inject constructor(
             }
         }
     }
+
 }

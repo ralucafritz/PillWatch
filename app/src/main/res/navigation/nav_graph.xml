@@ -71,7 +71,7 @@
             android:id="@+id/action_medicationFragment_to_addMedFragment"
             app:destination="@id/addMedFragment" />
         <action
-            android:id="@+id/action_medicationFragment_to_userMedFragment"
+            android:id="@+id/action_medicationFragment_to_medPageFragment"
             app:destination="@id/medPageFragment" />
     </fragment>
     <fragment
@@ -105,7 +105,7 @@
         android:name="com.example.pillwatch.ui.alarms.AlarmsPerDayFragment"
         android:label="AlarmsPerDayFragment" >
         <action
-            android:id="@+id/action_alarmsPerDayFragment_to_userMedFragment"
+            android:id="@+id/action_alarmsPerDayFragment_to_medPageFragment"
             app:destination="@id/medPageFragment" />
         <argument
             android:name="alarmTiming"
@@ -122,6 +122,9 @@
         <action
             android:id="@+id/action_userMedFragment_to_medicationFragment"
             app:destination="@id/medicationFragment" />
+        <argument
+            android:name="id"
+            app:argType="long" />
     </fragment>
     <activity
         android:id="@+id/splashActivity"

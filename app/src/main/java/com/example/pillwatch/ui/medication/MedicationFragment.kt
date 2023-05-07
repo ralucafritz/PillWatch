@@ -57,6 +57,12 @@ class MedicationFragment : Fragment() {
             if (medsList.isNotEmpty()) {
                 val adapter = MedsListAdapter(requireContext(), medsList)
                 recyclerView.adapter = adapter
+
+                adapter.onItemClick = {
+                    this@MedicationFragment.findNavController().navigate(
+                        MedicationFragmentDirections.actionMedicationFragmentToMedPageFragment(it)
+                    )
+                }
             }
         }
 
