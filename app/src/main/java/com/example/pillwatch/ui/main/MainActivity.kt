@@ -171,6 +171,8 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.setCurrentFragmentId(fragmentId)
         if (bool) {
             binding.toolbarFrame.visibility = View.VISIBLE
+            binding.openDrawer.visibility = View.VISIBLE
+            binding.backButton.visibility = View.GONE
             binding.bottomNavigationView.visibility = View.VISIBLE
             binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         } else {
@@ -182,15 +184,11 @@ class MainActivity : AppCompatActivity() {
 
     fun medPageToolbar(bool: Boolean, fragmentId: Int) {
         mainViewModel.setCurrentFragmentId(fragmentId)
-        if (bool) {
-            binding.toolbarFrame.visibility = View.VISIBLE
-            binding.openDrawer.visibility = View.GONE
-            binding.backButton.visibility = View.VISIBLE
-        } else {
-            binding.toolbarFrame.visibility = View.GONE
-            binding.openDrawer.visibility = View.VISIBLE
-            binding.backButton.visibility = View.GONE
-        }
+
+        binding.toolbarFrame.visibility = View.VISIBLE
+        binding.openDrawer.visibility = View.GONE
+        binding.backButton.visibility = View.VISIBLE
+
 
         binding.bottomNavigationView.visibility = View.GONE
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)

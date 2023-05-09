@@ -6,11 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentHomeBinding
 import com.example.pillwatch.ui.main.MainActivity
+import com.example.pillwatch.ui.medication.MedicationFragmentDirections
+import com.example.pillwatch.ui.medication.MedsListAdapter
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class HomeFragment : Fragment() {
@@ -39,6 +44,24 @@ class HomeFragment : Fragment() {
 
         // ViewModel
         binding.viewModel = viewModel
+
+        val recyclerView = binding.homeList
+
+        recyclerView.layoutManager = LinearLayoutManager(context)
+
+        lifecycleScope.launch {
+            val medsList = viewModel.getMedsList()
+            if (medsList != null) {
+                val adapter = HomeListAdapter(requireContext(), medsList)
+                recyclerView.adapter = adapter
+
+                adapter.onItemClick = {
+                    this@HomeFragment.findNavController().navigate(
+                        HomeFragmentDirections.actionHomeFragmentToMedPageFragment(it)
+                    )
+                }
+            }
+        }
 
         binding.btnAdd.setOnClickListener {
             this@HomeFragment.findNavController().navigate(
