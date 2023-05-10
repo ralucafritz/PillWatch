@@ -123,7 +123,7 @@
         android:name="com.example.pillwatch.ui.medication.medpage.MedPageFragment"
         android:label="MedPageFragment">
         <action
-            android:id="@+id/action_userMedFragment_to_medicationFragment"
+            android:id="@+id/action_medPageFragment_to_medicationFragment"
             app:destination="@id/medicationFragment" />
         <argument
             android:name="id"

@@ -2,7 +2,6 @@ package com.example.pillwatch.ui.home
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.data.model.UserMedsEntity
 import com.example.pillwatch.data.repository.AlarmRepository
 import com.example.pillwatch.data.repository.UserMedsRepository
@@ -10,6 +9,8 @@ import com.example.pillwatch.di.LoggedUserScope
 import com.example.pillwatch.user.UserManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -36,10 +37,10 @@ class HomeViewModel @Inject constructor(
                 list.forEach{ med ->
                     val currentTime = System.currentTimeMillis()
                     val midnightInMillis = Calendar.getInstance().apply {
+                        add(Calendar.DAY_OF_MONTH, 1)
                         set(Calendar.HOUR_OF_DAY, 0)
                         set(Calendar.MINUTE, 0)
                         set(Calendar.SECOND, 0)
-                        set(Calendar.MILLISECOND, 0)
                     }.timeInMillis
                     val alarm = alarmRepository.getNextAlarmBeforeMidnight(med.id, currentTime, midnightInMillis)
                     if(alarm != null) {

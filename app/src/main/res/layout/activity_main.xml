@@ -44,17 +44,6 @@
                 app:titleTextColor="?attr/colorOnPrimarySurface"
                 tools:ignore="RtlSymmetry" />
 
-            <ImageView
-                android:id="@+id/back_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="start|center_vertical"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/ic_back_arrow"
-                android:visibility="gone"
-                app:tint="?attr/colorOnPrimarySurface"
-                tools:ignore="ContentDescription,RtlSymmetry" />
-
             <LinearLayout
                 android:id="@+id/open_drawer"
                 android:layout_width="wrap_content"

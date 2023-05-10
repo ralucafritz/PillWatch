@@ -6,13 +6,13 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.RingtoneManager
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.pillwatch.R
 import com.example.pillwatch.data.model.AlarmEntity
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 
 class AlarmScheduler(private val context: Context) {
 
@@ -75,22 +75,25 @@ class AlarmScheduler(private val context: Context) {
             action = ACTION_TAKEN
             putExtra(EXTRA_ALARM_ID, alarm.id)
         }
-        val okPendingIntent = PendingIntent.getBroadcast(context, alarm.id.toInt(), okIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val okPendingIntent = PendingIntent.getBroadcast(context, alarm.id.toInt(), okIntent, PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_MUTABLE)
 
         // "Postpone" action
         val postponeIntent = Intent(context, AlarmReceiver::class.java).apply {
             action = ACTION_POSTPONED
             putExtra(EXTRA_ALARM_ID, alarm.id)
         }
-        val postponePendingIntent = PendingIntent.getBroadcast(context, alarm.id.toInt(), postponeIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val postponePendingIntent = PendingIntent.getBroadcast(context, alarm.id.toInt(), postponeIntent, PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_MUTABLE)
 
+        val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
         val notification = NotificationCompat.Builder(context, "pill_watch_channel")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle("PillWatch Reminder")
             .setContentText("It's time to take your medication.")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
-            .setTimeoutAfter(TimeUnit.MINUTES.toMillis(5))
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
+            .setSound(alarmSound)
             .addAction(0, "Ok", okPendingIntent)
             .addAction(0, "Postpone", postponePendingIntent)
             .build()

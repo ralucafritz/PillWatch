@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.data.model.UserMedsEntity
 import com.example.pillwatch.data.repository.AlarmRepository
 import com.example.pillwatch.data.repository.MedsLogRepository
@@ -11,6 +12,7 @@ import com.example.pillwatch.data.repository.UserMedsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 class MedPageViewModel @Inject constructor(
@@ -23,10 +25,53 @@ class MedPageViewModel @Inject constructor(
     val medEntity: LiveData<UserMedsEntity?>
         get() = _medEntity
 
+    private val _alarmsList = MutableLiveData<MutableList<AlarmEntity>?>()
+    val alarmsList: LiveData<MutableList<AlarmEntity>?>
+        get() = _alarmsList
+
     fun getMedEntity(id: Long) {
         viewModelScope.launch {
             _medEntity.value = withContext(Dispatchers.IO) {
                 userMedsRepository.getMedById(id)
+            }
+        }
+    }
+
+    fun getAlarms() {
+        viewModelScope.launch {
+            _alarmsList.value = withContext(Dispatchers.IO) {
+                alarmRepository.getAlarmsByMedId(medEntity.value!!.id).toMutableList()
+            }
+        }
+    }
+
+    suspend fun updateAlarm(alarm: AlarmEntity) {
+        withContext(Dispatchers.IO) {
+            val updatedAlarm = alarm.copy()
+            alarmRepository.updateAlarm(updatedAlarm)
+            sortAlarms(updatedAlarm)
+        }
+    }
+
+    private fun sortAlarms(updatedAlarm: AlarmEntity) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                alarmRepository.clearForMedId(medEntity.value!!.id)
+            }
+            Timber.d("alarma ${_alarmsList.value.toString()}")
+            _alarmsList.value?.let {
+                val updatedList = it.map { alarm ->
+                    if (alarm.id == updatedAlarm.id) {
+                        updatedAlarm
+                    } else {
+                        alarm
+                    }
+                }.sortedBy { alarm -> alarm.timeInMillis }
+                Timber.d("alarma ${_alarmsList.value.toString()}")
+                _alarmsList.value = updatedList.toMutableList()
+            }
+            withContext(Dispatchers.IO) {
+                alarmRepository.insertAll(_alarmsList.value!!.toList())
             }
         }
     }

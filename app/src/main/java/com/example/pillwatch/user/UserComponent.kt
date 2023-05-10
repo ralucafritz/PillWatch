@@ -1,5 +1,6 @@
 package com.example.pillwatch.user
 
+import com.example.pillwatch.alarms.AlarmHandler
 import com.example.pillwatch.alarms.AlarmSchedulerWorker
 import com.example.pillwatch.di.LoggedUserScope
 import com.example.pillwatch.ui.addmed.AddMedFragment
@@ -26,4 +27,5 @@ interface UserComponent {
     fun inject(fragment: MedicationFragment)
     fun inject(fragment: AddMedFragment)
     fun inject(alarmSchedulerWorker: AlarmSchedulerWorker)
+    fun  inject(alarmHandler: AlarmHandler)
 }

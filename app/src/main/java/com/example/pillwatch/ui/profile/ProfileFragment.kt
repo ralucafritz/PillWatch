@@ -28,7 +28,7 @@ class ProfileFragment : Fragment() {
         // Binding
         binding = FragmentProfileBinding.inflate(inflater)
 
-        (requireActivity() as MainActivity).navBarToolbarBottomNav(true, R.id.profileFragment)
+        (requireActivity() as MainActivity).navBarToolbarBottomNav(false, R.id.profileFragment)
 
         // NavController
         navController = NavHostFragment.findNavController(this)

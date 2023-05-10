@@ -3,6 +3,7 @@ package com.example.pillwatch.data.repository
 import androidx.lifecycle.LiveData
 import com.example.pillwatch.data.source.local.AlarmDao
 import com.example.pillwatch.data.model.AlarmEntity
+import kotlinx.coroutines.withContext
 
 class AlarmRepository(private val alarmDao: AlarmDao) {
 
@@ -36,6 +37,10 @@ class AlarmRepository(private val alarmDao: AlarmDao) {
 
     fun getAllAlarms(): List<AlarmEntity> {
         return alarmDao.getAllAlarms()
+    }
+
+    fun getNextAlarmBeforeMidnight(medId: Long, currentTimeInMillis: Long, midnightInMillis: Long): AlarmEntity? {
+        return alarmDao.getNextAlarmBeforeMidnight(medId, currentTimeInMillis, midnightInMillis)
     }
 
     fun clear() {

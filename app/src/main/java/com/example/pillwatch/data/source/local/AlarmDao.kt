@@ -32,6 +32,9 @@ interface AlarmDao {
     @Query("SELECT * FROM alarms_table")
     fun getAllAlarms(): List<AlarmEntity>
 
+    @Query("SELECT * FROM alarms_table WHERE medId = :medId AND timeInMillis > :currentTimeInMillis AND timeInMillis < :midnightInMillis ORDER BY timeInMillis ASC LIMIT 1")
+    fun getNextAlarmBeforeMidnight(medId: Long, currentTimeInMillis: Long, midnightInMillis: Long): AlarmEntity?
+
     @Query("DELETE FROM alarms_table")
     fun clear()
 }

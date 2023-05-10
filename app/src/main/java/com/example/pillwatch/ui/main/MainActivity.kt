@@ -17,6 +17,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.ActivityMainBinding
+import com.example.pillwatch.ui.medication.MedicationFragment
+import com.example.pillwatch.ui.medication.medpage.MedPageFragmentDirections
 import com.example.pillwatch.utils.extensions.ContextExtensions.dismissProgressDialog
 import com.example.pillwatch.utils.extensions.ContextExtensions.showProgressDialog
 import com.example.pillwatch.ui.splash.SplashActivity
@@ -152,6 +154,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 true
             }
+
         }
     }
 
@@ -171,8 +174,6 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.setCurrentFragmentId(fragmentId)
         if (bool) {
             binding.toolbarFrame.visibility = View.VISIBLE
-            binding.openDrawer.visibility = View.VISIBLE
-            binding.backButton.visibility = View.GONE
             binding.bottomNavigationView.visibility = View.VISIBLE
             binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         } else {
@@ -182,16 +183,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun medPageToolbar(bool: Boolean, fragmentId: Int) {
-        mainViewModel.setCurrentFragmentId(fragmentId)
-
-        binding.toolbarFrame.visibility = View.VISIBLE
-        binding.openDrawer.visibility = View.GONE
-        binding.backButton.visibility = View.VISIBLE
-
-
-        binding.bottomNavigationView.visibility = View.GONE
-        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+    fun getPreviousFragment(): Int? {
+        return mainViewModel.currentFragmentId.value
     }
-
 }

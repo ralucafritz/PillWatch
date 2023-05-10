@@ -45,8 +45,10 @@ class HomeFragment : Fragment() {
         // ViewModel
         binding.viewModel = viewModel
 
-        val recyclerView = binding.homeList
+        // Lifecycle
+        binding.lifecycleOwner = this
 
+        val recyclerView = binding.homeList
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         lifecycleScope.launch {
@@ -69,8 +71,6 @@ class HomeFragment : Fragment() {
             )
         }
 
-        // Lifecycle
-        binding.lifecycleOwner = this
 
         return binding.root
     }

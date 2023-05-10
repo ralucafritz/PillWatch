@@ -25,8 +25,8 @@ class PillWatchApplication : Application() {
         super.onCreate()
 
         createNotificationChannel(this)
-        scheduleOneTimeAlarmSchedulerWorker(this)
-        scheduleAlarmSchedulerWorker(this)
+//        scheduleOneTimeAlarmSchedulerWorker(this)
+//        scheduleAlarmSchedulerWorker(this)
     }
 
     private fun scheduleAlarmSchedulerWorker(context: Context) {

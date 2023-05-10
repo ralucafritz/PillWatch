@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
+import com.example.pillwatch.alarms.AlarmHandler
 import com.example.pillwatch.alarms.AlarmScheduler
 import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.databinding.FragmentAlarmsPerDayBinding
@@ -35,7 +36,7 @@ class AlarmsPerDayFragment : Fragment(), OnAlarmUpdatedListener {
     lateinit var viewModel: AlarmsViewModel
 
     @Inject
-    lateinit var alarmScheduler: AlarmScheduler
+    lateinit var alarmHandler: AlarmHandler
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -89,7 +90,7 @@ class AlarmsPerDayFragment : Fragment(), OnAlarmUpdatedListener {
         binding.buttonNext.setOnClickListener {
             viewModel.alarmsList.value!!.forEach { alarm ->
                 if (alarm.isEnabled) {
-                    alarmScheduler.scheduleAlarm(alarm)
+                    alarmHandler.scheduleAlarm(alarm.id.toInt(), alarm.timeInMillis)
                 }
             }
             this.findNavController().navigate(
