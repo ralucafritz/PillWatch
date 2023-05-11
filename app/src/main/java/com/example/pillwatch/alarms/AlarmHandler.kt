@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.example.pillwatch.PillWatchApplication
+import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.data.model.MedsLogEntity
 import com.example.pillwatch.data.repository.AlarmRepository
 import com.example.pillwatch.data.repository.MedsLogRepository
@@ -36,10 +37,8 @@ class AlarmHandler @Inject constructor(
         userManager.userComponent!!.inject(this)
     }
 
-    fun createMedsLog(alarmId: Long, status: TakenStatus) {
+    fun createMedsLog(alarm: AlarmEntity, status: TakenStatus) {
         CoroutineScope(Dispatchers.IO).launch {
-            val alarm = alarmRepository.getAlarmById(alarmId)
-
             val medId = alarm.medId
             val timestamp = System.currentTimeMillis()
             val medsLog = MedsLogEntity(medId = medId, status = status, timestamp = timestamp)
@@ -57,6 +56,7 @@ class AlarmHandler @Inject constructor(
             alarmIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
+        Timber.d("SCHEDULED ALARM $alarmId")
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             alarmTime,
@@ -82,10 +82,10 @@ class AlarmHandler @Inject constructor(
         alarmManager.cancel(pendingIntent)
     }
 
-    fun postponeAlarm(alarmId: Long) {
-        createMedsLog(alarmId, TakenStatus.POSTPONED)
+    fun postponeAlarm(alarm: AlarmEntity) {
+        createMedsLog(alarm, TakenStatus.POSTPONED)
         val postponeTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5)
-        scheduleAlarm(alarmId.toInt(), postponeTime)
+        scheduleAlarm(alarm.id.toInt(), postponeTime)
     }
 
     fun missedAlarm(alarmId: Int, alarmTime: Long) {
@@ -114,7 +114,7 @@ class AlarmHandler @Inject constructor(
                     val newAlarmList = alarmGenerator.generateAlarms(
                         lastAlarm.alarmTiming,
                         lastAlarm.medId,
-                        lastAlarm.everyXHours,
+                        lastAlarm.everyXHours ?: 1,
                         lastAlarm.timeInMillis
                     )
                     alarmRepository.clearForMedId(userMed.id)

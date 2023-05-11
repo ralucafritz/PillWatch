@@ -22,7 +22,8 @@ object ContextExtensions {
 
     fun Context.toastTop(msg: String) {
         val toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
-        toast.setGravity(Gravity.TOP, 0, 0)
+        val marginVertical = (100 * resources.displayMetrics.density).toInt()
+        toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, marginVertical)
         toast.show()
     }
 

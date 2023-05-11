@@ -37,7 +37,7 @@
 
             <TextView
                 android:id="@+id/med_name"
-                android:layout_width="250dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:paddingTop="10dp"
@@ -60,9 +60,10 @@
 
                 <TextView
                     android:id="@+id/med_conc"
-                    android:layout_width="wrap_content"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
+                    android:layout_gravity="center_horizontal"
                     android:textSize="15sp"
                     android:textStyle="italic"
                     android:textColor="?attr/colorPrimaryContainer"
@@ -95,6 +96,21 @@
             app:layout_constraintBottom_toTopOf="@id/background"
             app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+        <ImageView
+            android:id="@+id/delete_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="15dp"
+            android:clickable="true"
+            android:src="@drawable/ic_delete"
+            app:layout_constraintBottom_toTopOf="@id/background"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck"
+            app:tint="?attr/colorError" />
+
 
         <ImageView
             android:id="@+id/background"

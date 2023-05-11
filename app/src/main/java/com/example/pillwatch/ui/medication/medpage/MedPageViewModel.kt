@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pillwatch.alarms.AlarmHandler
 import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.data.model.UserMedsEntity
 import com.example.pillwatch.data.repository.AlarmRepository
@@ -18,7 +19,8 @@ import javax.inject.Inject
 class MedPageViewModel @Inject constructor(
     private val userMedsRepository: UserMedsRepository,
     private val alarmRepository: AlarmRepository,
-    private val medsLogRepository: MedsLogRepository
+    private val medsLogRepository: MedsLogRepository,
+    private val alarmHandler: AlarmHandler
 ): ViewModel() {
 
     private val _medEntity = MutableLiveData<UserMedsEntity?>()
@@ -72,6 +74,18 @@ class MedPageViewModel @Inject constructor(
             }
             withContext(Dispatchers.IO) {
                 alarmRepository.insertAll(_alarmsList.value!!.toList())
+            }
+        }
+    }
+
+    fun deleteMed() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                if(_alarmsList.value != null)
+                    _alarmsList.value!!.forEach {
+                        alarmHandler.cancelAlarm(it.id.toInt())
+                    }
+                userMedsRepository.deleteById(_medEntity.value!!.id)
             }
         }
     }

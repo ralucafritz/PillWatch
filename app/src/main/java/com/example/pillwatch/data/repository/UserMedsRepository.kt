@@ -24,6 +24,11 @@ class UserMedsRepository(private val userMedsDao: UserMedsDao) {
     fun getMedById(id: Long): UserMedsEntity {
         return userMedsDao.getMedById(id)
     }
+
+    fun deleteById(id: Long) {
+        userMedsDao.deleteById(id)
+    }
+
     fun clear() {
         userMedsDao.clear()
     }

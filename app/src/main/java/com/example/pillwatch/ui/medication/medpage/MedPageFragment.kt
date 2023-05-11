@@ -93,7 +93,16 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
                 R.id.homeFragment -> {
                     navigateToHomePage()
                 }
+                else -> {
+                    navigateToHomePage()
+                }
             }
+        }
+
+        binding.deleteButton.setOnClickListener{
+            viewModel.deleteMed()
+            navigateToMedicationPage()
+            requireContext().toastTop("Med ${viewModel.medEntity.value!!.tradeName} deleted successfully.")
         }
 
         // set up the RecyclerView to display the alarms

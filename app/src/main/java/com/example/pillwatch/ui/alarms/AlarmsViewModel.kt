@@ -58,7 +58,7 @@ class AlarmsViewModel @Inject constructor(
         val alarmsList = alarmGenerator.generateAlarms(
             alarmTiming,
             medId,
-            everyXHours.value!!,
+            everyXHours.value ?: 1,
             startHourInMillis!!
         )
 
