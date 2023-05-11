@@ -23,7 +23,7 @@ class AlarmSchedulerWorker(
     lateinit var userMedsRepository: UserMedsRepository
 
     @Inject
-    lateinit var alarmScheduler: AlarmScheduler
+    lateinit var alarmHandler: AlarmHandler
 
     @Inject
     lateinit var alarmGenerator: AlarmGenerator
@@ -50,7 +50,7 @@ class AlarmSchedulerWorker(
                     val newAlarmList = alarmGenerator.generateAlarms(
                         lastAlarm.alarmTiming,
                         lastAlarm.medId,
-                        lastAlarm.everyXHours,
+                        lastAlarm.everyXHours ?: 1,
                         lastAlarm.timeInMillis
                     )
 
@@ -63,8 +63,8 @@ class AlarmSchedulerWorker(
             val alarms = alarmRepository.getAllAlarms()
 
             // schedule the alarms that are active
-            alarms.filter { it.isEnabled }.forEach { alarm ->
-                alarmScheduler.scheduleAlarm(alarm)
+            alarms.filter { it.isEnabled && it.timeInMillis > currentTime}.forEach { alarm ->
+                alarmHandler.scheduleAlarm(alarm.id.toInt(), alarm.timeInMillis)
             }
 
             Result.success()

@@ -1,6 +1,5 @@
 package com.example.pillwatch.ui.home
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -10,7 +9,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class HomeListAdapter(private val context: Context, private val medList: MutableList<Pair<UserMedsEntity, Long>>) :
+class HomeListAdapter(private val medList: MutableList<Pair<UserMedsEntity, Long>>) :
     RecyclerView.Adapter<HomeListAdapter.HomeViewHolder>() {
 
     var onItemClick: ((Long) -> Unit)? = null
@@ -27,7 +26,7 @@ class HomeListAdapter(private val context: Context, private val medList: Mutable
     }
 
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
-        holder.bind(medList[position].first.tradeName, medList[position].second, context)
+        holder.bind(medList[position].first.tradeName, medList[position].second)
 
         holder.itemView.setOnClickListener {
             onItemClick?.invoke(medList[position].first.id)
@@ -37,7 +36,7 @@ class HomeListAdapter(private val context: Context, private val medList: Mutable
     class HomeViewHolder(private val binding: ItemHomeListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(medName: String, nextAlarm: Long, context: Context) {
+        fun bind(medName: String, nextAlarm: Long) {
             if (medName.length >= 15) {
                 val truncated = medName.substring(0, 14) + "..."
                 binding.medItemName.text = truncated

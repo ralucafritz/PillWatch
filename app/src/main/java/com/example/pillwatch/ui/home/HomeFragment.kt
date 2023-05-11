@@ -54,7 +54,7 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             val medsList = viewModel.getMedsList()
             if (medsList != null) {
-                val adapter = HomeListAdapter(requireContext(), medsList)
+                val adapter = HomeListAdapter(medsList)
                 recyclerView.adapter = adapter
 
                 adapter.onItemClick = {

@@ -4,15 +4,14 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.pillwatch.alarms.AlarmSchedulerWorker
 import com.example.pillwatch.di.AppComponent
 import com.example.pillwatch.di.DaggerAppComponent
-import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 class PillWatchApplication : Application() {
@@ -25,35 +24,24 @@ class PillWatchApplication : Application() {
         super.onCreate()
 
         createNotificationChannel(this)
-//        scheduleOneTimeAlarmSchedulerWorker(this)
-//        scheduleAlarmSchedulerWorker(this)
+        scheduleAlarmSchedulerWorker(this)
     }
 
     private fun scheduleAlarmSchedulerWorker(context: Context) {
         val workManager = WorkManager.getInstance(context)
 
-        // calculate the time until the next even hour
-        val now = Calendar.getInstance()
-        val nextHour = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, 1)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }
-
-        val initialDelay = nextHour.timeInMillis - now.timeInMillis
-
-        // create a PeriodicWorkRequest for AlarmSchedulerWorker
         val alarmSchedulerWorkerRequest =
-            PeriodicWorkRequestBuilder<AlarmSchedulerWorker>(24, TimeUnit.HOURS)
-                .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
-                .addTag("alarmSchedulerWorker")
+            PeriodicWorkRequestBuilder<AlarmSchedulerWorker>(1, TimeUnit.HOURS)
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build()
+                )
                 .build()
 
-        // schedule the worker
         workManager.enqueueUniquePeriodicWork(
             "AlarmSchedulerWorker",
-            ExistingPeriodicWorkPolicy.UPDATE,
+            ExistingPeriodicWorkPolicy.KEEP,
             alarmSchedulerWorkerRequest
         )
     }
@@ -70,21 +58,4 @@ class PillWatchApplication : Application() {
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
-
-    private fun scheduleOneTimeAlarmSchedulerWorker(context: Context) {
-        val workManager = WorkManager.getInstance(context)
-
-        // create a OneTimeWorkRequest for AlarmSchedulerWorker
-        val oneTimeAlarmSchedulerWorkerRequest = OneTimeWorkRequestBuilder<AlarmSchedulerWorker>()
-            .addTag("oneTimeAlarmSchedulerWorker")
-            .build()
-
-        // schedule the worker
-        workManager.enqueueUniqueWork(
-            "OneTimeAlarmSchedulerWorker",
-            ExistingWorkPolicy.REPLACE,
-            oneTimeAlarmSchedulerWorkerRequest
-        )
-    }
-
 }

@@ -36,5 +36,4 @@ interface AppComponent {
     fun inject(fragment: AlarmsPerDayFragment)
     fun inject(fragment: MedPageFragment)
     fun inject(alarmReceiver: AlarmReceiver)
-//    fun inject(notificationActionReceiver: NotificationActionReceiver)
 }

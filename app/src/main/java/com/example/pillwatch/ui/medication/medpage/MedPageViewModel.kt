@@ -60,7 +60,6 @@ class MedPageViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 alarmRepository.clearForMedId(medEntity.value!!.id)
             }
-            Timber.d("alarma ${_alarmsList.value.toString()}")
             _alarmsList.value?.let {
                 val updatedList = it.map { alarm ->
                     if (alarm.id == updatedAlarm.id) {
@@ -69,7 +68,6 @@ class MedPageViewModel @Inject constructor(
                         alarm
                     }
                 }.sortedBy { alarm -> alarm.timeInMillis }
-                Timber.d("alarma ${_alarmsList.value.toString()}")
                 _alarmsList.value = updatedList.toMutableList()
             }
             withContext(Dispatchers.IO) {

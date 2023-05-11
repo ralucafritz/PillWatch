@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.alarms.AlarmHandler
-import com.example.pillwatch.alarms.AlarmScheduler
 import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.databinding.FragmentAlarmsPerDayBinding
 import com.example.pillwatch.ui.main.MainActivity
@@ -126,10 +125,17 @@ class AlarmsPerDayFragment : Fragment(), OnAlarmUpdatedListener {
 
         val now = Calendar.getInstance()
         val minute = now.get(Calendar.MINUTE)
-        val hour = now.get(Calendar.HOUR_OF_DAY)
-        val closestMinute = when (minute % 5) {
-            0 -> minute
+        var hour = now.get(Calendar.HOUR_OF_DAY)
+        var closestMinute = when (minute % 5) {
+            0 -> minute + 5
             else -> minute + (5 - (minute % 5))
+        }
+        if (closestMinute >= 60) {
+            closestMinute %= 60
+            hour += 1
+            if (hour == 24) {
+                hour = 0
+            }
         }
         viewModel.updateStartHour(hour, closestMinute)
 
