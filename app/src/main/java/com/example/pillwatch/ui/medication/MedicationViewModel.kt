@@ -19,9 +19,14 @@ class MedicationViewModel @Inject constructor(
     private val userManager: UserManager
 ) :
     ViewModel() {
+    // LiveData to hold the list of user medications
+    private val _userMedsList = MutableLiveData<List<UserMedsEntity>>(listOf())
 
-    private val _userMedsList = MutableLiveData<List<UserMedsEntity>>(mutableListOf())
-
+    /**
+     * Retrieves the list of user medications from the repository.
+     *
+     * @return The list of user medications.
+     */
     suspend fun getMedsList(): List<UserMedsEntity> {
         val medsList = withContext(Dispatchers.IO) {
             val userId = userManager.id
@@ -35,6 +40,11 @@ class MedicationViewModel @Inject constructor(
         return medsList
     }
 
+    /**
+     * Generates the share text for the user's medication history.
+     *
+     * @return The share text for the medication history.
+     */
     fun getMedsShareText(): String {
         val medsList = _userMedsList.value ?: return ""
 
@@ -42,18 +52,19 @@ class MedicationViewModel @Inject constructor(
         val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
         val formattedDate = dateFormat.format(now.time)
 
-        val builder = StringBuilder()
-        builder.append("Hey, here's my medicine history from PillWatch as of today, $formattedDate! \n\n ")
-        for (med in medsList) {
-            builder.append("No. ${medsList.indexOf(med) + 1} ")
-            builder.append(med.tradeName)
-            if (med.concentration != null && med.concentration != "") {
-                builder.append(" ")
-                builder.append(med.concentration)
+        val shareText = buildString {
+            append("Hey, here's my medicine history from PillWatch as of today, $formattedDate! \n\n")
+            medsList.forEachIndexed { index, med ->
+                append("No. ${index + 1} ${med.tradeName}")
+                med.concentration?.let { concentration ->
+                    if (concentration.isNotBlank()) {
+                        append(" $concentration")
+                    }
+                }
+                appendLine()
             }
-            builder.append("\n")
         }
 
-        return builder.toString()
+        return shareText
     }
 }

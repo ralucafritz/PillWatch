@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.example.pillwatch.utils.AlarmTiming
 
 @Entity(
     tableName = "user_meds_table",
@@ -27,6 +26,7 @@ data class UserMedsEntity(
     val tradeName: String,
     val userId: Long,
     val medId: Long? = null,
-    val concentration: String? = ""
+    val concentration: String? = "",
+    val isArchived: Boolean? = false
 ) {
 }

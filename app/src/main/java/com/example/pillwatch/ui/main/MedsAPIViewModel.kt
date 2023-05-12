@@ -14,7 +14,13 @@ import kotlinx.coroutines.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class MedsViewModel @Inject constructor(
+/**
+ * ViewModel class for the Medication screen.
+ *
+ * @param medsRepository The repository for medication-related database operations.
+ * @param metadataRepository The repository for metadata-related database operations.
+ */
+class MedsAPIViewModel @Inject constructor(
     private val medsRepository: MedsRepository,
     private val metadataRepository: MetadataRepository,
 ) :
@@ -40,6 +46,10 @@ class MedsViewModel @Inject constructor(
     val updateDialogTitle: LiveData<String>
         get() = _updateDialogTitle
 
+    /**
+     * Retrieves medication data from the API and updates the local database if necessary.
+     * Returns the result of the update operation.
+     */
     suspend fun getMedsDataFromAPI(): Result<Boolean> {
         val result = withContext(Dispatchers.Main) {
             try {
@@ -82,7 +92,10 @@ class MedsViewModel @Inject constructor(
         return Result.success(result)
     }
 
-
+    /**
+     * Checks if the retrieved SHA value is new or different from the current SHA value stored in the metadata.
+     * Updates the SHA value in the metadata and triggers the update operation if necessary.
+     */
     private suspend fun checkNewSha(newSha: String): Boolean {
         // get the current value of SHA
         val currentSha = withContext(Dispatchers.IO) {
@@ -120,6 +133,12 @@ class MedsViewModel @Inject constructor(
         return false
     }
 
+    /**
+     * Transforms the medication data from the property format to the entity format.
+     *
+     * @param data The medication data in property format.
+     * @return The medication data in entity format.
+     */
     private fun transformDataToEntity(data: MedsDataProperty): MedsEntity {
         // return the entity from the property
         return MedsEntity(
@@ -134,6 +153,13 @@ class MedsViewModel @Inject constructor(
         )
     }
 
+    /**
+     * Logs the medication update operation result.
+     *
+     * @param title The title of the update dialog.
+     * @param status The status message of the update operation.
+     * @param errMsg The error message, if any.
+     */
     private fun logMeds(title: String, status: String, errMsg: String = "") {
         _updateDialogTitle.value = title
         _updateMessage.value = status
@@ -148,6 +174,11 @@ class MedsViewModel @Inject constructor(
         Timber.tag(TAG_MEDS_DB).d(logMessage)
     }
 
+    /**
+     * Logs the SHA value update result.
+     *
+     * @param value The result of the SHA update operation.
+     */
     private fun logSha(value: Boolean?) {
         val message = when (value) {
             false -> "SHA value is the same"

@@ -13,11 +13,13 @@ import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentAddMedBinding
 import com.example.pillwatch.ui.main.MainActivity
-import com.example.pillwatch.utils.AutoCompleteAdapter
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
+/**
+ * Fragment for adding a new medication to the user's list.
+ */
 class AddMedFragment : Fragment() {
 
     private lateinit var binding: FragmentAddMedBinding
@@ -25,6 +27,9 @@ class AddMedFragment : Fragment() {
     @Inject
     lateinit var viewModel: AddMedViewModel
 
+    /**
+     * Performs injection of dependencies and initialization.
+     */
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().application as PillWatchApplication).appComponent.userManager().userComponent!!.inject(
@@ -39,7 +44,7 @@ class AddMedFragment : Fragment() {
     ): View {
         // Binding
         binding = FragmentAddMedBinding.inflate(inflater)
-
+        // Set up the navigation and toolbar visibility
         (requireActivity() as MainActivity).navBarToolbarBottomNav(false, R.id.addMedFragment)
 
         // ViewModel
@@ -64,6 +69,7 @@ class AddMedFragment : Fragment() {
             }
         }
 
+        // Set up the autocomplete functionality for medication names
         viewModel.medName.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
                 if (viewModel.medName.value != null) {
@@ -77,11 +83,13 @@ class AddMedFragment : Fragment() {
             }
         }
 
+        // Set item click listener for the medication name autocomplete
         binding.medName.onItemClickListener =
             AdapterView.OnItemClickListener { _, _, position, _ ->
                 viewModel.getPairAtPosition(position)
             }
 
+        // Observe the isAlertNeeded flag and perform necessary action
         viewModel.isAlertNeeded.observe(viewLifecycleOwner) {
             if (it != null && it) {
                 viewModel.isAlertNeeded(requireContext())

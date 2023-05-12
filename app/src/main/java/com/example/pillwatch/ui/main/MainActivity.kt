@@ -17,8 +17,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.ActivityMainBinding
-import com.example.pillwatch.ui.medication.MedicationFragment
-import com.example.pillwatch.ui.medication.medpage.MedPageFragmentDirections
 import com.example.pillwatch.utils.extensions.ContextExtensions.dismissProgressDialog
 import com.example.pillwatch.utils.extensions.ContextExtensions.showProgressDialog
 import com.example.pillwatch.ui.splash.SplashActivity
@@ -41,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var mainViewModel: MainViewModel
 
     @Inject
-    lateinit var medsViewModel: MedsViewModel
+    lateinit var medsAPIViewModel: MedsAPIViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
+        // Firebase Messaging token retrieval
         val firebaseMessaging = FirebaseMessaging.getInstance()
         firebaseMessaging.token.addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -136,12 +135,12 @@ class MainActivity : AppCompatActivity() {
                         val progressDialog = showProgressDialog("Checking for updates")
                         lifecycleScope.launch {
                             withContext(Dispatchers.IO) {
-                                medsViewModel.getMedsDataFromAPI()
+                                medsAPIViewModel.getMedsDataFromAPI()
                             }
                             dismissProgressDialog(
                                 progressDialog,
-                                medsViewModel.updateDialogTitle.value!!,
-                                medsViewModel.updateMessage.value!!
+                                medsAPIViewModel.updateDialogTitle.value!!,
+                                medsAPIViewModel.updateMessage.value!!
                             )
                         }
                     }
@@ -167,8 +166,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     *      This function sets the @currentFragmentId MutableLiveData value in the ViewModel
-     *      @param bool is used to determine if the ToolbarFrame should be visible or not
+     * Sets the current fragment ID in the MainViewModel and updates the visibility of the ToolbarFrame and BottomNavigationView.
+     *
+     * @param bool Determines whether the ToolbarFrame and BottomNavigationView should be visible or not based on the provided boolean value.
      */
     fun navBarToolbarBottomNav(bool: Boolean, fragmentId: Int) {
         mainViewModel.setCurrentFragmentId(fragmentId)
@@ -183,6 +183,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Retrieves the ID of the previous fragment from the MainViewModel.
+     *
+     * @return The ID of the previous fragment.
+     */
     fun getPreviousFragment(): Int? {
         return mainViewModel.currentFragmentId.value
     }

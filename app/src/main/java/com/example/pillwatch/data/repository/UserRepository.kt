@@ -50,6 +50,12 @@ class UserRepository(private val userDao: UserDao) {
         }
     }
 
+    suspend fun getUserById(id: Long): UserEntity? {
+        return withContext(Dispatchers.IO) {
+            userDao.getUserById(id)
+        }
+    }
+
     suspend fun clear() {
         withContext(Dispatchers.IO) {
             userDao.clear()

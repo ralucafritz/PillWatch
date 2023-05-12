@@ -1,4 +1,4 @@
-package com.example.pillwatch.ui.alarms
+package com.example.pillwatch.alarms
 
 import com.example.pillwatch.data.model.AlarmEntity
 

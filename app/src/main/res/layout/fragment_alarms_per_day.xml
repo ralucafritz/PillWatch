@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.pillwatch.ui.alarms.AlarmsViewModel" />
+            type="com.example.pillwatch.ui.alarms.AlarmsPerDayViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

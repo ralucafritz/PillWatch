@@ -1,4 +1,4 @@
-package com.example.pillwatch.utils
+package com.example.pillwatch.ui.addmed
 
 import android.content.Context
 import android.view.LayoutInflater

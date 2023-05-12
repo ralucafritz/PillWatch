@@ -24,6 +24,9 @@ interface UserDao {
     @Query("SELECT username FROM users_table WHERE id =:id")
     fun getUserNameById(id: Long): String?
 
+    @Query("SELECT * FROM users_table WHERE id = :id")
+    fun getUserById(id: Long) : UserEntity?
+
     @Query("UPDATE users_table SET username = :newName WHERE id = :userId")
     fun updateUserName(userId: Long, newName: String)
 

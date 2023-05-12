@@ -23,6 +23,13 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+/**
+ * ViewModel for adding medication in the UI.
+ *
+ * @param medsRepository The repository for accessing and modifying medication data.
+ * @param userMedsRepository The repository for accessing and modifying user medication data.
+ * @param userManager The manager for user-related operations.
+ */
 @LoggedUserScope
 class AddMedViewModel @Inject constructor(
     private val medsRepository: MedsRepository,
@@ -33,17 +40,14 @@ class AddMedViewModel @Inject constructor(
 
     val medName = MutableLiveData("")
     val concentrationEditText = MutableLiveData("")
+    val concentrationList: MutableList<String> = mutableListOf()
+    val nameList: MutableList<String> = mutableListOf()
+    val addMedCheck = MutableLiveData<Boolean?>()
 
     private val _responseInteractionDataAPI = MutableLiveData<List<InteractionProperty>>()
     private val _selectedMedNumber = MutableLiveData<Int>()
     private val _selectedMed = MutableLiveData<MedsEntity>()
     private val _pairList = MutableLiveData<List<MedsEntity>>()
-
-    val concentrationList: MutableList<String> = mutableListOf()
-    val nameList: MutableList<String> = mutableListOf()
-
-    val addMedCheck = MutableLiveData<Boolean?>()
-
     private val severityHigh: MutableList<Pair<String, String>> = mutableListOf()
     private val severityModerate: MutableList<Pair<String, String>> = mutableListOf()
     private val severityLow: MutableList<Pair<String, String>> = mutableListOf()
@@ -60,6 +64,11 @@ class AddMedViewModel @Inject constructor(
     val isAlertNeeded: LiveData<Boolean>
         get() = _isAlertNeeded
 
+    /**
+     * Searches for medication names based on the entered text.
+     *
+     * @param medName The entered medication name.
+     */
     fun searchMedName(medName: String) {
         viewModelScope.launch {
             val medsSearch = withContext(Dispatchers.IO) {
@@ -84,12 +93,20 @@ class AddMedViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Sets the selected medication based on the position in the autocomplete dropdown.
+     *
+     * @param position The position of the selected medication.
+     */
     fun getPairAtPosition(position: Int) {
         _selectedMedNumber.value = position
         _selectedMed.value = _pairList.value?.get(position)
         concentrationEditText.value = _selectedMed.value!!.concentration
     }
 
+    /**
+     * Adds the selected medication to the user's list of medications.
+     */
     suspend fun addMedToUser() {
         val userId = userManager.id
         val medId: Long?
@@ -146,6 +163,11 @@ class AddMedViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Suspends the coroutine until the addMedCheck LiveData emits a non-null value.
+     *
+     * @return The value emitted by addMedCheck LiveData.
+     */
     private suspend fun waitUntilAddMedCheck(): Boolean = suspendCoroutine { continuation ->
         val observer = object : Observer<Boolean?> {
             override fun onChanged(value: Boolean?) {
@@ -158,6 +180,12 @@ class AddMedViewModel @Inject constructor(
         addMedCheck.observeForever(observer)
     }
 
+    /**
+     * Retrieves the list of rxCui values for a given list of medication IDs.
+     *
+     * @param list The list of medication IDs.
+     * @return The list of rxCui values.
+     */
     private suspend fun getRxCuiList(list: List<Long>): List<String> {
         val rxCuiList = mutableListOf<String>()
         list.map {
@@ -167,6 +195,12 @@ class AddMedViewModel @Inject constructor(
         return rxCuiList
     }
 
+    /**
+     * Checks for interactions between the selected medication and the medications in the user's list.
+     *
+     * @param medId The ID of the selected medication.
+     * @param userId The ID of the user.
+     */
     private fun checkInteraction(medId: Long, userId: Long) {
         viewModelScope.launch {
             // get rxcui based on the medId from Db
@@ -186,6 +220,12 @@ class AddMedViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Retrieves the interaction data from the API for the selected medication and the user's list of medications.
+     *
+     * @param rxCui The rxCui value of the selected medication.
+     * @param listRxCui The list of rxCui values for the user's medications.
+     */
     private fun getInteractionDataFromAPI(
         rxCui: String,
         listRxCui: List<String>
@@ -235,6 +275,11 @@ class AddMedViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Checks if an interaction alert is needed and shows the alert dialog if necessary.
+     *
+     * @param context The context of the activity or fragment.
+     */
     fun isAlertNeeded(context: Context) {
         val highCount = severityHigh.size
         val moderateCount = severityModerate.size
@@ -254,6 +299,15 @@ class AddMedViewModel @Inject constructor(
         Timber.tag("INTERACTION").d(addMedCheck.value.toString())
     }
 
+
+    /**
+     * Checks the severity levels of the medication interactions and returns the message and count.
+     *
+     * @param lowCount The count of interactions with low severity.
+     * @param moderateCount The count of interactions with moderate severity.
+     * @param highCount The count of interactions with high severity.
+     * @return A pair containing the interaction message and the total count of interactions.
+     */
     private fun checkSeverity(
         lowCount: Int,
         moderateCount: Int,
@@ -285,6 +339,9 @@ class AddMedViewModel @Inject constructor(
         return Pair(builder.toString(), count)
     }
 
+    /**
+     * Completes the navigation to the Alarm Frequency screen after adding a medication.
+     */
     fun navigationCompleteToAlarmFrequency() {
         _navigationCheck.value = null
         _medAddedId.value = null

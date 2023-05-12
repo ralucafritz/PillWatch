@@ -13,15 +13,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.data.model.AlarmEntity
+import com.example.pillwatch.data.model.UserMedsEntity
 import com.example.pillwatch.databinding.FragmentMedPageBinding
 import com.example.pillwatch.ui.alarms.AlarmsListAdapter
 import com.example.pillwatch.ui.alarms.AlarmsPerDayFragmentArgs
-import com.example.pillwatch.ui.alarms.OnAlarmUpdatedListener
+import com.example.pillwatch.alarms.OnAlarmUpdatedListener
 import com.example.pillwatch.ui.main.MainActivity
 import com.example.pillwatch.utils.extensions.ContextExtensions.toast
 import com.example.pillwatch.utils.extensions.ContextExtensions.toastTop
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+private const val MEDICATION_NOT_FOUND_ERROR_MESSAGE = "Error: Medication not found."
+private const val MED_DELETED_SUCCESS_MESSAGE_TEMPLATE = "Med %s deleted successfully."
 
 class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
     private lateinit var binding: FragmentMedPageBinding
@@ -59,50 +63,39 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
 
         viewModel.medEntity.observe(viewLifecycleOwner) {
             if (it != null) {
-                binding.medName.text = it.tradeName
-                binding.medConc.text = it.concentration
                 viewModel.getAlarms()
-                if (it.medId != null) {
-                    binding.medItemFab.setImageResource(R.drawable.ic_check)
-                    binding.medItemFab.setColorFilter(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.green
-                        )
-                    )
-                } else {
-                    binding.medItemFab.setImageResource(R.drawable.ic_close)
-                    binding.medItemFab.setColorFilter(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.red
-                        )
-                    )
-                }
+                generateUI(it)
             } else {
                 navigateToMedicationPage()
-                requireContext().toast("Error: Medication not found.")
+                requireContext().toast(MEDICATION_NOT_FOUND_ERROR_MESSAGE)
             }
         }
 
-        binding.backButton.setOnClickListener{
+        binding.backButton.setOnClickListener {
             when (previousFragment) {
                 R.id.medicationFragment -> {
                     navigateToMedicationPage()
                 }
+
                 R.id.homeFragment -> {
                     navigateToHomePage()
                 }
+
                 else -> {
                     navigateToHomePage()
                 }
             }
         }
 
-        binding.deleteButton.setOnClickListener{
+        binding.deleteButton.setOnClickListener {
             viewModel.deleteMed()
             navigateToMedicationPage()
-            requireContext().toastTop("Med ${viewModel.medEntity.value!!.tradeName} deleted successfully.")
+            requireContext().toastTop(
+                String.format(
+                    MED_DELETED_SUCCESS_MESSAGE_TEMPLATE,
+                    viewModel.medEntity.value!!.tradeName
+                )
+            )
         }
 
         // set up the RecyclerView to display the alarms
@@ -119,21 +112,55 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
 
         return binding.root
     }
-
+    /**
+     * Navigates to the medication list page.
+     */
     private fun navigateToMedicationPage() {
         this@MedPageFragment.findNavController().navigate(
             MedPageFragmentDirections.actionMedPageFragmentToMedicationFragment()
         )
     }
-
+    /**
+     * Navigates to the home page.
+     */
     private fun navigateToHomePage() {
         this@MedPageFragment.findNavController().navigate(
             MedPageFragmentDirections.actionMedPageFragmentToHomeFragment()
         )
     }
+    /**
+     * Generates the UI for the medication page based on the provided [med].
+     *
+     * @param med The UserMedsEntity object representing the medication.
+     */
+    private fun generateUI(med: UserMedsEntity) {
+        binding.medName.text = med.tradeName
+        binding.medConc.text = med.concentration
+        if (med.medId != null) {
+            binding.medItemFab.setImageResource(R.drawable.ic_check)
+            binding.medItemFab.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.green
+                )
+            )
+        } else {
+            binding.medItemFab.setImageResource(R.drawable.ic_close)
+            binding.medItemFab.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.red
+                )
+            )
+        }
+    }
 
-    //  called when an alarm is updated by the user manually -> the other alarms do not get autogenerated
-    //  but they do get sorted based on the next possible alarm
+    /**
+     * Called when an alarm is updated by the user manually.
+     * The other alarms do not get auto-generated, but they do get sorted based on the next possible alarm.
+     *
+     * @param alarm The updated AlarmEntity object.
+     */
     override fun onAlarmUpdated(alarm: AlarmEntity) {
         lifecycleScope.launch {
             viewModel.updateAlarm(alarm)

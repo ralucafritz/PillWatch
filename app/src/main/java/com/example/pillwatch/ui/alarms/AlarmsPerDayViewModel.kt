@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pillwatch.alarms.AlarmGenerator
+import com.example.pillwatch.alarms.AlarmHandler
 import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.data.repository.AlarmRepository
 import com.example.pillwatch.utils.AlarmTiming
@@ -14,32 +15,45 @@ import kotlinx.coroutines.withContext
 import java.util.Calendar
 import javax.inject.Inject
 
-class AlarmsViewModel @Inject constructor(
+/**
+ * The ViewModel for managing alarms in the UI.
+ *
+ * @param alarmRepository The repository for accessing and modifying alarm data.
+ * @param alarmGenerator The generator for creating alarm entities.
+ * @param alarmHandler The handler for scheduling and handling alarms.
+ */
+class AlarmsPerDayViewModel @Inject constructor(
     private val alarmRepository: AlarmRepository,
-    private val alarmGenerator: AlarmGenerator
+    private val alarmGenerator: AlarmGenerator,
+    private val alarmHandler: AlarmHandler
 ) :
     ViewModel() {
-
+    // MutableLiveData to hold the value of "everyXHours"
     var everyXHours = MutableLiveData<Int>()
-
-    val values = arrayOf(1, 2, 3, 4, 6, 8, 12)
-
+    // Array of values to choose from for "everyXHours"
+    val seekBarValues = arrayOf(1, 2, 3, 4, 6, 8, 12)
+    // Variable to hold the ID of the medication
     var medId: Long = 0L
-
+    // Variable to store the selected alarm timing option
     var alarmTiming: AlarmTiming = AlarmTiming.NO_REMINDERS
-
+    // MutableLiveData to hold the start hour of alarms
     val startHour: MutableLiveData<Calendar> = MutableLiveData(Calendar.getInstance().apply {
         set(Calendar.SECOND, 0)
         set(Calendar.MILLISECOND, 0)
     })
-
+    // Property to get the start hour in milliseconds
     private val startHourInMillis: Long?
         get() = startHour.value?.timeInMillis
-
-    private val _alarmsList = MutableLiveData<MutableList<AlarmEntity>>(mutableListOf())
-    val alarmsList: LiveData<MutableList<AlarmEntity>>
+    // MutableLiveData to hold the list of alarms
+    private val _alarmsList = MutableLiveData<List<AlarmEntity>>(listOf())
+    val alarmsList: LiveData<List<AlarmEntity>>
         get() = _alarmsList
-
+    /**
+     * Updates the start hour for generating alarms.
+     *
+     * @param hourOfDay The selected hour of the day.
+     * @param minute The selected minute.
+     */
     fun updateStartHour(hourOfDay: Int, minute: Int) {
         val startHour = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, hourOfDay)
@@ -48,12 +62,14 @@ class AlarmsViewModel @Inject constructor(
             set(Calendar.MILLISECOND, 0)
         }
         this.startHour.value = startHour
-
+        // Generate new alarms when the start hour is updated
         viewModelScope.launch {
             generateAlarms()
         }
     }
-
+    /**
+     * Coroutine function to generate alarms based on the selected options.
+     */
     suspend fun generateAlarms() {
         val alarmsList = alarmGenerator.generateAlarms(
             alarmTiming,
@@ -63,12 +79,20 @@ class AlarmsViewModel @Inject constructor(
         )
 
         _alarmsList.value = withContext(Dispatchers.IO) {
+            // Clear existing alarms for the current medication
             alarmRepository.clearForMedId(medId)
+            // Insert newly generated alarms into the repository
             alarmRepository.insertAll(alarmsList)
-            alarmRepository.getAlarmsByMedId(medId).toMutableList()
+            // Retrieve and return the updated list of alarms
+            alarmRepository.getAlarmsByMedId(medId)
         }!!
     }
 
+    /**
+     * Updates an existing alarm.
+     *
+     * @param alarm The alarm entity to be updated.
+     */
     suspend fun updateAlarm(alarm: AlarmEntity) {
         withContext(Dispatchers.IO) {
             val updatedAlarm = alarm.copy()
@@ -77,6 +101,11 @@ class AlarmsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Sorts the list of alarms after an update and updates the repository.
+     *
+     * @param updatedAlarm The updated alarm entity.
+     */
     private fun sortAlarms(updatedAlarm: AlarmEntity) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -90,12 +119,23 @@ class AlarmsViewModel @Inject constructor(
                         alarm
                     }
                 }.sortedBy { alarm -> alarm.timeInMillis }
-                _alarmsList.value = updatedList.toMutableList()
+                // Update the list of alarms locally
+                _alarmsList.value = updatedList
             }
             withContext(Dispatchers.IO) {
+                // Insert the updated list of alarms into the repository
                 alarmRepository.insertAll(_alarmsList.value!!.toList())
             }
         }
     }
 
+    /**
+     * Schedules enabled alarms for medication.
+     */
+    fun scheduleAlarms() {
+        val enabledAlarms = _alarmsList.value!!.filter { it.isEnabled }
+        enabledAlarms.forEach { alarm ->
+            alarmHandler.scheduleAlarm(alarm.id.toInt(), alarm.timeInMillis)
+        }
+    }
 }
