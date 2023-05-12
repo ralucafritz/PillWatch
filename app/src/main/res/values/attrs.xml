@@ -23,4 +23,9 @@
     <attr name ="colorTertiaryContainer" format="reference|color"/>
     <attr name ="logo_pillwatch" format ="reference"/>
     <attr name ="logo_pills" format ="reference"/>
+    <attr name='colorTaken' format ='color'/>
+    <attr name='colorPostponed' format ='color'/>
+    <attr name='colorMissed' format ='color'/>
+    <attr name='colorDelete' format ='color'/>
+    <attr name='colorBlack' format ='color'/>
 </resources>

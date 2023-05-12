@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pillwatch.alarms.AlarmHandler
 import com.example.pillwatch.data.model.AlarmEntity
+import com.example.pillwatch.data.model.MedsLogEntity
 import com.example.pillwatch.data.model.UserMedsEntity
 import com.example.pillwatch.data.repository.AlarmRepository
 import com.example.pillwatch.data.repository.MedsLogRepository
@@ -13,7 +14,6 @@ import com.example.pillwatch.data.repository.UserMedsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -38,6 +38,11 @@ class MedPageViewModel @Inject constructor(
     private val _alarmsList = MutableLiveData<List<AlarmEntity>?>()
     val alarmsList: LiveData<List<AlarmEntity>?>
         get() = _alarmsList
+
+    private val _logs = MutableLiveData<List<MedsLogEntity>?>()
+    val logs: LiveData<List<MedsLogEntity>?>
+        get() = _logs
+
     /**
      * Retrieves the medication entity from the repository based on the specified ID.
      *
@@ -98,6 +103,7 @@ class MedPageViewModel @Inject constructor(
             }
         }
     }
+
     /**
      * Deletes the medication and cancels associated alarms.
      */
@@ -111,6 +117,36 @@ class MedPageViewModel @Inject constructor(
                     }
                 // Delete the medication from the repository
                 userMedsRepository.deleteById(_medEntity.value!!.id)
+            }
+        }
+    }
+
+    /**
+     * Updates the medication name and concentration.
+     *
+     * @param newName The new name of the medication.
+     * @param newConcentration The new concentration of the medication.
+     */
+    fun updateMedName(newName: String, newConcentration: String) {
+        viewModelScope.launch {
+            val medEntity = _medEntity.value
+            if (medEntity != null) {
+                val updatedMedEntity = medEntity.copy(tradeName = newName, concentration = newConcentration)
+                withContext(Dispatchers.IO) {
+                    userMedsRepository.updateMed(updatedMedEntity)
+                }
+                _medEntity.value = updatedMedEntity
+            }
+        }
+    }
+
+    /**
+     * Retrieves the medication logs associated with the medication.
+     */
+    fun getLogs() {
+        viewModelScope.launch {
+            _logs.value = withContext(Dispatchers.IO) {
+                medsLogRepository.getLogByMedId(_medEntity.value!!.id)
             }
         }
     }

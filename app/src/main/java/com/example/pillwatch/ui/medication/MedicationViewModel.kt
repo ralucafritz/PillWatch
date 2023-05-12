@@ -1,12 +1,17 @@
 package com.example.pillwatch.ui.medication
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.pillwatch.data.model.UserMedsEntity
+import com.example.pillwatch.data.repository.MedsLogRepository
 import com.example.pillwatch.data.repository.UserMedsRepository
 import com.example.pillwatch.di.LoggedUserScope
 import com.example.pillwatch.user.UserManager
+import com.example.pillwatch.utils.TakenStatus
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -16,11 +21,16 @@ import javax.inject.Inject
 @LoggedUserScope
 class MedicationViewModel @Inject constructor(
     private val userMedsRepository: UserMedsRepository,
-    private val userManager: UserManager
+    private val userManager: UserManager,
+    private val medsLogRepository: MedsLogRepository
 ) :
     ViewModel() {
     // LiveData to hold the list of user medications
     private val _userMedsList = MutableLiveData<List<UserMedsEntity>>(listOf())
+
+    private val _logs = MutableLiveData<List<List<Long>>>()
+    val logs: LiveData<List<List<Long>>>
+        get() = _logs
 
     /**
      * Retrieves the list of user medications from the repository.
@@ -30,7 +40,7 @@ class MedicationViewModel @Inject constructor(
     suspend fun getMedsList(): List<UserMedsEntity> {
         val medsList = withContext(Dispatchers.IO) {
             val userId = userManager.id
-            if (userId != -1L) {
+             if (userId != -1L) {
                 userMedsRepository.getAllMedsForUser(userId)
             } else {
                 null
@@ -66,5 +76,36 @@ class MedicationViewModel @Inject constructor(
         }
 
         return shareText
+    }
+
+    /**
+     * Retrieves the logs for the user's medications.
+     */
+    fun getLogs() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val medsList = _userMedsList.value ?: return@withContext
+                val logsList = mutableListOf<List<Long>>()
+
+                medsList.forEach { med ->
+                    val takenCount =
+                        medsLogRepository.getLogCountByStatus(med.id, TakenStatus.TAKEN)
+                    val postponedCount =
+                        medsLogRepository.getLogCountByStatus(med.id, TakenStatus.POSTPONED)
+                    val missedCount =
+                        medsLogRepository.getLogCountByStatus(med.id, TakenStatus.MISSED)
+
+                    val pairList = listOf(
+                        takenCount,
+                        postponedCount,
+                        missedCount
+                    )
+
+                    logsList.add(pairList)
+                }
+
+                _logs.postValue(logsList)
+            }
+        }
     }
 }

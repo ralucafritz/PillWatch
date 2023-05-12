@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.data.model.AlarmEntity
@@ -26,6 +29,7 @@ import javax.inject.Inject
 
 private const val MEDICATION_NOT_FOUND_ERROR_MESSAGE = "Error: Medication not found."
 private const val MED_DELETED_SUCCESS_MESSAGE_TEMPLATE = "Med %s deleted successfully."
+private const val MED_LOGS_EMPTY = "Error: Lost not found."
 
 class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
     private lateinit var binding: FragmentMedPageBinding
@@ -64,6 +68,7 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
         viewModel.medEntity.observe(viewLifecycleOwner) {
             if (it != null) {
                 viewModel.getAlarms()
+                viewModel.getLogs()
                 generateUI(it)
             } else {
                 navigateToMedicationPage()
@@ -98,6 +103,18 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
             )
         }
 
+        binding.editButton.setOnClickListener {
+            showEditDialog()
+        }
+
+        binding.medLogsButton.setOnClickListener {
+            if (viewModel.logs.value != null) {
+                showLogsDialog()
+            } else {
+                requireContext().toastTop(MED_LOGS_EMPTY)
+            }
+        }
+
         // set up the RecyclerView to display the alarms
         val recyclerView = binding.alarmsList
 
@@ -112,6 +129,7 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
 
         return binding.root
     }
+
     /**
      * Navigates to the medication list page.
      */
@@ -120,6 +138,7 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
             MedPageFragmentDirections.actionMedPageFragmentToMedicationFragment()
         )
     }
+
     /**
      * Navigates to the home page.
      */
@@ -128,6 +147,7 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
             MedPageFragmentDirections.actionMedPageFragmentToHomeFragment()
         )
     }
+
     /**
      * Generates the UI for the medication page based on the provided [med].
      *
@@ -153,6 +173,57 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
                 )
             )
         }
+    }
+
+    /**
+     * Shows the logs dialog displaying a list of medication logs.
+     */
+    private fun showLogsDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(
+            R.layout.dialog_med_logs,
+            null
+        )
+
+        val logsRecyclerView = dialogView.findViewById<RecyclerView>(R.id.logsRecyclerView)
+        logsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        val adapter = LogsAdapter(requireContext(), viewModel.logs.value!!)
+        logsRecyclerView.adapter = adapter
+
+        val alertDialogBuilder = AlertDialog.Builder(requireContext(), R.style.RoundedDialogStyle)
+            .setTitle(R.string.medication_logs)
+            .setView(dialogView)
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
+        alertDialogBuilder.show()
+    }
+
+    /**
+     * Shows the edit dialog allowing the user to edit the medication name and concentration.
+     */
+    private fun showEditDialog() {
+        val dialogView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_edit_med, null)
+
+        val editName = dialogView.findViewById<EditText>(R.id.edit_name)
+        editName.setText(binding.medName.text)
+
+        val editConc = dialogView.findViewById<EditText>(R.id.edit_conc)
+        editConc.setText(binding.medConc.text)
+
+        val alertDialogBuilder = AlertDialog.Builder(requireContext(), R.style.RoundedDialogStyle)
+            .setTitle(R.string.medication_name)
+            .setView(dialogView)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                val editedName = editName.text.toString()
+                val editedConc = editConc.text.toString()
+                viewModel.updateMedName(editedName, editedConc)
+                binding.medName.text = editedName
+                binding.medConc.text = editedConc
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+
+        alertDialogBuilder.show()
     }
 
     /**

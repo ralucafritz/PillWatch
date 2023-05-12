@@ -55,13 +55,16 @@ class MedicationFragment : Fragment() {
         lifecycleScope.launch {
             val medsList = viewModel.getMedsList()
             if (medsList.isNotEmpty()) {
-                val adapter = MedsListAdapter(requireContext(), medsList)
-                recyclerView.adapter = adapter
+                viewModel.getLogs()
+                viewModel.logs.observe(viewLifecycleOwner) {logs->
+                    val adapter = MedsListAdapter(requireContext(), medsList, logs)
+                    recyclerView.adapter = adapter
 
-                adapter.onItemClick = {
-                    this@MedicationFragment.findNavController().navigate(
-                        MedicationFragmentDirections.actionMedicationFragmentToMedPageFragment(it)
-                    )
+                    adapter.onItemClick = {
+                        this@MedicationFragment.findNavController().navigate(
+                            MedicationFragmentDirections.actionMedicationFragmentToMedPageFragment(it)
+                        )
+                    }
                 }
             }
         }

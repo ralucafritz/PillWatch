@@ -49,11 +49,11 @@
             android:background="@drawable/edit_text_field"
             android:dropDownAnchor="@id/med_name"
             android:dropDownHeight="wrap_content"
-            android:maxHeight="200dp"
             android:dropDownVerticalOffset="10dp"
             android:ems="12"
             android:hint="@string/medicine_name"
             android:inputType="textAutoComplete"
+            android:maxHeight="200dp"
             android:minHeight="60dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
@@ -64,39 +64,21 @@
             app:layout_constraintTop_toTopOf="@+id/background"
             tools:ignore="Autofill" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <EditText
+            android:id="@+id/concentration_value_text"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="50dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginStart="16dp"
-            android:gravity="right"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/med_name">
+            android:background="@drawable/edit_text_field"
+            android:hint="@string/concentration"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:paddingStart="10dp"
+            android:text="@={viewModel.concentrationEditText}"
+            app:layout_constraintEnd_toEndOf="@id/med_name"
+            app:layout_constraintTop_toBottomOf="@id/med_name"
+            tools:ignore="Autofill,RtlSymmetry" />
 
-            <EditText
-                android:id="@+id/concentration_value_text"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:inputType="text"
-                android:hint="@string/concentration"
-                android:text="@={viewModel.concentrationEditText}"
-                android:paddingStart="10dp"
-                android:background="@drawable/edit_text_field"
-                tools:ignore="Autofill,RtlSymmetry"/>
-
-<!--            <Spinner-->
-<!--                android:id="@+id/concentration_spinner"-->
-<!--                android:layout_marginStart="15dp"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:minHeight="52dp"-->
-<!--                android:entries="@array/concentration_measures"-->
-<!--                style="@android:style/Widget.Spinner.DropDown"/>-->
-
-        </LinearLayout>
 
         <ImageButton
             android:id="@+id/btn_next"

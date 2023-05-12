@@ -35,13 +35,11 @@ class WelcomeFragment: Fragment() {
         binding.lifecycleOwner = this
 
         binding.getStartedButton.setOnClickListener {
-            val intent = Intent(activity, SignupActivity::class.java)
-            getResult.launch(intent)
+            goToSignup()
         }
 
         binding.logInWelcome.setOnClickListener {
-            val intent = Intent(activity, LoginActivity::class.java)
-            getResult.launch(intent)
+            goToLogin()
         }
         return binding.root
     }
@@ -51,6 +49,16 @@ class WelcomeFragment: Fragment() {
             (activity as SplashActivity).checkLoggedIn()
             requireActivity().supportFragmentManager.popBackStack()
         }
+    }
+
+    private fun goToSignup() {
+        val intent = Intent(activity, SignupActivity::class.java)
+        getResult.launch(intent)
+    }
+
+    private fun goToLogin() {
+        val intent = Intent(activity, LoginActivity::class.java)
+        getResult.launch(intent)
     }
 
 }

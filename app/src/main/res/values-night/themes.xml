@@ -48,5 +48,10 @@
         <item name="bottomNav">#4D948F99</item>
         <item name="logo_pillwatch">@drawable/ic_logo_dark</item>
         <item name="logo_pills">@drawable/ic_logo_pills_dark</item>
+        <item name="colorTaken">#CE8AFF70</item>
+        <item name="colorPostponed">#F8F6B137</item>
+        <item name="colorMissed">#EC3953</item>
+        <item name="colorDelete">#E8C65757</item>
+        <item name="colorBlack">@color/md_theme_dark_surface</item>
     </style>
 </resources>

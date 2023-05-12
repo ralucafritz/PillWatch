@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/edit_med_name_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textSize="@dimen/text_size_medium"
+        tools:text="@string/medication_name" />
+
+    <EditText
+        android:id="@+id/edit_name"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/edit_text_field"
+        android:inputType="text"
+        android:padding="12dp"
+        android:textSize="@dimen/text_size_small"
+        tools:text="Extra ultra giga long name" />
+
+    <EditText
+        android:id="@+id/edit_conc"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/edit_text_field"
+        android:inputType="text"
+        android:padding="12dp"
+        android:textSize="@dimen/text_size_small"
+        tools:text="Extra ultra giga long name" />
+
+</LinearLayout>

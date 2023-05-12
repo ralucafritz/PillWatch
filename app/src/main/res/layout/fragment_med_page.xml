@@ -37,7 +37,7 @@
 
             <TextView
                 android:id="@+id/med_name"
-                android:layout_width="200dp"
+                android:layout_width="270dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:paddingTop="10dp"
@@ -45,32 +45,27 @@
                 android:textSize="@dimen/text_size_big"
                 tools:text="Test med name extra long long long" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            <ImageView
+                android:id="@+id/med_item_fab"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="10dp"
+                tools:ignore="ContentDescription" />
 
-                <ImageView
-                    android:id="@+id/med_item_fab"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_gravity="center_horizontal"
-                    tools:ignore="ContentDescription" />
-
-                <TextView
-                    android:id="@+id/med_conc"
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="15sp"
-                    android:textStyle="italic"
-                    android:textColor="?attr/colorPrimaryContainer"
-                    tools:text="x mg/ml" />
-
-            </LinearLayout>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/med_conc"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textColor="?attr/colorPrimaryContainer"
+            android:textSize="15sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_name"
+            tools:text="x mg/ml" />
 
         <ImageView
             android:id="@+id/edit_button"
@@ -108,9 +103,8 @@
             android:src="@drawable/ic_delete"
             app:layout_constraintBottom_toTopOf="@id/background"
             app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="ContentDescription,SpeakableTextPresentCheck"
-            app:tint="?attr/colorError" />
-
+            app:tint="?attr/colorDelete"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
         <ImageView
             android:id="@+id/background"

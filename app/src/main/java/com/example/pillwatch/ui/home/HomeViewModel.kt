@@ -24,6 +24,12 @@ class HomeViewModel @Inject constructor(
 
     private val _userMedsList = MutableLiveData<MutableList<Pair<UserMedsEntity, Long>>?>(mutableListOf())
 
+
+    /**
+     * Retrieves the list of user medications along with the next alarm time for each medication.
+     *
+     * @return The list of user medications along with the next alarm time.
+     */
     suspend fun getMedsList(): MutableList<Pair<UserMedsEntity, Long>>? {
         val medsList = withContext(Dispatchers.IO) {
             val userId = userManager.id

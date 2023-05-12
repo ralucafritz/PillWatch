@@ -50,10 +50,10 @@
                     android:layout_marginStart="10dp"
                     android:ellipsize="end"
                     android:maxLength="17"
+                    android:scrollHorizontally="true"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    tools:text="@string/medName"
-                    android:scrollHorizontally="true"/>
+                    tools:text="@string/medName" />
 
                 <ImageView
                     android:id="@+id/med_item_fab"
@@ -88,6 +88,40 @@
                 android:padding="5dp"
                 tools:ignore="UseCompoundDrawables">
 
+                <TextView
+                    android:id="@+id/taken_log"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tag_rectangle"
+                    android:backgroundTint="?attr/colorTaken"
+                    android:padding="3dp"
+                    android:textColor="?attr/colorBlack"
+                    android:textSize="11sp"
+                    tools:text="Meds Taken" />
+
+                <TextView
+                    android:id="@+id/postponed_log"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/tag_rectangle"
+                    android:backgroundTint="?attr/colorPostponed"
+                    android:padding="3dp"
+                    android:textColor="?attr/colorBlack"
+                    android:textSize="11sp"
+                    tools:text="Alarms Postponed" />
+
+                <TextView
+                    android:id="@+id/missed_log"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tag_rectangle"
+                    android:backgroundTint="?attr/colorMissed"
+                    android:padding="3dp"
+                    android:textColor="?attr/colorBlack"
+                    android:textSize="11sp"
+                    tools:text="Meds Missed" />
 
             </LinearLayout>
 

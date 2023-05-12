@@ -29,6 +29,10 @@ class UserMedsRepository(private val userMedsDao: UserMedsDao) {
         userMedsDao.deleteById(id)
     }
 
+    fun updateMed(medEntity: UserMedsEntity) {
+        userMedsDao.update(medEntity)
+    }
+
     fun clear() {
         userMedsDao.clear()
     }

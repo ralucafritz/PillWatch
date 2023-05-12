@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.pillwatch.data.model.UserMedsEntity
 
 @Dao
@@ -25,6 +26,9 @@ interface UserMedsDao {
 
     @Query("DELETE FROM user_meds_table WHERE id  = :id")
     fun deleteById(id: Long)
+
+    @Update
+    fun update(medEntity: UserMedsEntity)
 
     @Query("DELETE FROM user_meds_table")
     fun clear()

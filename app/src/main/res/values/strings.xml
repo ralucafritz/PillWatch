@@ -44,6 +44,8 @@
     <string name="starting_hour">Starting hour:</string>
     <string name="share">Share</string>
     <string name="choose_reminder_frequency">Choose reminder frequency:</string>
+    <string name="medication_name">Medication name:</string>
+    <string name ="medication_logs">Medication logs:</string>
 
     <string-array name="concentration_measures">
         <item>-</item>

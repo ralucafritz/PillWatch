@@ -32,6 +32,13 @@ class UsernameCreationViewModel @Inject constructor(
     val updateComplete: LiveData<Boolean>
         get() = _updateComplete
 
+
+    /**
+     * Validates the provided username.
+     *
+     * @param username The username to validate.
+     * @return The ValidationProperty indicating whether the username is valid or not.
+     */
     fun isValid(username: String): ValidationProperty {
         return when {
             username == "" -> ValidationProperty(false, EMPTY_FIELDS_ERR)
@@ -43,6 +50,9 @@ class UsernameCreationViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Updates the username for the current user.
+     */
     fun updateUsername() {
         viewModelScope.launch {
             val userId = userManager.id

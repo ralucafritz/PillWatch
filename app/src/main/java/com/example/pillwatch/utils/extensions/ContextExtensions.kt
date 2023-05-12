@@ -8,6 +8,7 @@ import android.view.Gravity
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.example.pillwatch.R
 
 object ContextExtensions {
     /**
@@ -54,7 +55,7 @@ object ContextExtensions {
     ) {
         val builder = AlertDialog.Builder(
             this,
-            com.google.android.material.R.style.Base_Theme_Material3_Dark_Dialog
+            R.style.RoundedDialogStyle
         )
             .setTitle(title)
             .setMessage(message)
@@ -76,7 +77,7 @@ object ContextExtensions {
     fun Context.showProgressDialog(
         title: String,
     ): AlertDialog {
-        val progressDialog = AlertDialog.Builder(this)
+        val progressDialog = AlertDialog.Builder(this, R.style.RoundedDialogStyle)
             .setView(ProgressBar(this))
             .setTitle(title)
             .setMessage("Please wait...")
