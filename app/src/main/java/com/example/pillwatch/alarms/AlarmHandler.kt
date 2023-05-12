@@ -42,14 +42,14 @@ class AlarmHandler @Inject constructor(
      * @param alarm The alarm for which the log entry is created.
      * @param status The status of the medication (taken, postponed, missed).
      */
-    fun createMedsLog(alarm: AlarmEntity, status: TakenStatus) {
+    fun createMedsLog(medId: Long, status: TakenStatus) {
         CoroutineScope(Dispatchers.IO).launch {
-            val medId = alarm.medId
             val timestamp = System.currentTimeMillis()
             val medsLog = MedsLogEntity(medId = medId, status = status, timestamp = timestamp)
             medsLogRepository.insert(medsLog)
         }
     }
+
     /**
      * Reschedules the specified alarm.
      *
@@ -61,6 +61,7 @@ class AlarmHandler @Inject constructor(
             scheduleAlarm(alarm.id.toInt(), alarm.timeInMillis)
         }
     }
+
     /**
      * Schedules an alarm with the specified ID and time.
      *
@@ -83,7 +84,7 @@ class AlarmHandler @Inject constructor(
                 alarmTime,
                 pendingIntent
             )
-            Timber.tag("ALARM HANDLER").d("Scheduled  alarm $alarmId")
+            Timber.tag("ALARM HANDLER").d("Scheduled alarm $alarmId")
         }
     }
 
@@ -93,7 +94,6 @@ class AlarmHandler @Inject constructor(
      * @param alarmId The ID of the alarm to be canceled.
      */
     fun cancelAlarm(alarmId: Int) {
-        Timber.tag("ALARM HANDLER").d(" cancel alarm")
         val alarmIntent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("ALARM_ID", alarmId)
         }
@@ -107,27 +107,31 @@ class AlarmHandler @Inject constructor(
         Timber.tag("ALARM HANDLER").d("Canceled scheduled alarm $alarmId ")
         alarmManager.cancel(pendingIntent)
     }
+
     /**
      * Postpones the specified alarm by 5 minutes.
      *
      * @param alarm The alarm to be postponed.
      */
     fun postponeAlarm(alarm: AlarmEntity) {
-        createMedsLog(alarm, TakenStatus.POSTPONED)
+        createMedsLog(alarm.medId, TakenStatus.POSTPONED)
         val postponeTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5)
         scheduleAlarm(alarm.id.toInt(), postponeTime)
         Timber.tag("ALARM HANDLER").d("Postponed scheduled alarm ${alarm.id} ")
     }
+
     /**
      * Triggers a missed alarm with the specified ID and time.
      *
      * @param alarmId The ID of the missed alarm.
      * @param alarmTime The original time of the missed alarm.
      */
-    fun missedAlarm(alarmId: Int, alarmTime: Long) {
+    fun missedAlarm(alarmId: Int, originalTime: Long, alarmTime: Long) {
         val alarmIntent = Intent(context, AlarmReceiver::class.java).apply {
             action = "MISSED_CHECK_ACTION"
             putExtra("ALARM_ID", alarmId)
+            putExtra("ORIGINAL_ALARM_TIME", originalTime)
+            putExtra("NEW_ALARM_TIME", alarmTime)
         }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
@@ -136,9 +140,30 @@ class AlarmHandler @Inject constructor(
             PendingIntent.FLAG_UPDATE_CURRENT
         )
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarmTime, pendingIntent)
-        Timber.tag("ALARM HANDLER").d("Missed scheduled alarm $alarmId ")
+        Timber.tag("ALARM HANDLER").d("Scheduled missed check for alarm $alarmId ")
 
     }
+
+    /**
+     * Checks the medication logs for the specified medication ID within the timeframe
+     * from the original alarm time to the missed check time. If no log entry is found,
+     * creates a medication log entry with the status as MISSED.
+     *
+     * @param medId The ID of the medication.
+     * @param originalTime The time of the original alarm.
+     * @param missedCheckTime The time of the missed check.
+     */
+
+    fun checkLogsForTakenOrPostponed(medId: Long, originalTime: Long, missedCheckTime: Long) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val logEntries =
+                medsLogRepository.getLogInTimeframeByMedId(medId, originalTime, missedCheckTime)
+            if (logEntries.isEmpty()) {
+                createMedsLog(medId, TakenStatus.MISSED)
+            }
+        }
+    }
+
     /**
      * Reschedules and regenerates alarms for the specified medication ID.
      *

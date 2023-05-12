@@ -34,12 +34,19 @@ class AlarmService : Service() {
     private fun startAlarm() {
         val alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
         mediaPlayer = MediaPlayer.create(this, alarmUri)
+
+
         mediaPlayer?.start()
         startVibration()
+
+
+
         Handler(Looper.getMainLooper()).postDelayed({
-            mediaPlayer!!.stop()
-            mediaPlayer!!.release()
-            stopVibration()
+            if(mediaPlayer!=null) {
+                mediaPlayer!!.stop()
+                mediaPlayer!!.release()
+                stopVibration()
+            }
         }, 30000) // 30 seconds
     }
 
@@ -53,12 +60,13 @@ class AlarmService : Service() {
 
     private fun startVibration() {
         vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        vibrator?.vibrate(
-            VibrationEffect.createOneShot(
-                2000,
-                VibrationEffect.DEFAULT_AMPLITUDE
+            vibrator?.vibrate(
+                VibrationEffect.createWaveform(
+                    longArrayOf(0, 1000, 500),
+                    intArrayOf(0, VibrationEffect.DEFAULT_AMPLITUDE, 0),
+                    0
+                )
             )
-        )
     }
 
     private fun stopVibration() {

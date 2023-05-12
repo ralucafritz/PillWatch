@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.data.model.AlarmEntity
@@ -50,7 +49,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 when (action) {
                     "OK_ACTION" -> handleOkAction(alarm, context, intent)
                     "POSTPONE_ACTION" -> handlePostponeAction(alarm, context, intent)
-                    "MISSED_CHECK_ACTION" -> handleMissedAction(alarm)
+                    "MISSED_CHECK_ACTION" -> handleMissedAction(alarm, intent)
                     else -> handleAlarmTriggered(context, alarm)
                 }
             }
@@ -63,11 +62,8 @@ class AlarmReceiver : BroadcastReceiver() {
             val notificationManager = NotificationManagerCompat.from(context)
             notificationManager.cancel(notificationId)
         }
-        val stopAlarmIntent = Intent(context, AlarmService::class.java).apply {
-            action = "STOP_ALARM"
-        }
-        context.startService(stopAlarmIntent)
-        alarmHandler.createMedsLog(alarm, TakenStatus.TAKEN)
+        stopAlarmService(context)
+        alarmHandler.createMedsLog(alarm.medId, TakenStatus.TAKEN)
     }
 
     private fun handlePostponeAction(alarm: AlarmEntity,  context: Context,intent: Intent) {
@@ -76,15 +72,17 @@ class AlarmReceiver : BroadcastReceiver() {
             val notificationManager = NotificationManagerCompat.from(context)
             notificationManager.cancel(notificationId)
         }
-        val stopAlarmIntent = Intent(context, AlarmService::class.java).apply {
-            action = "STOP_ALARM"
-        }
-        context.startService(stopAlarmIntent)
+        stopAlarmService(context)
         alarmHandler.postponeAlarm(alarm)
     }
 
-    private fun handleMissedAction(alarm: AlarmEntity) {
-        alarmHandler.createMedsLog(alarm, TakenStatus.MISSED)
+    private fun handleMissedAction(alarm: AlarmEntity, intent: Intent) {
+        val originalAlarmTime = intent.getLongExtra("ORIGINAL_ALARM_TIME", -1L)
+        val newAlarmTime = intent.getLongExtra("NEW_ALARM_TIME", -1L)
+        CoroutineScope(Dispatchers.IO).launch {
+            alarmHandler.checkLogsForTakenOrPostponed(alarm.medId, originalAlarmTime, newAlarmTime)
+        }
+        Timber.tag("ALARM RECEIVER").d("Missed scheduled alarm")
     }
 
     private fun handleAlarmTriggered(context: Context, alarm: AlarmEntity) {
@@ -148,17 +146,24 @@ class AlarmReceiver : BroadcastReceiver() {
             val startAlarmIntent = Intent(context, AlarmService::class.java).apply {
                 action = "START_ALARM"
             }
-            ContextCompat.startForegroundService(context, startAlarmIntent)
+            context.startService(startAlarmIntent)
 
             // Schedule a missed check alarm in 1 hour
+            val currentTime = System.currentTimeMillis()
             val missedAlarmTime =
                 System.currentTimeMillis() + (60 * 60 * 1000) // 1 hour from now
-            alarmHandler.missedAlarm(alarm.id.toInt(), missedAlarmTime)
+            alarmHandler.missedAlarm(alarm.id.toInt(), currentTime, missedAlarmTime)
 
             // Schedule the next set of alarms
             alarmHandler.scheduleNextAlarms(med.id)
         }
     }
 
+    private fun stopAlarmService(context: Context){
+        val stopAlarmIntent = Intent(context, AlarmService::class.java).apply {
+            action = "STOP_ALARM"
+        }
+        context.startService(stopAlarmIntent)
+    }
 }
 

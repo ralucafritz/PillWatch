@@ -14,6 +14,10 @@ class MedsLogRepository(private val medsLogDao: MedsLogDao) {
         return medsLogDao.getLogByMedId(medId)
     }
 
+    fun getLogInTimeframeByMedId(medId: Long, startTime: Long, endTime: Long): List<MedsLogEntity> {
+        return medsLogDao.getLogInTimeframeByMedId(medId, startTime, endTime)
+    }
+
     fun clear() {
         medsLogDao.clear()
     }
