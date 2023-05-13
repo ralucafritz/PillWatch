@@ -1,5 +1,6 @@
 package com.example.pillwatch.ui.main
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,17 +15,26 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
+import com.example.pillwatch.alarms.AlarmSchedulerWorker
 import com.example.pillwatch.databinding.ActivityMainBinding
 import com.example.pillwatch.utils.extensions.ContextExtensions.dismissProgressDialog
 import com.example.pillwatch.utils.extensions.ContextExtensions.showProgressDialog
 import com.example.pillwatch.ui.splash.SplashActivity
 import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
@@ -50,6 +60,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
+
+        scheduleAlarmSchedulerWorker(this, userManager.id)
+
 
         // Firebase Messaging token retrieval
         val firebaseMessaging = FirebaseMessaging.getInstance()
@@ -190,5 +203,25 @@ class MainActivity : AppCompatActivity() {
      */
     fun getPreviousFragment(): Int? {
         return mainViewModel.currentFragmentId.value
+    }
+
+    private fun scheduleAlarmSchedulerWorker(context: Context, userId: Long) {
+        val workManager = WorkManager.getInstance(context)
+
+        Timber.d("WORKER USER ID = $userId")
+        val alarmSchedulerWorkerRequest =
+            PeriodicWorkRequestBuilder<AlarmSchedulerWorker>(1, TimeUnit.HOURS)
+                .build()
+
+        workManager.enqueueUniquePeriodicWork(
+            "AlarmSchedulerWorker",
+            ExistingPeriodicWorkPolicy.KEEP,
+            alarmSchedulerWorkerRequest
+        )
+
+        val oneTimeWorkRequest = OneTimeWorkRequestBuilder<AlarmSchedulerWorker>()
+            .build()
+
+        workManager.enqueue(oneTimeWorkRequest)
     }
 }

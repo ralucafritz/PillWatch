@@ -28,4 +28,6 @@
     <attr name='colorMissed' format ='color'/>
     <attr name='colorDelete' format ='color'/>
     <attr name='colorBlack' format ='color'/>
+    <attr name='backgroundGrey' format="color"/>
+    <attr name='onBackgroundGrey' format="color"/>
 </resources>

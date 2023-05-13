@@ -342,7 +342,7 @@ class AddMedViewModel @Inject constructor(
     /**
      * Completes the navigation to the Alarm Frequency screen after adding a medication.
      */
-    fun navigationCompleteToAlarmFrequency() {
+    fun navigationComplete() {
         _navigationCheck.value = null
         _medAddedId.value = null
     }

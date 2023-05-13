@@ -53,19 +53,20 @@ class AddMedFragment : Fragment() {
         // Lifecycle
         binding.lifecycleOwner = this
 
-        binding.btnNext.setOnClickListener {
+        binding.btnNext.setOnClickListener{
             lifecycleScope.launch {
                 viewModel.addMedToUser()
-                viewModel.navigationCheck.observe(viewLifecycleOwner) {
-                    if (viewModel.navigationCheck.value != null && viewModel.navigationCheck.value!!) {
-                        this@AddMedFragment.findNavController().navigate(
-                            AddMedFragmentDirections.actionAddMedFragmentToAlarmFrequencyFragment(
-                                viewModel.medAddedId.value!!
-                            )
-                        )
-                        viewModel.navigationCompleteToAlarmFrequency()
-                    }
-                }
+            }
+        }
+
+        viewModel.navigationCheck.observe(viewLifecycleOwner) {
+            if (viewModel.navigationCheck.value != null && viewModel.navigationCheck.value!!) {
+                this@AddMedFragment.findNavController().navigate(
+                    AddMedFragmentDirections.actionAddMedFragmentToAlarmFrequencyFragment(
+                        viewModel.medAddedId.value!!
+                    )
+                )
+                viewModel.navigationComplete()
             }
         }
 

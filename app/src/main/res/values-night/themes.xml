@@ -51,7 +51,9 @@
         <item name="colorTaken">#CE8AFF70</item>
         <item name="colorPostponed">#F8F6B137</item>
         <item name="colorMissed">#EC3953</item>
-        <item name="colorDelete">#E8C65757</item>
+        <item name="colorDelete">#E8F8C2C2</item>
         <item name="colorBlack">@color/md_theme_dark_surface</item>
+        <item name="backgroundGrey">#26222E</item>
+        <item name="onBackgroundGrey">#FEFEFF</item>
     </style>
 </resources>

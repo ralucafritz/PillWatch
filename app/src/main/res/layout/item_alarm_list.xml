@@ -5,42 +5,48 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
+    android:layout_marginTop="10dp"
     android:layout_marginEnd="16dp"
-    android:layout_marginTop="5dp"
+    android:padding="10dp"
+    app:cardBackgroundColor="?attr/backgroundGrey"
     app:cardCornerRadius="8dp"
-    app:cardElevation="7dp">
+    app:cardElevation="3dp">
+
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_marginStart="2dp"
-        android:layout_marginEnd="2dp"/>
+        android:layout_marginEnd="2dp"
+        android:layout_weight="1" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal">
 
-    <TextView
-        android:id="@+id/time_picker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        tools:text="00:00"
-        android:layout_gravity="center" />
+        <TextView
+            android:id="@+id/time_picker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="?attr/onBackgroundGrey"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            tools:text="00:00" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/enabled_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingStart="30dp"
-        android:layout_gravity="center"
-        tools:ignore="RtlSymmetry" />
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/enabled_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingStart="30dp"
+            tools:ignore="RtlSymmetry" />
     </LinearLayout>
+
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_marginStart="2dp"
-        android:layout_marginEnd="2dp"/>
+        android:layout_marginEnd="2dp"
+        android:layout_weight="1" />
 </androidx.cardview.widget.CardView>

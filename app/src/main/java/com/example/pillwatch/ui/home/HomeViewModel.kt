@@ -9,8 +9,6 @@ import com.example.pillwatch.di.LoggedUserScope
 import com.example.pillwatch.user.UserManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
-import java.text.SimpleDateFormat
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -23,7 +21,6 @@ class HomeViewModel @Inject constructor(
 
 
     private val _userMedsList = MutableLiveData<MutableList<Pair<UserMedsEntity, Long>>?>(mutableListOf())
-
 
     /**
      * Retrieves the list of user medications along with the next alarm time for each medication.
@@ -53,7 +50,7 @@ class HomeViewModel @Inject constructor(
                         filteredList.add(Pair(med, alarm.timeInMillis))
                     }
                 }
-                filteredList
+                filteredList.sortedBy { it.second }.toMutableList()
             } else {
                 null
             }

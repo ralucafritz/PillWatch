@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+
     <application
         android:name=".PillWatchApplication"
         android:usesCleartextTraffic="true"
@@ -53,6 +54,7 @@
                 <action android:name="MISSED_CHECK_ACTION" />
             </intent-filter>
         </receiver>
+
 
         <meta-data
             android:name="preloaded_fonts"

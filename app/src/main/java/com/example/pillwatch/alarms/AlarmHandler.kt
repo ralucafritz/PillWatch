@@ -8,7 +8,6 @@ import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.data.model.MedsLogEntity
 import com.example.pillwatch.data.repository.AlarmRepository
 import com.example.pillwatch.data.repository.MedsLogRepository
-import com.example.pillwatch.utils.AlarmTiming
 import com.example.pillwatch.utils.TakenStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -175,13 +174,8 @@ class AlarmHandler @Inject constructor(
             val currentTime = System.currentTimeMillis()
             val lastAlarm = alarmRepository.getLastAlarmByMedId(medId)
             if (currentTime > lastAlarm.timeInMillis) {
-                val newAlarmList = alarmGenerator.generateAlarms(
-                    lastAlarm.alarmTiming,
-                    lastAlarm.medId,
-                    lastAlarm.everyXHours ?: 1,
-                    lastAlarm.timeInMillis,
-                    true
-                )
+                val newAlarmList = generateAlarms(lastAlarm, currentTime)
+
                 alarmRepository.clearForMedId(medId)
                 alarmRepository.insertAll(newAlarmList)
 
@@ -189,6 +183,23 @@ class AlarmHandler @Inject constructor(
                     scheduleAlarm(alarm.id.toInt(), alarm.timeInMillis)
                 }
             }
+        }
+    }
+
+    private fun generateAlarms(lastAlarm: AlarmEntity, currentTime: Long): List<AlarmEntity> {
+        val newAlarmList = alarmGenerator.generateAlarms(
+            lastAlarm.alarmTiming,
+            lastAlarm.medId,
+            lastAlarm.everyXHours ?: 1,
+            lastAlarm.timeInMillis,
+            true
+        )
+
+        val newGeneratedLastAlarm = newAlarmList.maxByOrNull { it.timeInMillis }
+        return if (newGeneratedLastAlarm!!.timeInMillis < currentTime) {
+            generateAlarms(newGeneratedLastAlarm, currentTime)
+        } else {
+            newAlarmList
         }
     }
 }

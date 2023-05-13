@@ -53,5 +53,7 @@
         <item name="colorMissed">#FD4E69</item>
         <item name="colorDelete">#FD5858</item>
         <item name="colorBlack">@color/md_theme_dark_surface</item>
+        <item name="backgroundGrey">#ECE2FA</item>
+        <item name="onBackgroundGrey">#4A4A4A</item>
     </style>
 </resources>

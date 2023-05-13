@@ -1,5 +1,6 @@
 package com.example.pillwatch.utils.extensions
 
+
 import timber.log.Timber
 
 object Extensions {
@@ -11,5 +12,4 @@ object Extensions {
     fun timber() {
         Timber.plant(Timber.DebugTree())
     }
-
 }
