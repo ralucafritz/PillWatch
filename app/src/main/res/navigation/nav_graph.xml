@@ -131,6 +131,9 @@
         <action
             android:id="@+id/action_medPageFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_medPageFragment_to_alarmFrequencyFragment"
+            app:destination="@id/alarmFrequencyFragment" />
     </fragment>
     <activity
         android:id="@+id/splashActivity"

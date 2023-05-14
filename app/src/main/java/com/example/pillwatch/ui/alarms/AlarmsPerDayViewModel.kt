@@ -3,6 +3,7 @@ package com.example.pillwatch.ui.alarms
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.example.pillwatch.alarms.AlarmGenerator
 import com.example.pillwatch.alarms.AlarmHandler
@@ -30,43 +31,45 @@ class AlarmsPerDayViewModel @Inject constructor(
     ViewModel() {
     // MutableLiveData to hold the value of "everyXHours"
     var everyXHours = MutableLiveData<Int>()
+
     // Array of values to choose from for "everyXHours"
     val seekBarValues = arrayOf(1, 2, 3, 4, 6, 8, 12)
+
     // Variable to hold the ID of the medication
     var medId: Long = 0L
+
     // Variable to store the selected alarm timing option
     var alarmTiming: AlarmTiming = AlarmTiming.NO_REMINDERS
+
     // MutableLiveData to hold the start hour of alarms
     val startHour: MutableLiveData<Calendar> = MutableLiveData(Calendar.getInstance().apply {
         set(Calendar.SECOND, 0)
         set(Calendar.MILLISECOND, 0)
     })
+
     // Property to get the start hour in milliseconds
     private val startHourInMillis: Long?
         get() = startHour.value?.timeInMillis
+
     // MutableLiveData to hold the list of alarms
     private val _alarmsList = MutableLiveData<List<AlarmEntity>>(listOf())
     val alarmsList: LiveData<List<AlarmEntity>>
         get() = _alarmsList
+
     /**
      * Updates the start hour for generating alarms.
      *
      * @param hourOfDay The selected hour of the day.
      * @param minute The selected minute.
      */
-    fun updateStartHour(hourOfDay: Int, minute: Int) {
-        val startHour = Calendar.getInstance().apply {
-            set(Calendar.HOUR_OF_DAY, hourOfDay)
-            set(Calendar.MINUTE, minute)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }
-        this.startHour.value = startHour
+    fun updateStartHour(selectedTime: Calendar) {
+        this.startHour.value = selectedTime
         // Generate new alarms when the start hour is updated
         viewModelScope.launch {
             generateAlarms()
         }
     }
+
     /**
      * Coroutine function to generate alarms based on the selected options.
      */
@@ -130,7 +133,7 @@ class AlarmsPerDayViewModel @Inject constructor(
     }
 
     /**
-     * Schedules enabled alarms for medication.
+     * Schedules enabled alarms for medication and save to db.
      */
     fun scheduleAlarms() {
         val enabledAlarms = _alarmsList.value!!.filter { it.isEnabled }

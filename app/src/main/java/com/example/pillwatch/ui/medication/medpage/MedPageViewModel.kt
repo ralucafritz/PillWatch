@@ -43,6 +43,10 @@ class MedPageViewModel @Inject constructor(
     val logs: LiveData<List<MedsLogEntity>?>
         get() = _logs
 
+    private val _hasAlarms = MutableLiveData<Boolean>()
+    val hasAlarms: LiveData<Boolean>
+        get() = _hasAlarms
+
     /**
      * Retrieves the medication entity from the repository based on the specified ID.
      *
@@ -63,6 +67,7 @@ class MedPageViewModel @Inject constructor(
             _alarmsList.value = withContext(Dispatchers.IO) {
                 alarmRepository.getAlarmsByMedId(medEntity.value!!.id).toMutableList()
             }
+            _hasAlarms.value = (alarmsList.value != null && alarmsList.value!!.isNotEmpty())
         }
     }
     /**

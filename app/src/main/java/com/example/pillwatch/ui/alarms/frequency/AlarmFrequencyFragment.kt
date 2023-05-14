@@ -14,6 +14,7 @@ import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentAlarmFrequencyBinding
 import com.example.pillwatch.ui.main.MainActivity
 import com.example.pillwatch.utils.AlarmTiming
+import timber.log.Timber
 
 class AlarmFrequencyFragment : Fragment() {
 
@@ -44,6 +45,33 @@ class AlarmFrequencyFragment : Fragment() {
 
         val medId = AlarmFrequencyFragmentArgs.fromBundle(requireArguments()).id
 
+        setupRadioGroup()
+
+        binding.buttonNext.setOnClickListener {
+            if (medId != -1L && viewModel.selectedOption.value != null) {
+                try {
+                    if (viewModel.selectedOption.value != AlarmTiming.NO_REMINDERS) {
+                        this.findNavController().navigate(
+                            AlarmFrequencyFragmentDirections.actionAlarmFrequencyFragmentToAlarmsPerDayFragment(
+                                medId,
+                                viewModel.selectedOption.value!!
+                            )
+                        )
+                    } else {
+                        this.findNavController()
+                            .navigate(AlarmFrequencyFragmentDirections.actionAlarmFrequencyFragmentToMedicationFragment())
+                    }
+                } catch (e: Exception) {
+                    Timber.tag("AlarmFrequency").e("Error found for AlarmFrequencyNavigation: $e")
+                }
+            }
+        }
+
+        return binding.root
+    }
+
+    private fun setupRadioGroup() {
+        val defaultOption = AlarmTiming.EVERY_X_HOURS
         for (enumValue in AlarmTiming.values()) {
             val radioButton = RadioButton(requireContext())
             radioButton.text = enumValue.label
@@ -61,25 +89,11 @@ class AlarmFrequencyFragment : Fragment() {
             radioButton.layoutParams = layoutParams
             radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
             binding.radioGroup.addView(radioButton)
-        }
-
-        binding.buttonNext.setOnClickListener {
-            if (medId != -1L && viewModel.selectedOption.value != null) {
-                if (viewModel.selectedOption.value != AlarmTiming.NO_REMINDERS) {
-                    this.findNavController().navigate(
-                        AlarmFrequencyFragmentDirections.actionAlarmFrequencyFragmentToAlarmsPerDayFragment(
-                            medId,
-                            viewModel.selectedOption.value!!
-                        )
-                    )
-                } else {
-                    this.findNavController()
-                        .navigate(AlarmFrequencyFragmentDirections.actionAlarmFrequencyFragmentToMedicationFragment())
-                }
+            if (enumValue == defaultOption) {
+                radioButton.isChecked = true
             }
         }
-
-        return binding.root
+        viewModel.selectedOption.value = defaultOption
     }
-
 }
+

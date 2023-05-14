@@ -13,9 +13,8 @@ import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentHomeBinding
 import com.example.pillwatch.ui.main.MainActivity
-import com.example.pillwatch.ui.medication.MedicationFragmentDirections
-import com.example.pillwatch.ui.medication.MedsListAdapter
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class HomeFragment : Fragment() {
@@ -58,20 +57,32 @@ class HomeFragment : Fragment() {
                 recyclerView.adapter = adapter
 
                 adapter.onItemClick = {
-                    this@HomeFragment.findNavController().navigate(
-                        HomeFragmentDirections.actionHomeFragmentToMedPageFragment(it)
-                    )
+                    startNavigation(it)
                 }
             }
         }
 
         binding.btnAdd.setOnClickListener {
-            this@HomeFragment.findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToAddMedFragment()
-            )
+            startNavigation()
         }
 
 
         return binding.root
+    }
+
+    private fun startNavigation(medId: Long = -1L) {
+        try {
+            if (medId == -1L) {
+                this@HomeFragment.findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToAddMedFragment()
+                )
+            } else {
+                this@HomeFragment.findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToMedPageFragment(medId)
+                )
+            }
+        } catch (e: Exception) {
+            Timber.tag("HomeFragment").e("Error found for HomeFragmentNavigation: $e")
+        }
     }
 }

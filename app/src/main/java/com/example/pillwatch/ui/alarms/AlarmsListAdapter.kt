@@ -49,7 +49,7 @@ class AlarmsListAdapter(
 
     override fun onBindViewHolder(holder: AlarmViewHolder, position: Int) {
         // Bind the alarm entity to the view holder
-        holder.bind(alarms[position])
+        holder.bind(alarms[position], position)
     }
 
     override fun getItemCount(): Int = alarms.size
@@ -61,7 +61,7 @@ class AlarmsListAdapter(
          *
          * @param alarm The alarm entity to be displayed.
          */
-        fun bind(alarm: AlarmEntity) {
+        fun bind(alarm: AlarmEntity, position: Int) {
             // Update the text and state of the time picker
             updateTimePickerText(alarm.timeInMillis)
             binding.enabledSwitch.isChecked = alarm.isEnabled
@@ -79,7 +79,14 @@ class AlarmsListAdapter(
                             set(Calendar.HOUR_OF_DAY, hourOfDay)
                             set(Calendar.MINUTE, minute)
                         }
-                        alarm.timeInMillis = calendar.timeInMillis
+                        val currentTime = Calendar.getInstance()
+                        val selectedTime = calendar.clone() as Calendar
+
+                        if (selectedTime.before(currentTime)) {
+                            selectedTime.add(Calendar.DAY_OF_MONTH, 1)
+                        }
+
+                        alarm.timeInMillis = selectedTime.timeInMillis
                         updateTimePickerText(calendar.timeInMillis)
                         // Notify the listener that the alarm has been updated
                         onAlarmUpdatedListener.onAlarmUpdated(alarm)

@@ -18,6 +18,7 @@ import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentMedicationBinding
 import com.example.pillwatch.ui.main.MainActivity
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -61,9 +62,7 @@ class MedicationFragment : Fragment() {
                     recyclerView.adapter = adapter
 
                     adapter.onItemClick = {
-                        this@MedicationFragment.findNavController().navigate(
-                            MedicationFragmentDirections.actionMedicationFragmentToMedPageFragment(it)
-                        )
+                        startNavigation(it)
                     }
                 }
             }
@@ -71,9 +70,7 @@ class MedicationFragment : Fragment() {
 
         // next button
         binding.btnAdd.setOnClickListener {
-            this@MedicationFragment.findNavController().navigate(
-                MedicationFragmentDirections.actionMedicationFragmentToAddMedFragment()
-            )
+            startNavigation()
         }
 
         // Lifecycle
@@ -82,6 +79,22 @@ class MedicationFragment : Fragment() {
         setHasOptionsMenu(true)
 
         return binding.root
+    }
+
+    private fun startNavigation(medId: Long = -1L) {
+        try {
+            if(medId == -1L) {
+                this@MedicationFragment.findNavController().navigate(
+                    MedicationFragmentDirections.actionMedicationFragmentToAddMedFragment()
+                )
+            } else {
+                this@MedicationFragment.findNavController().navigate(
+                    MedicationFragmentDirections.actionMedicationFragmentToMedPageFragment(medId)
+                )
+            }
+        } catch (e: Exception) {
+            Timber.tag("MedicationFragment").e("Error found for MedicationNavigation: $e")
+        }
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {

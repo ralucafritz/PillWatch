@@ -25,6 +25,7 @@ import com.example.pillwatch.ui.main.MainActivity
 import com.example.pillwatch.utils.extensions.ContextExtensions.toast
 import com.example.pillwatch.utils.extensions.ContextExtensions.toastTop
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 private const val MEDICATION_NOT_FOUND_ERROR_MESSAGE = "Error: Medication not found."
@@ -76,19 +77,39 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
             }
         }
 
+        viewModel.hasAlarms.observe(viewLifecycleOwner) {
+            if(it != null && it) {
+                binding.btnAdd.text = "Regenerate alarms"
+            } else {
+                binding.btnAdd.text = "Add alarms"
+            }
+        }
+
         binding.backButton.setOnClickListener {
-            when (previousFragment) {
-                R.id.medicationFragment -> {
-                    navigateToMedicationPage()
-                }
+            try {
+                when (previousFragment) {
+                    R.id.medicationFragment -> {
+                        navigateToMedicationPage()
+                    }
 
-                R.id.homeFragment -> {
-                    navigateToHomePage()
-                }
+                    R.id.homeFragment -> {
+                        navigateToHomePage()
+                    }
 
-                else -> {
-                    navigateToHomePage()
+                    else -> {
+                        navigateToHomePage()
+                    }
                 }
+            } catch(e: Exception) {
+                Timber.tag("MedPageFragment").e("Error: MedPageNavigation $e")
+            }
+        }
+
+        binding.btnAdd.setOnClickListener {
+            try {
+                navigateToFrequency(id)
+            } catch(e: Exception) {
+                Timber.tag("MedPageFragment").e("Error: MedPageNavigation $e")
             }
         }
 
@@ -145,6 +166,15 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
     private fun navigateToHomePage() {
         this@MedPageFragment.findNavController().navigate(
             MedPageFragmentDirections.actionMedPageFragmentToHomeFragment()
+        )
+    }
+
+    /**
+     * Navigates to the set alarm frequency page.
+     */
+    private fun navigateToFrequency(id: Long) {
+        this@MedPageFragment.findNavController().navigate(
+            MedPageFragmentDirections.actionMedPageFragmentToAlarmFrequencyFragment(id)
         )
     }
 
@@ -230,11 +260,11 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
      * Called when an alarm is updated by the user manually.
      * The other alarms do not get auto-generated, but they do get sorted based on the next possible alarm.
      *
-     * @param alarm The updated AlarmEntity object.
+     * @param updatedAlarm The updated AlarmEntity object.
      */
-    override fun onAlarmUpdated(alarm: AlarmEntity) {
+    override fun onAlarmUpdated(updatedAlarm: AlarmEntity) {
         lifecycleScope.launch {
-            viewModel.updateAlarm(alarm)
+            viewModel.updateAlarm(updatedAlarm)
         }
     }
 }

@@ -46,6 +46,7 @@
     <string name="choose_reminder_frequency">Choose reminder frequency:</string>
     <string name="medication_name">Medication name:</string>
     <string name ="medication_logs">Medication logs:</string>
+    <string name="add_alarms">Add alarms</string>
 
     <string-array name="concentration_measures">
         <item>-</item>

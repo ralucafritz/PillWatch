@@ -20,6 +20,7 @@ import com.example.pillwatch.databinding.FragmentAlarmsPerDayBinding
 import com.example.pillwatch.ui.main.MainActivity
 import com.example.pillwatch.utils.AlarmTiming
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -85,11 +86,15 @@ class AlarmsPerDayFragment : Fragment(), OnAlarmUpdatedListener {
 
         binding.buttonNext.setOnClickListener {
             viewModel.scheduleAlarms()
-            this.findNavController().navigate(
-                AlarmsPerDayFragmentDirections.actionAlarmsPerDayFragmentToMedPageFragment(
-                    viewModel.medId
+            try {
+                this.findNavController().navigate(
+                    AlarmsPerDayFragmentDirections.actionAlarmsPerDayFragmentToMedPageFragment(
+                        viewModel.medId
+                    )
                 )
-            )
+            } catch (e: Exception) {
+                Timber.tag("AlarmsPerDayFragment").e("Error found for AlarmsPerDayNavigation: $e")
+            }
         }
 
         // Lifecycle
@@ -103,11 +108,11 @@ class AlarmsPerDayFragment : Fragment(), OnAlarmUpdatedListener {
      * Called when an alarm is updated by the user manually.
      * The other alarms do not get auto-generated, but they do get sorted based on the next possible alarm.
      *
-     * @param alarm The updated AlarmEntity object.
+     * @param updatedAlarm The updated AlarmEntity object.
      */
-    override fun onAlarmUpdated(alarm: AlarmEntity) {
+    override fun onAlarmUpdated(updatedAlarm: AlarmEntity) {
         lifecycleScope.launch {
-            viewModel.updateAlarm(alarm)
+            viewModel.updateAlarm(updatedAlarm)
         }
     }
 
@@ -134,7 +139,11 @@ class AlarmsPerDayFragment : Fragment(), OnAlarmUpdatedListener {
                 hour = 0
             }
         }
-        viewModel.updateStartHour(hour, closestMinute)
+        val selectedTime = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.MINUTE, closestMinute)
+        }
+        viewModel.updateStartHour(selectedTime)
 
         // show a time picker dialog when the start hour text is clicked, allowing the user to update the start hour value
         binding.startHour.setOnClickListener {
@@ -144,7 +153,18 @@ class AlarmsPerDayFragment : Fragment(), OnAlarmUpdatedListener {
             val timePickerDialog = TimePickerDialog(
                 requireContext(),
                 { _, hourOfDay, minute ->
-                    viewModel.updateStartHour(hourOfDay, minute)
+
+                    val currentTime = Calendar.getInstance()
+                    val newSelectedTime = Calendar.getInstance().apply {
+                        set(Calendar.HOUR_OF_DAY, hourOfDay)
+                        set(Calendar.MINUTE, minute)
+                    }
+
+                    if (selectedTime.before(currentTime)) {
+                        selectedTime.add(Calendar.DAY_OF_MONTH, 1)
+                    }
+
+                    viewModel.updateStartHour(newSelectedTime)
                 },
                 currentHour,
                 currentMinute,
@@ -182,7 +202,7 @@ class AlarmsPerDayFragment : Fragment(), OnAlarmUpdatedListener {
         if (viewModel.alarmTiming == AlarmTiming.EVERY_X_HOURS) {
             binding.slider.isVisible = true
             binding.slider.max = viewModel.seekBarValues.size - 1
-            val defaultValue = 3 // aka values[3] = 4
+            val defaultValue = viewModel.seekBarValues[3] // aka values[3] = 4
             binding.slider.progress = defaultValue
             viewModel.everyXHours.value = viewModel.seekBarValues[defaultValue]
             changeValueText(binding.slider.progress)

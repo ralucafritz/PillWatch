@@ -128,6 +128,18 @@
             app:layout_constraintTop_toTopOf="@id/background"
             tools:itemCount="12"
             tools:listitem="@layout/item_alarm_list" />
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/slightly_rounded_button"
+            tools:text="@string/add_alarms"
+            android:textSize="@dimen/btn_text_size"
+            app:layout_constraintTop_toTopOf="@id/delete_button"
+            app:layout_constraintEnd_toStartOf="@id/edit_button"
+            app:layout_constraintStart_toEndOf="@id/delete_button"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

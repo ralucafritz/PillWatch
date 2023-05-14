@@ -15,14 +15,17 @@ class AlarmGenerator {
     ): List<AlarmEntity> {
         val frequency = when (alarmTiming) {
             AlarmTiming.EVERY_X_HOURS -> {
-                24 / everyXHours
+                if(everyXHours != 0) {
+                    24 / everyXHours
+                } else {
+                    6  // default value every 4 hours
+                }
             }
-
             AlarmTiming.ONCE_A_DAY -> 1
             AlarmTiming.TWICE_A_DAY -> 2
             AlarmTiming.THREE_TIMES -> 3
             AlarmTiming.FOUR_TIMES -> 4
-            AlarmTiming.NO_REMINDERS -> 0
+            AlarmTiming.NO_REMINDERS -> 1
         }
 
         val alarmList = mutableListOf<AlarmEntity>()

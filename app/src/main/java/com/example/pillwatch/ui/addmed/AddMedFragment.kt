@@ -14,6 +14,7 @@ import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentAddMedBinding
 import com.example.pillwatch.ui.main.MainActivity
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -54,18 +55,24 @@ class AddMedFragment : Fragment() {
         binding.lifecycleOwner = this
 
         binding.btnNext.setOnClickListener{
-            lifecycleScope.launch {
-                viewModel.addMedToUser()
+            if(viewModel.addMedCheck.value == null) {
+                lifecycleScope.launch {
+                    viewModel.addMedToUser()
+                }
             }
         }
 
         viewModel.navigationCheck.observe(viewLifecycleOwner) {
             if (viewModel.navigationCheck.value != null && viewModel.navigationCheck.value!!) {
-                this@AddMedFragment.findNavController().navigate(
-                    AddMedFragmentDirections.actionAddMedFragmentToAlarmFrequencyFragment(
-                        viewModel.medAddedId.value!!
+                try {
+                    this@AddMedFragment.findNavController().navigate(
+                        AddMedFragmentDirections.actionAddMedFragmentToAlarmFrequencyFragment(
+                            viewModel.medAddedId.value!!
+                        )
                     )
-                )
+                } catch(e: Exception) {
+                    Timber.tag("AddMedFragment").e("Error found for AddMedNavigation: $e")
+                }
                 viewModel.navigationComplete()
             }
         }
