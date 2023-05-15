@@ -3,6 +3,7 @@ package com.example.pillwatch.alarms
 import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.utils.AlarmTiming
 import java.util.Calendar
+import java.util.UUID
 
 class AlarmGenerator {
 
@@ -39,7 +40,7 @@ class AlarmGenerator {
                 add(Calendar.MILLISECOND, (intervalMillis * i))
             }
             if (!isRegen) {
-                val alarm = AlarmEntity(0L, medId, calendar.timeInMillis, alarmTiming, true)
+                val alarm = AlarmEntity(UUID.randomUUID().mostSignificantBits, medId, calendar.timeInMillis, alarmTiming, true)
                 alarmList.add(alarm)
             } else {
                 isRegen = false

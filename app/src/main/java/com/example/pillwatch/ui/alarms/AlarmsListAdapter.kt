@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pillwatch.alarms.OnAlarmUpdatedListener
 import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.databinding.ItemAlarmListBinding
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -82,10 +83,15 @@ class AlarmsListAdapter(
                         val currentTime = Calendar.getInstance()
                         val selectedTime = calendar.clone() as Calendar
 
-                        if (selectedTime.before(currentTime)) {
+                        if(selectedTime.get(Calendar.HOUR_OF_DAY) >= currentTime.get(Calendar.HOUR_OF_DAY) &&
+                            selectedTime.get(Calendar.DAY_OF_MONTH) != currentTime.get(Calendar.DAY_OF_MONTH))
+                        {
+                            selectedTime.set(Calendar.DAY_OF_MONTH, currentTime.get(Calendar.DAY_OF_MONTH))
+                        } else if(selectedTime.get(Calendar.DAY_OF_MONTH) == currentTime.get(Calendar.DAY_OF_MONTH)) {
                             selectedTime.add(Calendar.DAY_OF_MONTH, 1)
                         }
 
+                        Timber.d(alarm.timeInMillis.toString())
                         alarm.timeInMillis = selectedTime.timeInMillis
                         updateTimePickerText(calendar.timeInMillis)
                         // Notify the listener that the alarm has been updated

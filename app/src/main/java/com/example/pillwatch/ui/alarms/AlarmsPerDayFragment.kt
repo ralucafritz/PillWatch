@@ -111,9 +111,7 @@ class AlarmsPerDayFragment : Fragment(), OnAlarmUpdatedListener {
      * @param updatedAlarm The updated AlarmEntity object.
      */
     override fun onAlarmUpdated(updatedAlarm: AlarmEntity) {
-        lifecycleScope.launch {
             viewModel.updateAlarm(updatedAlarm)
-        }
     }
 
     // set the start hour value to the current hour and the nearest 5-minute increment.

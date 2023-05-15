@@ -13,6 +13,7 @@ import com.example.pillwatch.utils.AlarmTiming
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -81,14 +82,7 @@ class AlarmsPerDayViewModel @Inject constructor(
             startHourInMillis!!
         )
 
-        _alarmsList.value = withContext(Dispatchers.IO) {
-            // Clear existing alarms for the current medication
-            alarmRepository.clearForMedId(medId)
-            // Insert newly generated alarms into the repository
-            alarmRepository.insertAll(alarmsList)
-            // Retrieve and return the updated list of alarms
-            alarmRepository.getAlarmsByMedId(medId)
-        }!!
+        _alarmsList.value = alarmsList
     }
 
     /**
@@ -96,12 +90,8 @@ class AlarmsPerDayViewModel @Inject constructor(
      *
      * @param alarm The alarm entity to be updated.
      */
-    suspend fun updateAlarm(alarm: AlarmEntity) {
-        withContext(Dispatchers.IO) {
-            val updatedAlarm = alarm.copy()
-            alarmRepository.updateAlarm(updatedAlarm)
-            sortAlarms(updatedAlarm)
-        }
+     fun updateAlarm(alarm: AlarmEntity) {
+            sortAlarms(alarm)
     }
 
     /**
@@ -110,11 +100,8 @@ class AlarmsPerDayViewModel @Inject constructor(
      * @param updatedAlarm The updated alarm entity.
      */
     private fun sortAlarms(updatedAlarm: AlarmEntity) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                alarmRepository.clearForMedId(medId)
-            }
             _alarmsList.value?.let {
+                Timber.d("alarms: ${_alarmsList.value.toString()}")
                 val updatedList = it.map { alarm ->
                     if (alarm.id == updatedAlarm.id) {
                         updatedAlarm
@@ -125,20 +112,21 @@ class AlarmsPerDayViewModel @Inject constructor(
                 // Update the list of alarms locally
                 _alarmsList.value = updatedList
             }
-            withContext(Dispatchers.IO) {
-                // Insert the updated list of alarms into the repository
-                alarmRepository.insertAll(_alarmsList.value!!.toList())
-            }
-        }
     }
 
     /**
      * Schedules enabled alarms for medication and save to db.
      */
     fun scheduleAlarms() {
-        val enabledAlarms = _alarmsList.value!!.filter { it.isEnabled }
-        enabledAlarms.forEach { alarm ->
-            alarmHandler.scheduleAlarm(alarm.id.toInt(), alarm.timeInMillis)
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                alarmRepository.clearForMedId(medId)
+                alarmRepository.insertAll(_alarmsList.value!!)
+            }
+            val enabledAlarms = _alarmsList.value!!.filter { it.isEnabled }
+            enabledAlarms.forEach { alarm ->
+                alarmHandler.scheduleAlarm(alarm.id.toInt(), alarm.timeInMillis)
+            }
         }
     }
 }
