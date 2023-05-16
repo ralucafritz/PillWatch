@@ -1,0 +1,9 @@
+<resources>
+    <style name="SpinnerItemText" parent="@android:style/Widget.TextView.SpinnerItem">
+        <item name="android:background">@drawable/spinner_item_background</item>
+    </style>
+
+    <style name="RoundedDialogStyle" parent="@style/ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/dialog_background_rounded</item>
+    </style>
+</resources>

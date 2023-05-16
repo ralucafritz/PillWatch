@@ -48,10 +48,13 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-auth-ktx:21.3.0'
+    implementation 'com.google.firebase:firebase-auth-ktx:22.0.0'
     implementation 'androidx.annotation:annotation:1.6.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.firebase:firebase-database-ktx:20.2.0'
+    implementation 'com.google.firebase:firebase-database-ktx:20.2.1'
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.1.2'
+    implementation "androidx.work:work-runtime-ktx:2.8.1"
+
     def nav_version = "2.5.3"
     def room_version = "2.5.1"
     def retrofit_version = "2.9.0"
@@ -108,4 +111,7 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    implementation 'com.google.dagger:dagger:2.45'
+    kapt 'com.google.dagger:dagger-compiler:2.45'
 }

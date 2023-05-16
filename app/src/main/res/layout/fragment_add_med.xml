@@ -6,14 +6,14 @@
 
         <variable
             name="viewModel"
-            type="com.example.pillwatch.viewmodel.AddMedViewModel" />
+            type="com.example.pillwatch.ui.addmed.AddMedViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/colorPrimary"
-        tools:context=".ui.fragment.AddMedFragment">
+        tools:context=".ui.addmed.AddMedFragment">
 
         <TextView
             android:id="@+id/add_med_name"
@@ -31,9 +31,9 @@
             android:id="@+id/background"
             android:layout_width="450dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="196dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.512"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/rounded_rectangle"
@@ -49,11 +49,11 @@
             android:background="@drawable/edit_text_field"
             android:dropDownAnchor="@id/med_name"
             android:dropDownHeight="wrap_content"
-            android:maxHeight="200dp"
             android:dropDownVerticalOffset="10dp"
             android:ems="12"
             android:hint="@string/medicine_name"
-            android:inputType="text"
+            android:inputType="textAutoComplete"
+            android:maxHeight="200dp"
             android:minHeight="60dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
@@ -64,12 +64,28 @@
             app:layout_constraintTop_toTopOf="@+id/background"
             tools:ignore="Autofill" />
 
+        <EditText
+            android:id="@+id/concentration_value_text"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/edit_text_field"
+            android:hint="@string/concentration"
+            android:inputType="text"
+            android:minHeight="48dp"
+            android:paddingStart="10dp"
+            android:text="@={viewModel.concentrationEditText}"
+            app:layout_constraintEnd_toEndOf="@id/med_name"
+            app:layout_constraintTop_toBottomOf="@id/med_name"
+            tools:ignore="Autofill,RtlSymmetry" />
+
+
         <ImageButton
             android:id="@+id/btn_next"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginEnd="64dp"
-            android:layout_marginBottom="64dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/slightly_rounded_button"
             android:paddingStart="10dp"
             android:paddingEnd="5dp"

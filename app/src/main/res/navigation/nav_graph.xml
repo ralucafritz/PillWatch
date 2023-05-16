@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loadingFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/welcomeFragment"
-        android:name="com.example.pillwatch.ui.fragment.WelcomeFragment"
+        android:name="com.example.pillwatch.ui.splash.welcome.WelcomeFragment"
         android:label="WelcomeFragment"
         tools:layout="@layout/fragment_welcome" >
         <action
@@ -16,53 +16,22 @@
         <action
             android:id="@+id/action_welcomeFragment_to_loginActivity"
             app:destination="@id/loginActivity" />
-        <action
-            android:id="@+id/action_welcomeFragment_to_loadingFragment"
-            app:destination="@id/loadingFragment" />
     </fragment>
     <activity
         android:id="@+id/signupActivity"
-        android:name="com.example.pillwatch.ui.activity.SignupActivity"
+        android:name="com.example.pillwatch.ui.signup.SignupActivity"
         android:label="SignupActivity"/>
     <activity
         android:id="@+id/loginActivity"
-        android:name="com.example.pillwatch.ui.activity.LoginActivity"
+        android:name="com.example.pillwatch.ui.login.LoginActivity"
         android:label="LoginActivity" />
     <fragment
-        android:id="@+id/loadingFragment"
-        android:name="com.example.pillwatch.ui.fragment.LoadingFragment"
-        android:label="LoadingFragment" >
-        <action
-            android:id="@+id/action_loadingFragment_to_welcomeFragment"
-            app:destination="@id/welcomeFragment"
-            app:enterAnim="@anim/fui_slide_in_right"
-            app:exitAnim="@anim/fui_slide_out_left" />
-        <action
-            android:id="@+id/action_loadingFragment_to_usernameCreationFragment"
-            app:destination="@id/usernameCreationFragment"
-            app:enterAnim="@anim/fui_slide_in_right"
-            app:exitAnim="@anim/fui_slide_out_left"
-            app:popEnterAnim="@anim/fui_slide_in_right"
-            app:popExitAnim="@anim/fui_slide_out_left" />
-        <action
-            android:id="@+id/action_loadingFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/usernameCreationFragment"
-        android:name="com.example.pillwatch.ui.fragment.UsernameCreationFragment"
-        android:label="UsernameCreationFragment" >
-        <action
-            android:id="@+id/action_usernameCreationFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
-    </fragment>
+        android:name="com.example.pillwatch.ui.username.UsernameCreationFragment"
+        android:label="UsernameCreationFragment" />
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.pillwatch.ui.fragment.HomeFragment"
+        android:name="com.example.pillwatch.ui.home.HomeFragment"
         android:label="HomeFragment" >
         <action
             android:id="@+id/action_homeFragment_to_medicationFragment"
@@ -76,10 +45,13 @@
         <action
             android:id="@+id/action_homeFragment_to_addMedFragment"
             app:destination="@id/addMedFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_medPageFragment"
+            app:destination="@id/medPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.pillwatch.ui.fragment.SettingsFragment"
+        android:name="com.example.pillwatch.ui.settings.SettingsFragment"
         android:label="SettingsFragment" >
         <action
             android:id="@+id/action_settingsFragment_to_profileFragment"
@@ -87,7 +59,7 @@
     </fragment>
     <fragment
         android:id="@+id/medicationFragment"
-        android:name="com.example.pillwatch.ui.fragment.MedicationFragment"
+        android:name="com.example.pillwatch.ui.medication.MedicationFragment"
         android:label="MedicationFragment" >
         <action
             android:id="@+id/action_medicationFragment_to_homeFragment"
@@ -101,17 +73,70 @@
         <action
             android:id="@+id/action_medicationFragment_to_addMedFragment"
             app:destination="@id/addMedFragment" />
+        <action
+            android:id="@+id/action_medicationFragment_to_medPageFragment"
+            app:destination="@id/medPageFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.pillwatch.ui.fragment.ProfileFragment"
+        android:name="com.example.pillwatch.ui.profile.ProfileFragment"
         android:label="ProfileFragment" />
     <fragment
         android:id="@+id/addMedFragment"
-        android:name="com.example.pillwatch.ui.fragment.AddMedFragment"
+        android:name="com.example.pillwatch.ui.addmed.AddMedFragment"
         android:label="AddMedFragment" >
         <action
-            android:id="@+id/action_addMedFragment_to_medicationFragment"
-            app:destination="@id/medicationFragment" />
+            android:id="@+id/action_addMedFragment_to_alarmFrequencyFragment"
+            app:destination="@id/alarmFrequencyFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/alarmFrequencyFragment"
+        android:name="com.example.pillwatch.ui.alarms.frequency.AlarmFrequencyFragment"
+        android:label="AlarmFrequencyFragment" >
+        <action
+            android:id="@+id/action_alarmFrequencyFragment_to_alarmsPerDayFragment"
+            app:destination="@id/alarmsPerDayFragment" />
+        <action
+            android:id="@+id/action_alarmFrequencyFragment_to_medicationFragment"
+            app:destination="@id/medicationFragment" />
+        <argument
+            android:name="id"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/alarmsPerDayFragment"
+        android:name="com.example.pillwatch.ui.alarms.AlarmsPerDayFragment"
+        android:label="AlarmsPerDayFragment" >
+        <action
+            android:id="@+id/action_alarmsPerDayFragment_to_medPageFragment"
+            app:destination="@id/medPageFragment" />
+        <argument
+            android:name="alarmTiming"
+            app:argType="com.example.pillwatch.utils.AlarmTiming"
+            android:defaultValue="NO_REMINDERS" />
+        <argument
+            android:name="id"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/medPageFragment"
+        android:name="com.example.pillwatch.ui.medication.medpage.MedPageFragment"
+        android:label="MedPageFragment">
+        <action
+            android:id="@+id/action_medPageFragment_to_medicationFragment"
+            app:destination="@id/medicationFragment" />
+        <argument
+            android:name="id"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_medPageFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_medPageFragment_to_alarmFrequencyFragment"
+            app:destination="@id/alarmFrequencyFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/splashActivity"
+        android:name="com.example.pillwatch.ui.splash.SplashActivity"
+        android:label="SplashActivity" />
 </navigation>

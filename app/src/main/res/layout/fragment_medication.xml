@@ -5,13 +5,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.pillwatch.viewmodel.MedicationViewModel" />
+            type="com.example.pillwatch.ui.medication.MedicationViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.fragment.MedicationFragment">
+        tools:context=".ui.medication.MedicationFragment">
 
         <ImageView
             android:id="@+id/toolbar_background"
@@ -27,12 +27,9 @@
             android:id="@+id/meds_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="10dp"
+            android:layout_margin="20dp"
             tools:itemCount="10"
-            tools:listitem="@layout/card_view_design"
+            tools:listitem="@layout/item_meds_list"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/btn_add"
             app:layout_constraintEnd_toEndOf="parent"

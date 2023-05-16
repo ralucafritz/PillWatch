@@ -5,13 +5,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.pillwatch.viewmodel.ProfileViewModel" />
+            type="com.example.pillwatch.ui.profile.ProfileViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.fragment.ProfileFragment">
+        tools:context=".ui.profile.ProfileFragment">
 
         <TextView
             android:id="@+id/textView"

@@ -8,7 +8,6 @@ import android.view.Gravity
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.pillwatch.R
 
 object ContextExtensions {
@@ -24,45 +23,9 @@ object ContextExtensions {
 
     fun Context.toastTop(msg: String) {
         val toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
-        toast.setGravity(Gravity.TOP, 0, 0)
+        val marginVertical = (100 * resources.displayMetrics.density).toInt()
+        toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, marginVertical)
         toast.show()
-
-    }
-
-
-    /**
-     *      Extension function to set the value of the `isLoggedIn` preference from SharedPreferences
-     */
-    fun Context.setLoggedInStatus(value: Boolean) {
-        SharedPreferencesExtensions.setPreference(this, "isLoggedIn", value)
-    }
-
-    /**
-     *      Extension function to get the value of the 'isLoggedIn` preference from SharedPreferences
-     */
-    fun Context.getLoggedInStatus(): Boolean {
-        return SharedPreferencesExtensions.getPreference(this, "isLoggedIn", false)
-    }
-
-    /**
-     *      Extension function to set a preference value from SharedPreferences
-     */
-    fun Context.setPreference(key: String, value: Any) {
-        SharedPreferencesExtensions.setPreference(this, key, value)
-    }
-
-    /**
-     *      Extension function to get a preference value from SharedPreferences by providing a random value of the type of the preference
-     */
-    fun Context.getPreference(key: String, type: Any): Any {
-        return SharedPreferencesExtensions.getPreference(this, key, type)
-    }
-
-    /**
-     *      Extension function to get a string preference value from SharedPreferences
-     */
-    fun Context.getPreference(key: String): String {
-        return SharedPreferencesExtensions.getPreference(this, key, "")
     }
 
     /**
@@ -90,7 +53,10 @@ object ContextExtensions {
         negativeButtonText: String? = null,
         callback: ((positiveButtonPressed: Boolean) -> Unit)? = null
     ) {
-        val builder = AlertDialog.Builder(this, com.google.android.material.R.style.Base_Theme_Material3_Dark_Dialog)
+        val builder = AlertDialog.Builder(
+            this,
+            R.style.RoundedDialogStyle
+        )
             .setTitle(title)
             .setMessage(message)
             .setPositiveButton(positiveButtonText) { dialog, _ ->
@@ -110,9 +76,8 @@ object ContextExtensions {
 
     fun Context.showProgressDialog(
         title: String,
-        isCancelable: Boolean = false
     ): AlertDialog {
-        val progressDialog = AlertDialog.Builder(this)
+        val progressDialog = AlertDialog.Builder(this, R.style.RoundedDialogStyle)
             .setView(ProgressBar(this))
             .setTitle(title)
             .setMessage("Please wait...")

@@ -1,7 +1,7 @@
 package com.example.pillwatch.utils.extensions
 
+
 import timber.log.Timber
-import java.util.Locale
 
 object Extensions {
     /**
@@ -12,5 +12,4 @@ object Extensions {
     fun timber() {
         Timber.plant(Timber.DebugTree())
     }
-
 }

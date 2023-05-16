@@ -38,5 +38,5 @@ data class InteractionProperty(
 )
 
 data class InteractionTestProperty(
-    val interaction: List<List<InteractionProperty>>
+    val interaction: List<List<InteractionProperty>>?
 )

@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.example.pillwatch.utils.AlarmTiming
 
 @Entity(
     tableName = "alarms_table",
@@ -19,6 +20,9 @@ data class AlarmEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val medId: Long,
-    val hour: Int
+    var timeInMillis: Long,
+    var alarmTiming: AlarmTiming,
+    var isEnabled: Boolean,
+    var everyXHours: Int = 0
 ) {
 }

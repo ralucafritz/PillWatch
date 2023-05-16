@@ -1,11 +1,11 @@
 package com.example.pillwatch.data.repository
 
 import androidx.lifecycle.LiveData
-import com.example.pillwatch.data.datasource.local.AlarmDao
+import com.example.pillwatch.data.source.local.AlarmDao
 import com.example.pillwatch.data.model.AlarmEntity
-import com.example.pillwatch.data.model.MedsEntity
+import kotlinx.coroutines.withContext
 
-class AlarmRepository(private val alarmDao: AlarmDao){
+class AlarmRepository(private val alarmDao: AlarmDao) {
 
     fun insert(alarm: AlarmEntity): Long {
         return alarmDao.insert(alarm)
@@ -15,8 +15,32 @@ class AlarmRepository(private val alarmDao: AlarmDao){
         alarmDao.insertAll(alarmList)
     }
 
-    fun getAlarmsByMedId(medId: Long) : LiveData<List<AlarmEntity?>> {
+    fun updateAlarm(alarm: AlarmEntity) {
+        alarmDao.updateAlarm(alarm.id, alarm.timeInMillis, alarm.isEnabled)
+    }
+
+    fun clearForMedId(medId: Long) {
+        alarmDao.clearForMedId(medId)
+    }
+
+    fun getAlarmById(alarmId: Long): AlarmEntity {
+        return alarmDao.getAlarmById(alarmId)
+    }
+
+    fun getLastAlarmByMedId(medId: Long): AlarmEntity {
+        return alarmDao.getLastAlarmByMedId(medId)
+    }
+
+    fun getAlarmsByMedId(medId: Long): List<AlarmEntity> {
         return alarmDao.getAlarmsByMedId(medId)
+    }
+
+    fun getAllAlarms(): List<AlarmEntity> {
+        return alarmDao.getAllAlarms()
+    }
+
+    fun getNextAlarmBeforeMidnight(medId: Long, currentTimeInMillis: Long, midnightInMillis: Long): AlarmEntity? {
+        return alarmDao.getNextAlarmBeforeMidnight(medId, currentTimeInMillis, midnightInMillis)
     }
 
     fun clear() {

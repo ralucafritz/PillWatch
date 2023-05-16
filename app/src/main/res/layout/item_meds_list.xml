@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_margin="10dp"
+    app:cardBackgroundColor="?attr/backgroundGrey"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="7dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        tools:ignore="UseCompoundDrawables">
+
+        <FrameLayout
+            android:id="@+id/pills_container"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/pill_image_med_item"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="7dp"
+                android:layout_marginBottom="5dp"
+                android:src="?attr/logo_pills"
+                tools:ignore="ContentDescription" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:ignore="UseCompoundDrawables">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/med_item_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:ellipsize="end"
+                    android:maxLength="17"
+                    android:scrollHorizontally="true"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="@string/medName" />
+
+                <ImageView
+                    android:id="@+id/med_item_fab"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="3dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/med_item_conc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="15dp"
+                    android:textSize="15sp"
+                    android:textStyle="italic"
+                    tools:ignore="HardcodedText"
+                    tools:text="x mg/ml" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                tools:ignore="UseCompoundDrawables">
+
+                <TextView
+                    android:id="@+id/taken_log"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tag_rectangle"
+                    android:backgroundTint="?attr/colorTaken"
+                    android:padding="3dp"
+                    android:textColor="?attr/colorBlack"
+                    android:textSize="11sp"
+                    tools:text="Meds Taken" />
+
+                <TextView
+                    android:id="@+id/postponed_log"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/tag_rectangle"
+                    android:backgroundTint="?attr/colorPostponed"
+                    android:padding="3dp"
+                    android:textColor="?attr/colorBlack"
+                    android:textSize="11sp"
+                    tools:text="Alarms Postponed" />
+
+                <TextView
+                    android:id="@+id/missed_log"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tag_rectangle"
+                    android:backgroundTint="?attr/colorMissed"
+                    android:padding="3dp"
+                    android:textColor="?attr/colorBlack"
+                    android:textSize="11sp"
+                    tools:text="Meds Missed" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>
