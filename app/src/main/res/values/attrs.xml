@@ -30,4 +30,5 @@
     <attr name='colorBlack' format ='color'/>
     <attr name='backgroundGrey' format="color"/>
     <attr name='onBackgroundGrey' format="color"/>
+    <attr name ='colorCredits' format='color'/>
 </resources>

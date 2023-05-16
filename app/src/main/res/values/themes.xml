@@ -55,5 +55,6 @@
         <item name="colorBlack">@color/md_theme_dark_surface</item>
         <item name="backgroundGrey">#ECE2FA</item>
         <item name="onBackgroundGrey">#4A4A4A</item>
+        <item name="colorCredits">#7E625B71</item>
     </style>
 </resources>

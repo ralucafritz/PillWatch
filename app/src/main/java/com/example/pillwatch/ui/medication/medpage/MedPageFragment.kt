@@ -72,13 +72,13 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
                 viewModel.getLogs()
                 generateUI(it)
             } else {
-                navigateToMedicationPage()
+                navigate(R.id.medicationFragment)
                 requireContext().toast(MEDICATION_NOT_FOUND_ERROR_MESSAGE)
             }
         }
 
         viewModel.hasAlarms.observe(viewLifecycleOwner) {
-            if(it != null && it) {
+            if (it != null && it) {
                 binding.btnAdd.text = "Regenerate alarms"
             } else {
                 binding.btnAdd.text = "Add alarms"
@@ -87,35 +87,23 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
 
         binding.backButton.setOnClickListener {
             try {
-                when (previousFragment) {
-                    R.id.medicationFragment -> {
-                        navigateToMedicationPage()
-                    }
-
-                    R.id.homeFragment -> {
-                        navigateToHomePage()
-                    }
-
-                    else -> {
-                        navigateToHomePage()
-                    }
-                }
-            } catch(e: Exception) {
+                navigate(previousFragment)
+            } catch (e: Exception) {
                 Timber.tag("MedPageFragment").e("Error: MedPageNavigation $e")
             }
         }
 
         binding.btnAdd.setOnClickListener {
             try {
-                navigateToFrequency(id)
-            } catch(e: Exception) {
+                navigate(0, id)
+            } catch (e: Exception) {
                 Timber.tag("MedPageFragment").e("Error: MedPageNavigation $e")
             }
         }
 
         binding.deleteButton.setOnClickListener {
             viewModel.deleteMed()
-            navigateToMedicationPage()
+            navigate(R.id.medicationFragment)
             requireContext().toastTop(
                 String.format(
                     MED_DELETED_SUCCESS_MESSAGE_TEMPLATE,
@@ -152,30 +140,28 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
     }
 
     /**
-     * Navigates to the medication list page.
+     * Navigates to the medication page, the home page or the set alarm frequency page.
      */
-    private fun navigateToMedicationPage() {
-        this@MedPageFragment.findNavController().navigate(
-            MedPageFragmentDirections.actionMedPageFragmentToMedicationFragment()
-        )
-    }
+    private fun navigate(previousFragment: Int?, id: Long = -1L) {
+        if (id == -1L) {
+            when (previousFragment) {
+                R.id.medicationFragment -> {
+                    this@MedPageFragment.findNavController().navigate(
+                        MedPageFragmentDirections.actionMedPageFragmentToMedicationFragment()
+                    )
+                }
 
-    /**
-     * Navigates to the home page.
-     */
-    private fun navigateToHomePage() {
-        this@MedPageFragment.findNavController().navigate(
-            MedPageFragmentDirections.actionMedPageFragmentToHomeFragment()
-        )
-    }
-
-    /**
-     * Navigates to the set alarm frequency page.
-     */
-    private fun navigateToFrequency(id: Long) {
-        this@MedPageFragment.findNavController().navigate(
-            MedPageFragmentDirections.actionMedPageFragmentToAlarmFrequencyFragment(id)
-        )
+                else -> {
+                    this@MedPageFragment.findNavController().navigate(
+                        MedPageFragmentDirections.actionMedPageFragmentToHomeFragment()
+                    )
+                }
+            }
+        } else {
+            this@MedPageFragment.findNavController().navigate(
+                MedPageFragmentDirections.actionMedPageFragmentToAlarmFrequencyFragment(id)
+            )
+        }
     }
 
     /**
@@ -233,12 +219,12 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
      */
     private fun showEditDialog() {
         val dialogView = LayoutInflater.from(requireContext())
-            .inflate(R.layout.dialog_edit_med, null)
+            .inflate(R.layout.dialog_edit, null)
 
-        val editName = dialogView.findViewById<EditText>(R.id.edit_name)
+        val editName = dialogView.findViewById<EditText>(R.id.edit_text)
         editName.setText(binding.medName.text)
 
-        val editConc = dialogView.findViewById<EditText>(R.id.edit_conc)
+        val editConc = dialogView.findViewById<EditText>(R.id.edit_text_secondary)
         editConc.setText(binding.medConc.text)
 
         val alertDialogBuilder = AlertDialog.Builder(requireContext(), R.style.RoundedDialogStyle)

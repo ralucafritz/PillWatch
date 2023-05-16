@@ -2,6 +2,7 @@
 <resources>
     <dimen name="margin">16dp</dimen>
     <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_mid">24sp</dimen>
     <dimen name="text_size_big">28sp</dimen>
     <dimen name="btn_text_size">20sp</dimen>
     <dimen name="text_size_small">14sp</dimen>

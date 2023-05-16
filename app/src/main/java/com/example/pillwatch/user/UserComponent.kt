@@ -1,5 +1,6 @@
 package com.example.pillwatch.user
 
+import android.provider.ContactsContract.Profile
 import com.example.pillwatch.alarms.AlarmHandler
 import com.example.pillwatch.alarms.AlarmSchedulerWorker
 import com.example.pillwatch.di.LoggedUserScope
@@ -8,6 +9,7 @@ import com.example.pillwatch.ui.home.HomeFragment
 import com.example.pillwatch.ui.splash.SplashActivity
 import com.example.pillwatch.ui.main.MainActivity
 import com.example.pillwatch.ui.medication.MedicationFragment
+import com.example.pillwatch.ui.profile.ProfileFragment
 import com.example.pillwatch.ui.settings.SettingsFragment
 import dagger.Subcomponent
 
@@ -26,6 +28,7 @@ interface UserComponent {
     fun inject(fragment: SettingsFragment)
     fun inject(fragment: MedicationFragment)
     fun inject(fragment: AddMedFragment)
+    fun inject(fragment: ProfileFragment)
     fun inject(alarmSchedulerWorker: AlarmSchedulerWorker)
     fun  inject(alarmHandler: AlarmHandler)
 }
