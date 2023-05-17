@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/edit_med_name_dialog"
+        android:id="@+id/edit_dialog_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:textAppearanceMedium"
@@ -15,28 +15,28 @@
         tools:text="@string/medication_name" />
 
     <EditText
-        android:id="@+id/edit_name"
+        android:id="@+id/edit_text"
         android:layout_width="250dp"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
         android:background="@drawable/edit_text_field"
         android:inputType="text"
         android:padding="12dp"
-        android:textSize="@dimen/text_size_small"
+        android:textSize="@dimen/text_size_medium"
         tools:text="Extra ultra giga long name" />
 
     <EditText
-        android:id="@+id/edit_conc"
+        android:id="@+id/edit_text_secondary"
         android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_height="55dp"
         android:layout_gravity="center"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="30dp"
         android:background="@drawable/edit_text_field"
         android:inputType="text"
         android:padding="12dp"
-        android:textSize="@dimen/text_size_small"
-        tools:text="Extra ultra giga long name" />
+        android:textSize="@dimen/text_size_medium"
+        tools:text="Extra ultra giga long conc" />
 
 </LinearLayout>

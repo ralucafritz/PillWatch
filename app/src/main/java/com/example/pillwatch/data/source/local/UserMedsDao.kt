@@ -1,5 +1,6 @@
 package com.example.pillwatch.data.source.local
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -23,6 +24,9 @@ interface UserMedsDao {
 
     @Query("SELECT * FROM user_meds_table WHERE id = :id")
     fun getMedById(id: Long): UserMedsEntity
+
+    @Query("SELECT COUNT(*) FROM user_meds_table WHERE userId = :userId")
+    fun getMedCountByUserId(userId: Long): Int?
 
     @Query("DELETE FROM user_meds_table WHERE id  = :id")
     fun deleteById(id: Long)

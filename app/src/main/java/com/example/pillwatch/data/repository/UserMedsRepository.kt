@@ -25,6 +25,10 @@ class UserMedsRepository(private val userMedsDao: UserMedsDao) {
         return userMedsDao.getMedById(id)
     }
 
+    fun getMedCountByUserId(userId: Long): Int? {
+        return userMedsDao.getMedCountByUserId(userId)
+    }
+
     fun deleteById(id: Long) {
         userMedsDao.deleteById(id)
     }
