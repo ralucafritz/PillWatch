@@ -29,6 +29,10 @@ class MainViewModel @Inject constructor(
     private val userManager: UserManager
 ) : ViewModel() {
 
+    private val _showNotification = MutableLiveData<Boolean>()
+    val showNotification: LiveData<Boolean>
+        get() = _showNotification
+
     private val _currentFragmentId = MutableLiveData<Int>()
     val currentFragmentId: LiveData<Int>
         get() = _currentFragmentId
@@ -41,6 +45,13 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             userManager.logout()
             delay(2000)
+        }
+    }
+
+    fun showToast(){
+        viewModelScope.launch {
+            delay(5000)
+            _showNotification.value = true
         }
     }
 

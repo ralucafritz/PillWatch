@@ -2,12 +2,18 @@ package com.example.pillwatch.utils.extensions
 
 import android.content.Context
 import android.content.res.Configuration
+import android.graphics.PorterDuff
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.util.TypedValue
 import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import com.example.pillwatch.R
 
 object ContextExtensions {
@@ -25,6 +31,21 @@ object ContextExtensions {
         val toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
         val marginVertical = (100 * resources.displayMetrics.density).toInt()
         toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, marginVertical)
+        toast.show()
+    }
+
+    fun Context.toastNotifications(msg: String) {
+        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val layout: View = inflater.inflate(R.layout.custom_toast_layout, null)
+
+        val text = layout.findViewById<TextView>(R.id.text)
+        text.text = msg
+
+        val toast = Toast(applicationContext)
+        val marginVertical = (100 * resources.displayMetrics.density).toInt()
+        toast.duration = Toast.LENGTH_LONG
+        toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, marginVertical)
+        toast.view = layout
         toast.show()
     }
 
