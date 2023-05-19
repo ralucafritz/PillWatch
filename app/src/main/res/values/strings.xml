@@ -51,6 +51,10 @@
     <string name="email_">Email:</string>
     <string name="active_med_count">Active med count:</string>
     <string name="credits">© PillWatch 2023</string>
+    <string name="healthcare">In order to ensure safe and appropriate management, talk to your healthcare practitioner if you believe you are experiencing, or may experience, a drug interaction.</string>
+    <string name ="interaction">Warning: If no interactions are found between two drugs, it does not necessarily mean that no interactions exist. Always consult with a healthcare professional.</string>
+    <string name ="medical_advice">This app does not provide medical advice. Please consult a qualified healthcare professional for personalized medical guidance.</string>
+    <string name ="cannot_check_interaction">Couldn\'t verify the interaction of this med with the existing medications.</string>
 
     <string-array name="concentration_measures">
         <item>-</item>

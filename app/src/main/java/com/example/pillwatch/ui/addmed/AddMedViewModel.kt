@@ -64,6 +64,14 @@ class AddMedViewModel @Inject constructor(
     val isAlertNeeded: LiveData<Boolean>
         get() = _isAlertNeeded
 
+    private val _interactionChecked = MutableLiveData<Boolean>()
+    val interactionChecked: LiveData<Boolean>
+        get() = _interactionChecked
+
+    private val _showToast = MutableLiveData<String>()
+    val showToast: LiveData<String>
+        get() = _showToast
+
     /**
      * Searches for medication names based on the entered text.
      *
@@ -111,8 +119,8 @@ class AddMedViewModel @Inject constructor(
         val userId = userManager.id
         val medId: Long?
         val name: String
-        if (_selectedMed.value != null && medName.value != "") {
-            if (_selectedMed.value!!.tradeName == medName.value) {
+        if (medName.value != "") {
+            if (_selectedMed.value != null && _selectedMed.value!!.tradeName == medName.value) {
                 medId = _selectedMed.value!!.id
                 name = _selectedMed.value!!.tradeName
             } else {
@@ -142,24 +150,27 @@ class AddMedViewModel @Inject constructor(
                         addMedCheck.value = null
                     }
                 }
+            } else {
+                if (medName.value != "") {
+                    _interactionChecked.value = false
+                    _medAddedId.value = withContext(Dispatchers.IO) {
+                        userMedsRepository.insert(
+                            UserMedsEntity(
+                                0L,
+                                medName.value!!,
+                                userId,
+                                null,
+                                concentrationEditText.value
+                            )
+                        )
+                    }
+                    if (_medAddedId.value != null) {
+                        _navigationCheck.value = true
+                    }
+                }
             }
         } else {
-            if (medName.value != "") {
-                _medAddedId.value = withContext(Dispatchers.IO) {
-                    userMedsRepository.insert(
-                        UserMedsEntity(
-                            0L,
-                            medName.value!!,
-                            userId,
-                            null,
-                            concentrationEditText.value
-                        )
-                    )
-                }
-                if (_medAddedId.value != null) {
-                    _navigationCheck.value = true
-                }
-            }
+            _showToast.value = "Please write a name for the medication you wish to add."
         }
     }
 

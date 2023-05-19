@@ -68,6 +68,12 @@ class UserRepository(private val userDao: UserDao) {
         }
     }
 
+    suspend fun getRoleById(userId:Long): Role? {
+        return withContext(Dispatchers.IO) {
+            userDao.getRoleById(userId)
+        }
+    }
+
     suspend fun getUserByIdToken(idToken: String): UserEntity? {
         return withContext(Dispatchers.IO) {
             userDao.getUserByIdToken(idToken)

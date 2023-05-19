@@ -2,35 +2,40 @@ package com.example.pillwatch.ui.main
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import androidx.work.workDataOf
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
+import com.example.pillwatch.R.*
 import com.example.pillwatch.alarms.AlarmSchedulerWorker
 import com.example.pillwatch.databinding.ActivityMainBinding
-import com.example.pillwatch.utils.extensions.ContextExtensions.dismissProgressDialog
-import com.example.pillwatch.utils.extensions.ContextExtensions.showProgressDialog
+import com.example.pillwatch.storage.Storage
 import com.example.pillwatch.ui.splash.SplashActivity
+import com.example.pillwatch.user.UserManager
+import com.example.pillwatch.utils.Role
+import com.example.pillwatch.utils.extensions.ContextExtensions.dismissProgressDialog
+import com.example.pillwatch.utils.extensions.ContextExtensions.isInternetConnected
+import com.example.pillwatch.utils.extensions.ContextExtensions.showProgressDialog
+import com.example.pillwatch.utils.extensions.ContextExtensions.snackbar
+import com.example.pillwatch.utils.extensions.ContextExtensions.toastTop
 import com.google.firebase.messaging.FirebaseMessaging
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -51,9 +56,14 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var medsAPIViewModel: MedsAPIViewModel
 
+    @Inject
+    lateinit var storage: Storage
+
+    lateinit var userManager: UserManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val userManager = (application as PillWatchApplication).appComponent.userManager()
+        userManager = (application as PillWatchApplication).appComponent.userManager()
         userManager.userComponent!!.inject(this)
 
         Timber.plant(Timber.DebugTree())
@@ -63,6 +73,9 @@ class MainActivity : AppCompatActivity() {
 
         scheduleAlarmSchedulerWorker(this, userManager.id)
 
+        if(!isInternetConnected()) {
+            toastTop("No internet connection.")
+        }
 
         // Firebase Messaging token retrieval
         val firebaseMessaging = FirebaseMessaging.getInstance()
@@ -79,7 +92,7 @@ class MainActivity : AppCompatActivity() {
              *     NavController initialization
              */
             val navHostFragment =
-                supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                supportFragmentManager.findFragmentById(id.nav_host_fragment) as NavHostFragment
             navController = navHostFragment.navController
 
             /**
@@ -96,7 +109,7 @@ class MainActivity : AppCompatActivity() {
             bottomNavigationView.setupWithNavController(navController)
 
             appBarConfigurationNavBottom = AppBarConfiguration(
-                setOf(R.id.homeFragment, R.id.medicationFragment, R.id.settingsFragment)
+                setOf(id.homeFragment, id.medicationFragment, id.settingsFragment)
             )
             setupActionBarWithNavController(navController, appBarConfigurationNavBottom)
 
@@ -108,8 +121,8 @@ class MainActivity : AppCompatActivity() {
                 this@MainActivity,
                 drawerLayout,
                 toolbar,
-                R.string.nav_open,
-                R.string.nav_close
+                string.nav_open,
+                string.nav_close
             )
             drawerLayout.addDrawerListener(actionBarDrawerToggle)
             actionBarDrawerToggle.syncState()
@@ -130,7 +143,7 @@ class MainActivity : AppCompatActivity() {
              */
             drawerView.setNavigationItemSelectedListener { item ->
                 when (item.itemId) {
-                    R.id.nav_logout -> {
+                    id.nav_logout -> {
                         mainViewModel.logout()
                         drawerLayout.closeDrawer(GravityCompat.START)
                         val intent = Intent(this@MainActivity, SplashActivity::class.java)
@@ -138,13 +151,13 @@ class MainActivity : AppCompatActivity() {
                         finish()
                     }
 
-                    R.id.nav_clean -> {
-                        navController.navigate(R.id.homeFragment)
+                    id.nav_clean -> {
+                        navController.navigate(id.homeFragment)
                         mainViewModel.clear()
                         drawerLayout.closeDrawer(GravityCompat.START)
                     }
 
-                    R.id.nav_update -> {
+                    id.nav_update -> {
                         val progressDialog = showProgressDialog("Checking for updates")
                         lifecycleScope.launch {
                             withContext(Dispatchers.IO) {
@@ -167,7 +180,44 @@ class MainActivity : AppCompatActivity() {
                 true
             }
 
+            mainViewModel.getUserRole(userManager.id)
+
+            mainViewModel.userRole.observe(this@MainActivity) {
+                val navCleanItem = drawerView.menu.findItem(R.id.nav_clean)
+                navCleanItem.isVisible = it== Role.ADMIN
+            }
+
         }
+
+        mainViewModel.showToast()
+
+        mainViewModel.showNotification.observe(this) {
+            if(it != null && it) {
+                showMessage()
+            }
+        }
+    }
+
+    private fun showMessage() {
+        val messageIds = arrayOf(
+            string.healthcare,
+            string.interaction,
+            string.medical_advice
+        )
+
+        // Get the index of the last displayed message (defaulting to -1 if not found)
+        val lastIndex = storage.getInt("messageIndex")
+
+        // Compute the index of the next message
+        val nextIndex = (lastIndex + 1) % messageIds.size
+
+        // Get the string for the next message
+        val nextMessage = getString(messageIds[nextIndex])
+
+        binding.root.snackbar(nextMessage, attr.colorMissed, 10000, 110)
+
+        // Store the index of the next message
+        storage.setInt("messageIndex", nextIndex)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -195,6 +245,8 @@ class MainActivity : AppCompatActivity() {
             binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
     }
+
+
 
     /**
      * Retrieves the ID of the previous fragment from the MainViewModel.

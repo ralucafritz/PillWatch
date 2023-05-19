@@ -13,6 +13,9 @@ import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentAddMedBinding
 import com.example.pillwatch.ui.main.MainActivity
+import com.example.pillwatch.utils.extensions.ContextExtensions.snackbar
+import com.example.pillwatch.utils.extensions.ContextExtensions.toast
+import com.example.pillwatch.utils.extensions.ContextExtensions.toastTop
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -70,6 +73,19 @@ class AddMedFragment : Fragment() {
                             viewModel.medAddedId.value!!
                         )
                     )
+                    if(viewModel.interactionChecked.value != null) {
+                        binding.root.snackbar(
+                            getString(R.string.cannot_check_interaction),
+                            R.attr.colorMissed,
+                            5000
+                        )
+                    } else {
+                        binding.root.snackbar(
+                            getString(R.string.interaction),
+                            R.attr.colorMissed,
+                            10000
+                        )
+                    }
                 } catch(e: Exception) {
                     Timber.tag("AddMedFragment").e("Error found for AddMedNavigation: $e")
                 }
@@ -101,6 +117,16 @@ class AddMedFragment : Fragment() {
         viewModel.isAlertNeeded.observe(viewLifecycleOwner) {
             if (it != null && it) {
                 viewModel.isAlertNeeded(requireContext())
+            }
+        }
+
+        viewModel.showToast.observe(viewLifecycleOwner) {
+            if(it!=null) {
+                binding.root.snackbar(
+                    it,
+                    R.attr.colorMissed,
+                    5000
+                )
             }
         }
 

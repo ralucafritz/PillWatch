@@ -15,6 +15,10 @@ class MedsRepository(private val medsDao: MedsDao) {
         return medsDao.getAllMeds()
     }
 
+    fun getMedsCount(): Int {
+        return medsDao.getMedsCount()
+    }
+
     fun searchMedsWithName(medName: String): List<MedsEntity> {
         return medsDao.searchMedsWithName(medName)
     }

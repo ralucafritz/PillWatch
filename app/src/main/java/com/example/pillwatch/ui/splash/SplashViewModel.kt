@@ -11,7 +11,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -26,15 +25,11 @@ class SplashViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    companion object {
-        const val TAG = "Splash"
-    }
-
     private val _username = MutableLiveData<String>()
     val username: LiveData<String>
         get() = _username
 
-    private val _welcomeMessage = MutableLiveData<String>("Welcome")
+    private val _welcomeMessage = MutableLiveData("Welcome")
     val welcomeMessage: LiveData<String>
         get() = _welcomeMessage
 
