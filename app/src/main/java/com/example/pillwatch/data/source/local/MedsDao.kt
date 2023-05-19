@@ -24,6 +24,9 @@ interface MedsDao {
     @Query("SELECT rxcui FROM meds_table WHERE id = :medId")
     fun getRxCuiForMed(medId: Long): String
 
+    @Query("SELECT COUNT(*) FROM meds_table")
+    fun getMedsCount(): Int
+
     @Query("SELECT * FROM meds_table WHERE trade_name LIKE :inputText")
     fun getMedsWithSimilarName(inputText: String): LiveData<List<MedsEntity>>
 }

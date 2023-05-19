@@ -1,6 +1,7 @@
 package com.example.pillwatch.user
 
 import com.example.pillwatch.storage.Storage
+import com.example.pillwatch.utils.Role
 import javax.inject.Inject
 
 class UserManager @Inject constructor(
@@ -18,8 +19,7 @@ class UserManager @Inject constructor(
         get() = storage.getString("email")
 
     val id: Long
-        get() = storage.getLong("id");
-
+        get() = storage.getLong("id")
     init {
         checkLogin()
     }

@@ -12,9 +12,7 @@ import com.example.pillwatch.ui.main.MainActivity
 import com.example.pillwatch.ui.main.MedsAPIViewModel
 import com.example.pillwatch.ui.splash.welcome.WelcomeFragment
 import com.example.pillwatch.user.UserManager
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SplashActivity : AppCompatActivity() {
@@ -53,7 +51,7 @@ class SplashActivity : AppCompatActivity() {
             userManager.userComponent!!.inject(this)
             binding.viewModel = viewModel
             viewModel.checkUserExistsInDb()
-            viewModel.userInDb.observe(this) { it ->
+            viewModel.userInDb.observe(this) {
                 if (it != null && it) {
                     // User exists in the database
                     binding.mainSplash.visibility = View.VISIBLE
@@ -67,10 +65,8 @@ class SplashActivity : AppCompatActivity() {
                     viewModel.uiStatus.observe(this) { uiStatus ->
                         if (uiStatus != null && uiStatus)
                             lifecycleScope.launch {
-                                withContext(Dispatchers.IO) {
                                     medsAPIViewModel.getMedsDataFromAPI()
                                     viewModel.navigationStart()
-                                }
                             }
                     }
                     // Observe navigation check for starting the main activity

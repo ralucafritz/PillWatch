@@ -18,6 +18,9 @@ interface UserDao {
     @Query("SELECT id FROM users_table WHERE email =:email")
     fun getIdByEmail(email: String): Long?
 
+    @Query("SELECT role FROM users_table WHERE id = :userId")
+    fun getRoleById(userId: Long): Role
+
     @Query("SELECT * FROM users_table WHERE idToken =:idToken")
     fun getUserByIdToken(idToken: String): UserEntity?
 

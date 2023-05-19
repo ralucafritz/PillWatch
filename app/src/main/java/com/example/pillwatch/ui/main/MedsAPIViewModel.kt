@@ -3,6 +3,7 @@ package com.example.pillwatch.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.pillwatch.data.model.MedsEntity
 import com.example.pillwatch.data.model.MetadataEntity
 import com.example.pillwatch.data.repository.MedsRepository
@@ -52,6 +53,12 @@ class MedsAPIViewModel @Inject constructor(
      */
     suspend fun getMedsDataFromAPI(): Result<Boolean> {
         val result = withContext(Dispatchers.Main) {
+            val count = withContext(Dispatchers.IO) {
+                medsRepository.getMedsCount()
+            }
+            if(count == 0) {
+                return@withContext false
+            }
             try {
                 // call the API
                 val responseAPICall = AppApi.retrofitService.getDataset()

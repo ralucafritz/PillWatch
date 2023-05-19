@@ -3,6 +3,7 @@ package com.example.pillwatch.ui.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -20,15 +21,18 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.pillwatch.PillWatchApplication
+import com.example.pillwatch.R
 import com.example.pillwatch.R.*
 import com.example.pillwatch.alarms.AlarmSchedulerWorker
 import com.example.pillwatch.databinding.ActivityMainBinding
 import com.example.pillwatch.storage.Storage
 import com.example.pillwatch.ui.splash.SplashActivity
+import com.example.pillwatch.user.UserManager
+import com.example.pillwatch.utils.Role
 import com.example.pillwatch.utils.extensions.ContextExtensions.dismissProgressDialog
+import com.example.pillwatch.utils.extensions.ContextExtensions.isInternetConnected
 import com.example.pillwatch.utils.extensions.ContextExtensions.showProgressDialog
-import com.example.pillwatch.utils.extensions.ContextExtensions.toast
-import com.example.pillwatch.utils.extensions.ContextExtensions.toastNotifications
+import com.example.pillwatch.utils.extensions.ContextExtensions.snackbar
 import com.example.pillwatch.utils.extensions.ContextExtensions.toastTop
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.Dispatchers
@@ -55,9 +59,11 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var storage: Storage
 
+    lateinit var userManager: UserManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val userManager = (application as PillWatchApplication).appComponent.userManager()
+        userManager = (application as PillWatchApplication).appComponent.userManager()
         userManager.userComponent!!.inject(this)
 
         Timber.plant(Timber.DebugTree())
@@ -67,6 +73,9 @@ class MainActivity : AppCompatActivity() {
 
         scheduleAlarmSchedulerWorker(this, userManager.id)
 
+        if(!isInternetConnected()) {
+            toastTop("No internet connection.")
+        }
 
         // Firebase Messaging token retrieval
         val firebaseMessaging = FirebaseMessaging.getInstance()
@@ -170,6 +179,14 @@ class MainActivity : AppCompatActivity() {
                 }
                 true
             }
+
+            mainViewModel.getUserRole(userManager.id)
+
+            mainViewModel.userRole.observe(this@MainActivity) {
+                val navCleanItem = drawerView.menu.findItem(R.id.nav_clean)
+                navCleanItem.isVisible = it== Role.ADMIN
+            }
+
         }
 
         mainViewModel.showToast()
@@ -197,8 +214,7 @@ class MainActivity : AppCompatActivity() {
         // Get the string for the next message
         val nextMessage = getString(messageIds[nextIndex])
 
-        // Display the message
-        toastNotifications(nextMessage)
+        binding.root.snackbar(nextMessage, attr.colorMissed, 10000, 110)
 
         // Store the index of the next message
         storage.setInt("messageIndex", nextIndex)

@@ -1,20 +1,28 @@
 package com.example.pillwatch.utils.extensions
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.PorterDuff
+import android.graphics.Typeface
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Handler
+import android.os.Looper
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.AttrRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import com.example.pillwatch.R
+import com.google.android.material.snackbar.Snackbar
 
 object ContextExtensions {
     /**
@@ -34,19 +42,49 @@ object ContextExtensions {
         toast.show()
     }
 
-    fun Context.toastNotifications(msg: String) {
-        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val layout: View = inflater.inflate(R.layout.custom_toast_layout, null)
+    fun View.snackbar(msg:String, colorAttr: Int = -1, duration:  Long = 5000L, marginBottom: Int = 50) {
+        val snackbar = Snackbar.make(this, msg, Snackbar.LENGTH_INDEFINITE)
 
-        val text = layout.findViewById<TextView>(R.id.text)
-        text.text = msg
+        // Set margins
+        val layoutParams = snackbar.view.layoutParams as ViewGroup.MarginLayoutParams
+        layoutParams.bottomMargin = (marginBottom * resources.displayMetrics.density).toInt()
+        snackbar.view.layoutParams = layoutParams
 
-        val toast = Toast(applicationContext)
-        val marginVertical = (100 * resources.displayMetrics.density).toInt()
-        toast.duration = Toast.LENGTH_LONG
-        toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, marginVertical)
-        toast.view = layout
-        toast.show()
+
+        // Set text color and alignment
+        val snackbarTextView = snackbar.view.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
+        snackbarTextView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+
+        if(colorAttr != -1) {
+            // Set background tint color
+            val colorMissedValue = context.getThemeColor(colorAttr)
+            ViewCompat.setBackgroundTintList(
+                snackbar.view,
+                ColorStateList.valueOf(colorMissedValue)
+            )
+            snackbarTextView.setTextColor(ContextCompat.getColor(context, android.R.color.background_light))
+        }
+
+
+        // Make the text bold
+        snackbarTextView.setTypeface(snackbarTextView.typeface, Typeface.BOLD)
+
+        // Set max lines to avoid truncation
+        snackbarTextView.maxLines = Int.MAX_VALUE
+
+        snackbar.show()
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            snackbar.dismiss()
+        }, duration)  // Dismiss after 10 seconds
+    }
+
+    fun Context.getThemeColor(
+        @AttrRes attrResId: Int
+    ): Int {
+        val typedValue = TypedValue()
+        theme.resolveAttribute(attrResId, typedValue, true)
+        return typedValue.data
     }
 
     /**

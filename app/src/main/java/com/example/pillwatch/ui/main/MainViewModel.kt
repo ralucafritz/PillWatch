@@ -12,6 +12,7 @@ import com.example.pillwatch.data.repository.UserMedsRepository
 import com.example.pillwatch.data.repository.UserRepository
 import com.example.pillwatch.di.LoggedUserScope
 import com.example.pillwatch.user.UserManager
+import com.example.pillwatch.utils.Role
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -37,6 +38,10 @@ class MainViewModel @Inject constructor(
     val currentFragmentId: LiveData<Int>
         get() = _currentFragmentId
 
+    private val _userRole = MutableLiveData(Role.USER)
+    val userRole: LiveData<Role?>
+        get() = _userRole
+
     fun setCurrentFragmentId(id: Int) {
         _currentFragmentId.value = id
     }
@@ -50,8 +55,16 @@ class MainViewModel @Inject constructor(
 
     fun showToast(){
         viewModelScope.launch {
-            delay(5000)
+            delay(2000)
             _showNotification.value = true
+        }
+    }
+
+    fun getUserRole(userId: Long){
+        viewModelScope.launch {
+            _userRole.value = withContext(Dispatchers.IO) {
+                userRepository.getRoleById(userId)
+            }
         }
     }
 
@@ -85,6 +98,8 @@ class MainViewModel @Inject constructor(
             userRepository.clear()
         }
     }
+
+
 
     private suspend fun cleanUserMeds() {
         withContext(Dispatchers.IO) {
