@@ -114,7 +114,9 @@ class SettingsFragment : Fragment() {
                 userManager.theme = themeValues[which]
                 binding.themeSettingCurrent.text = themes[which]
                 dialog.dismiss()
-                showRestartDialog()
+                if(userManager.theme != currentTheme) {
+                    showRestartDialog()
+                }
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
