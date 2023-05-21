@@ -16,9 +16,9 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="signup_btn">Sign up</string>
-    <string name="confirm_password"><font size = "18">Confirm Password</font></string>
-    <string name="password"><font size = "18">Password</font></string>
-    <string name="email"><font size = "18">Email</font></string>
+    <string name="confirm_password"><font size="18">Confirm Password</font></string>
+    <string name="password"><font size="18">Password</font></string>
+    <string name="email"><font size="18">Email</font></string>
     <string name="sign_up">Sign up</string>
     <string name="dont_have_an_account">Don\'t have an account?</string>
     <string name="log_in_btn">Log in</string>
@@ -45,16 +45,19 @@
     <string name="share">Share</string>
     <string name="choose_reminder_frequency">Choose reminder frequency:</string>
     <string name="medication_name">Medication name:</string>
-    <string name ="medication_logs">Medication logs:</string>
+    <string name="medication_logs">Medication logs:</string>
     <string name="add_alarms">Add alarms</string>
     <string name="username_">Username:</string>
     <string name="email_">Email:</string>
     <string name="active_med_count">Active med count:</string>
     <string name="credits">© PillWatch 2023</string>
     <string name="healthcare">In order to ensure safe and appropriate management, talk to your healthcare practitioner if you believe you are experiencing, or may experience, a drug interaction.</string>
-    <string name ="interaction">Warning: If no interactions are found between two drugs, it does not necessarily mean that no interactions exist. Always consult with a healthcare professional.</string>
-    <string name ="medical_advice">This app does not provide medical advice. Please consult a qualified healthcare professional for personalized medical guidance.</string>
-    <string name ="cannot_check_interaction">Couldn\'t verify the interaction of this med with the existing medications.</string>
+    <string name="interaction">Warning: If no interactions are found between two drugs, it does not necessarily mean that no interactions exist. Always consult with a healthcare professional.</string>
+    <string name="medical_advice">This app does not provide medical advice. Please consult a qualified healthcare professional for personalized medical guidance.</string>
+    <string name="cannot_check_interaction">Couldn\'t verify the interaction of this med with the existing medications.</string>
+    <string name="theme">Theme</string>
+    <string name="sign_out">Sign out</string>
+    <string name="log_out">Log out</string>
 
     <string-array name="concentration_measures">
         <item>-</item>
@@ -70,6 +73,18 @@
         <item>µg/ml</item>
         <item>MU/ml</item>
         <item>UI/ml</item>
+    </string-array>
+
+    <string-array name="theme_entries">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>System Default</item>
+    </string-array>
+
+    <string-array name="theme_values">
+        <item>light</item>
+        <item>dark</item>
+        <item>system</item>
     </string-array>
 
 </resources>

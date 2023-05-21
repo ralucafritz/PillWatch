@@ -2,12 +2,13 @@ package com.example.pillwatch.ui.main
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
@@ -21,11 +22,9 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.pillwatch.PillWatchApplication
-import com.example.pillwatch.R
 import com.example.pillwatch.R.*
 import com.example.pillwatch.alarms.AlarmSchedulerWorker
 import com.example.pillwatch.databinding.ActivityMainBinding
-import com.example.pillwatch.storage.Storage
 import com.example.pillwatch.ui.splash.SplashActivity
 import com.example.pillwatch.user.UserManager
 import com.example.pillwatch.utils.Role
@@ -43,7 +42,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var navController: NavController
     private lateinit var appBarConfigurationNavBottom: AppBarConfiguration
@@ -55,9 +54,6 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var medsAPIViewModel: MedsAPIViewModel
-
-    @Inject
-    lateinit var storage: Storage
 
     lateinit var userManager: UserManager
 
@@ -73,9 +69,11 @@ class MainActivity : AppCompatActivity() {
 
         scheduleAlarmSchedulerWorker(this, userManager.id)
 
-        if(!isInternetConnected()) {
+        if (!isInternetConnected()) {
             toastTop("No internet connection.")
         }
+
+        setThemeAccordingToPreference()
 
         // Firebase Messaging token retrieval
         val firebaseMessaging = FirebaseMessaging.getInstance()
@@ -144,11 +142,7 @@ class MainActivity : AppCompatActivity() {
             drawerView.setNavigationItemSelectedListener { item ->
                 when (item.itemId) {
                     id.nav_logout -> {
-                        mainViewModel.logout()
-                        drawerLayout.closeDrawer(GravityCompat.START)
-                        val intent = Intent(this@MainActivity, SplashActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                       logout()
                     }
 
                     id.nav_clean -> {
@@ -161,13 +155,13 @@ class MainActivity : AppCompatActivity() {
                         val progressDialog = showProgressDialog("Checking for updates")
                         lifecycleScope.launch {
                             withContext(Dispatchers.IO) {
-                                medsAPIViewModel.getMedsDataFromAPI()
+                                medsAPIViewModel.getMedsDataFromAPI(false)
+                                dismissProgressDialog(
+                                    progressDialog,
+                                    medsAPIViewModel.updateDialogTitle.value!!,
+                                    medsAPIViewModel.updateMessage.value!!
+                                )
                             }
-                            dismissProgressDialog(
-                                progressDialog,
-                                medsAPIViewModel.updateDialogTitle.value!!,
-                                medsAPIViewModel.updateMessage.value!!
-                            )
                         }
                     }
 
@@ -183,8 +177,8 @@ class MainActivity : AppCompatActivity() {
             mainViewModel.getUserRole(userManager.id)
 
             mainViewModel.userRole.observe(this@MainActivity) {
-                val navCleanItem = drawerView.menu.findItem(R.id.nav_clean)
-                navCleanItem.isVisible = it== Role.ADMIN
+                val navCleanItem = drawerView.menu.findItem(id.nav_clean)
+                navCleanItem.isVisible = it == Role.ADMIN
             }
 
         }
@@ -192,7 +186,7 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.showToast()
 
         mainViewModel.showNotification.observe(this) {
-            if(it != null && it) {
+            if (it != null && it) {
                 showMessage()
             }
         }
@@ -206,7 +200,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         // Get the index of the last displayed message (defaulting to -1 if not found)
-        val lastIndex = storage.getInt("messageIndex")
+        val lastIndex = userManager.messageIndex
 
         // Compute the index of the next message
         val nextIndex = (lastIndex + 1) % messageIds.size
@@ -217,7 +211,7 @@ class MainActivity : AppCompatActivity() {
         binding.root.snackbar(nextMessage, attr.colorMissed, 10000, 110)
 
         // Store the index of the next message
-        storage.setInt("messageIndex", nextIndex)
+        userManager.setMessageIndex(nextIndex)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -246,7 +240,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+    private fun setThemeAccordingToPreference() {
+        when (userManager.theme) {
+            "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            "system" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
+    }
 
     /**
      * Retrieves the ID of the previous fragment from the MainViewModel.
@@ -275,5 +275,19 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         workManager.enqueue(oneTimeWorkRequest)
+    }
+
+    fun logout(){
+        mainViewModel.logout()
+        binding.drawerLayout.closeDrawer(GravityCompat.START)
+        val intent = Intent(this@MainActivity, SplashActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (key == "theme") {
+            setThemeAccordingToPreference()
+        }
     }
 }

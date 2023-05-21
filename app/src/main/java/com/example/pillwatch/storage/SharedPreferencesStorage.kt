@@ -49,4 +49,28 @@ class SharedPreferencesStorage @Inject constructor(context: Context) : Storage {
     override fun getInt(key:String): Int {
         return sharedPreferences.getInt(key, 0)
     }
+
+    override fun setTheme(theme: String) {
+        setString("theme", theme)
+    }
+
+    override fun getTheme(): String {
+        return sharedPreferences.getString("theme", "system")!!
+    }
+
+    override fun setMessageIndex(index: Int) {
+        setInt("messageIndex", index)
+    }
+
+    override fun getMessageIndex(): Int {
+        return getInt("messageIndex")
+    }
+
+    override fun setAlarmNotificationMessage(message: String) {
+        setString("alarmNotificationMessage", message)
+    }
+
+    override fun getAlarmNotificationMessage(): String {
+         return sharedPreferences.getString("alarmNotificationMessage", "Time to take your medication:")!!
+    }
 }

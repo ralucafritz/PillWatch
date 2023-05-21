@@ -1,5 +1,6 @@
 package com.example.pillwatch.user
 
+import com.example.pillwatch.R
 import com.example.pillwatch.storage.Storage
 import com.example.pillwatch.utils.Role
 import javax.inject.Inject
@@ -20,6 +21,7 @@ class UserManager @Inject constructor(
 
     val id: Long
         get() = storage.getLong("id")
+
     init {
         checkLogin()
     }
@@ -42,6 +44,25 @@ class UserManager @Inject constructor(
 
         userJustLoggedIn()
         return true
+    }
+
+    var theme: String
+        get() = storage.getTheme()
+        set(themeSetting: String) {
+            storage.setTheme(themeSetting)
+        }
+
+    val messageIndex: Int
+        get() = storage.getMessageIndex()
+
+    var alarmMessage: String
+        get() = storage.getAlarmNotificationMessage()
+        set(message: String) {
+            storage.setAlarmNotificationMessage(message)
+        }
+
+    fun setMessageIndex(index: Int) {
+        storage.setMessageIndex(index)
     }
 
     fun setUsername(username: String) {
