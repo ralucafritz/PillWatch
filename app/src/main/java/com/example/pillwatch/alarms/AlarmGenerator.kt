@@ -38,9 +38,11 @@ class AlarmGenerator {
             val calendar = Calendar.getInstance().apply {
                 timeInMillis = startHourInMillis
                 add(Calendar.MILLISECOND, (intervalMillis * i))
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
             }
             if (!isRegen) {
-                val alarm = AlarmEntity(UUID.randomUUID().mostSignificantBits, medId, calendar.timeInMillis, alarmTiming, true)
+                val alarm = AlarmEntity(UUID.randomUUID().mostSignificantBits and Long.MAX_VALUE, medId, calendar.timeInMillis, alarmTiming, true)
                 alarmList.add(alarm)
             } else {
                 isRegen = false

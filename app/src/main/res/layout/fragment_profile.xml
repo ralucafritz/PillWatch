@@ -158,7 +158,6 @@
             android:id="@+id/credits"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
             android:textColor="?attr/colorCredits"
             android:textSize="@dimen/text_size_medium"
             android:layout_marginBottom="25dp"

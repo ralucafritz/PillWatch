@@ -74,6 +74,10 @@ object ContextExtensions {
 
         snackbar.show()
 
+        snackbar.view.setOnClickListener {
+            snackbar.dismiss()
+        }
+
         Handler(Looper.getMainLooper()).postDelayed({
             snackbar.dismiss()
         }, duration)  // Dismiss after 10 seconds

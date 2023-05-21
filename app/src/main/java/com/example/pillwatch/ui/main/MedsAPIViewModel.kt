@@ -51,13 +51,15 @@ class MedsAPIViewModel @Inject constructor(
      * Retrieves medication data from the API and updates the local database if necessary.
      * Returns the result of the update operation.
      */
-    suspend fun getMedsDataFromAPI(): Result<Boolean> {
+    suspend fun getMedsDataFromAPI(checkCount : Boolean = true): Result<Boolean> {
         val result = withContext(Dispatchers.Main) {
-            val count = withContext(Dispatchers.IO) {
-                medsRepository.getMedsCount()
-            }
-            if(count == 0) {
-                return@withContext false
+            if(checkCount) {
+                val count = withContext(Dispatchers.IO) {
+                    medsRepository.getMedsCount()
+                }
+                if (count != 0) {
+                    return@withContext false
+                }
             }
             try {
                 // call the API

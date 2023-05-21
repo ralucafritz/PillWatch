@@ -14,6 +14,7 @@ import com.example.pillwatch.R
 import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.data.repository.AlarmRepository
 import com.example.pillwatch.data.repository.UserMedsRepository
+import com.example.pillwatch.storage.Storage
 import com.example.pillwatch.utils.TakenStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +30,9 @@ class AlarmReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var userMedsRepository: UserMedsRepository
+
+    @Inject
+    lateinit var storage: Storage
 
     @Inject
     lateinit var alarmHandler: AlarmHandler
@@ -113,11 +117,13 @@ class AlarmReceiver : BroadcastReceiver() {
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
             Timber.tag("ALARM RECEIVER").d("notif builder")
+            val alarmMessage = storage.getAlarmNotificationMessage()
+            val name = med.tradeName
             val notificationBuilder =
                 NotificationCompat.Builder(context, "pill_watch_channel")
                     .setSmallIcon(R.drawable.ic_logo_pills_light)
                     .setContentTitle("Pill Reminder")
-                    .setContentText("Time to take your medication: ${med.tradeName}")
+                    .setContentText("$alarmMessage $name")
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .addAction(0, "OK", okPendingIntent)
                     .addAction(0, "Postpone", postponePendingIntent)
