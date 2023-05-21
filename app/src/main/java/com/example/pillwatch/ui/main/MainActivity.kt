@@ -156,12 +156,12 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                         lifecycleScope.launch {
                             withContext(Dispatchers.IO) {
                                 medsAPIViewModel.getMedsDataFromAPI(false)
-                                dismissProgressDialog(
-                                    progressDialog,
-                                    medsAPIViewModel.updateDialogTitle.value!!,
-                                    medsAPIViewModel.updateMessage.value!!
-                                )
                             }
+                            dismissProgressDialog(
+                                progressDialog,
+                                medsAPIViewModel.updateDialogTitle.value!!,
+                                medsAPIViewModel.updateMessage.value!!
+                            )
                         }
                     }
 
