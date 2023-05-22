@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.util.UUID
 
 @Entity(
     tableName = "user_meds_table",
@@ -20,11 +21,12 @@ import androidx.room.PrimaryKey
     )],
     indices = [Index("userId"), Index("medId")]
 )
+
 data class UserMedsEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
+    @PrimaryKey
+    val id: String = UUID.randomUUID().toString(),
     val tradeName: String,
-    val userId: Long,
+    val userId: String,
     val medId: Long? = null,
     val concentration: String? = "",
     val isArchived: Boolean? = false

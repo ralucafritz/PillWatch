@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.example.pillwatch.utils.TakenStatus
+import java.util.UUID
 
 @Entity(
     tableName = "meds_log_table",
@@ -17,9 +18,9 @@ import com.example.pillwatch.utils.TakenStatus
     indices = [Index("medId")]
 )
 data class MedsLogEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
-    val medId: Long,
+    @PrimaryKey
+    val id: String = UUID.randomUUID().toString(),
+    val medId: String,
     val status: TakenStatus,
     val timestamp: Long
 )

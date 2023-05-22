@@ -40,7 +40,8 @@ class ProfileViewModel @Inject constructor(
         userManager.setUsername(updatedName)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                userRepository.updateUserName(userManager.id, updatedName)
+                val userId = userManager.id
+                userRepository.updateUsername(userId, updatedName)
             }
         }
     }

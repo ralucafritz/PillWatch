@@ -28,8 +28,8 @@ class MedicationViewModel @Inject constructor(
     // LiveData to hold the list of user medications
     private val _userMedsList = MutableLiveData<List<UserMedsEntity>>(listOf())
 
-    private val _logs = MutableLiveData<List<List<Long>>>()
-    val logs: LiveData<List<List<Long>>>
+    private val _logs = MutableLiveData<List<List<Int>>>()
+    val logs: LiveData<List<List<Int>>>
         get() = _logs
 
     /**
@@ -40,7 +40,7 @@ class MedicationViewModel @Inject constructor(
     suspend fun getMedsList(): List<UserMedsEntity> {
         val medsList = withContext(Dispatchers.IO) {
             val userId = userManager.id
-             if (userId != -1L) {
+             if (userId != "") {
                 userMedsRepository.getAllMedsForUser(userId)
             } else {
                 null
@@ -85,7 +85,7 @@ class MedicationViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val medsList = _userMedsList.value ?: return@withContext
-                val logsList = mutableListOf<List<Long>>()
+                val logsList = mutableListOf<List<Int>>()
 
                 medsList.forEach { med ->
                     val takenCount =

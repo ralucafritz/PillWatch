@@ -2,9 +2,11 @@ package com.example.pillwatch.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "meds_table")
+@Entity(tableName = "meds_table",
+    indices = [Index(value = ["trade_name", "concentration"], unique = true)])
 data class MedsEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

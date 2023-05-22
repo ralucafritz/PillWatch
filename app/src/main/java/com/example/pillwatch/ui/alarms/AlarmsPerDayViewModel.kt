@@ -3,7 +3,6 @@ package com.example.pillwatch.ui.alarms
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.example.pillwatch.alarms.AlarmGenerator
 import com.example.pillwatch.alarms.AlarmHandler
@@ -37,7 +36,7 @@ class AlarmsPerDayViewModel @Inject constructor(
     val seekBarValues = arrayOf(1, 2, 3, 4, 6, 8, 12)
 
     // Variable to hold the ID of the medication
-    var medId: Long = 0L
+    var medId: String = ""
 
     // Variable to store the selected alarm timing option
     var alarmTiming: AlarmTiming = AlarmTiming.NO_REMINDERS
@@ -60,8 +59,7 @@ class AlarmsPerDayViewModel @Inject constructor(
     /**
      * Updates the start hour for generating alarms.
      *
-     * @param hourOfDay The selected hour of the day.
-     * @param minute The selected minute.
+     * @param selectedTime The selected time of the day
      */
     fun updateStartHour(selectedTime: Calendar) {
         this.startHour.value = selectedTime
@@ -74,7 +72,7 @@ class AlarmsPerDayViewModel @Inject constructor(
     /**
      * Coroutine function to generate alarms based on the selected options.
      */
-    suspend fun generateAlarms() {
+    fun generateAlarms() {
         val alarmsList = alarmGenerator.generateAlarms(
             alarmTiming,
             medId,
@@ -120,13 +118,14 @@ class AlarmsPerDayViewModel @Inject constructor(
     fun scheduleAlarms() {
         viewModelScope.launch {
              withContext(Dispatchers.IO) {
-                alarmRepository.clearForMedId(medId)
+                alarmRepository.clearForMedId(medId) }
+            withContext(Dispatchers.IO) {
                 alarmRepository.insertAll(_alarmsList.value!!)
                  _alarmsList.postValue(alarmRepository.getAlarmsByMedId(medId))
             }
             val enabledAlarms = _alarmsList.value!!.filter { it.isEnabled }
             enabledAlarms.forEach { alarm ->
-                alarmHandler.scheduleAlarm(alarm.id.toInt(), alarm.timeInMillis)
+                alarmHandler.scheduleAlarm(alarm.id, alarm.timeInMillis)
             }
         }
     }

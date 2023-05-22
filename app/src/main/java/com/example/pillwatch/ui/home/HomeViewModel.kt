@@ -31,7 +31,7 @@ class HomeViewModel @Inject constructor(
         val medsList = withContext(Dispatchers.IO) {
             val userId = userManager.id
             val filteredList: MutableList<Pair<UserMedsEntity, Long>> = mutableListOf()
-            val list = if (userId != -1L) {
+            val list = if (userId !=  "") {
                 userMedsRepository.getAllMedsForUser(userId)
             } else {
                 null

@@ -12,11 +12,11 @@ import com.example.pillwatch.databinding.ItemMedsListBinding
 class MedsListAdapter(
     private val context: Context,
     private val medList: List<UserMedsEntity>,
-    private val logList: List<List< Long>>
+    private val logList: List<List< Int>>
     ) :
     RecyclerView.Adapter<MedsListAdapter.MedsViewHolder>() {
 
-    var onItemClick: ((Long) -> Unit)? = null
+    var onItemClick: ((String) -> Unit)? = null
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): MedsViewHolder {
         val binding =
@@ -40,7 +40,7 @@ class MedsListAdapter(
     class MedsViewHolder(private val binding: ItemMedsListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(med: UserMedsEntity, logs: List<Long>, context: Context) {
+        fun bind(med: UserMedsEntity, logs: List<Int>, context: Context) {
             // Set the truncated or full medication name based on the length
             if (med.tradeName.length >= 15) {
                 val truncated = med.tradeName.substring(0, 14) + "..."

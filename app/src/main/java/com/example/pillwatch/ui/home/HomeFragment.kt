@@ -70,9 +70,9 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    private fun startNavigation(medId: Long = -1L) {
+    private fun startNavigation(medId: String = "") {
         try {
-            if (medId == -1L) {
+            if (medId == "") {
                 this@HomeFragment.findNavController().navigate(
                     HomeFragmentDirections.actionHomeFragmentToAddMedFragment()
                 )

@@ -1,9 +1,13 @@
 package com.example.pillwatch.di
 
+import com.example.pillwatch.data.repository.AlarmFirestoreRepository
 import com.example.pillwatch.data.repository.AlarmRepository
+import com.example.pillwatch.data.repository.MedsLogFirestoreRepository
 import com.example.pillwatch.data.repository.MedsLogRepository
 import com.example.pillwatch.data.repository.MedsRepository
 import com.example.pillwatch.data.repository.MetadataRepository
+import com.example.pillwatch.data.repository.UserFirestoreRepository
+import com.example.pillwatch.data.repository.UserMedsFirestoreRepository
 import com.example.pillwatch.data.repository.UserMedsRepository
 import com.example.pillwatch.data.repository.UserRepository
 import com.example.pillwatch.data.source.local.AlarmDao
@@ -18,8 +22,16 @@ import dagger.Provides
 @Module
 class RepositoryModule {
     @Provides
-    fun provideUserRepository(userDao: UserDao): UserRepository {
-        return UserRepository(userDao)
+    fun provideUserRepository(
+        userDao: UserDao,
+        userFirestoreRepository: UserFirestoreRepository
+    ): UserRepository {
+        return UserRepository(userDao, userFirestoreRepository)
+    }
+
+    @Provides
+    fun provideUserFirestoreRep(): UserFirestoreRepository{
+        return UserFirestoreRepository()
     }
 
     @Provides
@@ -28,8 +40,16 @@ class RepositoryModule {
     }
 
     @Provides
-    fun provideMedsLogRepository(medsLogDao: MedsLogDao): MedsLogRepository {
-        return MedsLogRepository(medsLogDao)
+    fun provideMedsLogRepository(
+        medsLogDao: MedsLogDao,
+        medsLogFirestoreRepository: MedsLogFirestoreRepository
+    ): MedsLogRepository {
+        return MedsLogRepository(medsLogDao, medsLogFirestoreRepository)
+    }
+
+    @Provides
+    fun provideMedsLogFirestoreRep(): MedsLogFirestoreRepository{
+        return MedsLogFirestoreRepository()
     }
 
     @Provides
@@ -38,12 +58,28 @@ class RepositoryModule {
     }
 
     @Provides
-    fun provideAlarmRepository(alarmDao: AlarmDao): AlarmRepository {
-        return AlarmRepository(alarmDao)
+    fun provideAlarmRepository(
+        alarmDao: AlarmDao,
+        alarmFirestoreRepository: AlarmFirestoreRepository
+    ): AlarmRepository {
+        return AlarmRepository(alarmDao, alarmFirestoreRepository)
     }
 
     @Provides
-    fun provideUserMedsRepository(userMedsDao: UserMedsDao): UserMedsRepository {
-        return UserMedsRepository(userMedsDao)
+    fun provideAlarmFirestoreRep(): AlarmFirestoreRepository{
+        return AlarmFirestoreRepository()
+    }
+
+    @Provides
+    fun provideUserMedsRepository(
+        userMedsDao: UserMedsDao,
+        userMedsFirestoreRepository: UserMedsFirestoreRepository
+    ): UserMedsRepository {
+        return UserMedsRepository(userMedsDao, userMedsFirestoreRepository)
+    }
+
+    @Provides
+    fun provideUserMedsFirestoreRep(): UserMedsFirestoreRepository{
+        return UserMedsFirestoreRepository()
     }
 }

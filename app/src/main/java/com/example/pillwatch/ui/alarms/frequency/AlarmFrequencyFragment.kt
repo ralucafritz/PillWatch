@@ -48,7 +48,7 @@ class AlarmFrequencyFragment : Fragment() {
         setupRadioGroup()
 
         binding.buttonNext.setOnClickListener {
-            if (medId != -1L && viewModel.selectedOption.value != null) {
+            if (medId != "" && viewModel.selectedOption.value != null) {
                 try {
                     if (viewModel.selectedOption.value != AlarmTiming.NO_REMINDERS) {
                         this.findNavController().navigate(

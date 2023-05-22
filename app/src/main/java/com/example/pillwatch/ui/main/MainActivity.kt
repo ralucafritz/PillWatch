@@ -257,7 +257,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         return mainViewModel.currentFragmentId.value
     }
 
-    private fun scheduleAlarmSchedulerWorker(context: Context, userId: Long) {
+    private fun scheduleAlarmSchedulerWorker(context: Context, userId: String) {
         val workManager = WorkManager.getInstance(context)
 
         Timber.d("WORKER USER ID = $userId")

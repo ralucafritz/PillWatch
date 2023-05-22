@@ -10,7 +10,7 @@ class AlarmGenerator {
 
     fun generateAlarms(
         alarmTiming: AlarmTiming,
-        medId: Long,
+        medId: String,
         everyXHours: Int,
         startHourInMillis: Long,
         regenCheck: Boolean = false
@@ -43,7 +43,7 @@ class AlarmGenerator {
                 set(Calendar.MILLISECOND, 0)
             }
             if (!isRegen) {
-                val alarm = AlarmEntity(Random.nextInt().toLong(), medId, calendar.timeInMillis, alarmTiming, true)
+                val alarm = AlarmEntity(UUID.randomUUID().toString(), medId, calendar.timeInMillis, alarmTiming, true, everyXHours)
                 alarmList.add(alarm)
             } else {
                 isRegen = false

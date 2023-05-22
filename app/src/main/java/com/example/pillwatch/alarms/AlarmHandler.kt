@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -41,10 +42,10 @@ class AlarmHandler @Inject constructor(
      * @param alarm The alarm for which the log entry is created.
      * @param status The status of the medication (taken, postponed, missed).
      */
-    fun createMedsLog(medId: Long, status: TakenStatus) {
+    fun createMedsLog(medId: String, status: TakenStatus) {
         CoroutineScope(Dispatchers.IO).launch {
             val timestamp = System.currentTimeMillis()
-            val medsLog = MedsLogEntity(medId = medId, status = status, timestamp = timestamp)
+            val medsLog = MedsLogEntity(UUID.randomUUID().toString(), medId = medId, status = status, timestamp = timestamp)
             medsLogRepository.insert(medsLog)
         }
     }
@@ -55,9 +56,9 @@ class AlarmHandler @Inject constructor(
      * @param alarm The alarm to be rescheduled.
      */
     fun rescheduleAlarm(alarm: AlarmEntity) {
-        cancelAlarm(alarm.id.toInt())
+        cancelAlarm(alarm.id)
         if (alarm.isEnabled) {
-            scheduleAlarm(alarm.id.toInt(), alarm.timeInMillis)
+            scheduleAlarm(alarm.id, alarm.timeInMillis)
         }
     }
 
@@ -67,14 +68,14 @@ class AlarmHandler @Inject constructor(
      * @param alarmId The ID of the alarm.
      * @param alarmTime The time at which the alarm should be triggered.
      */
-    fun scheduleAlarm(alarmId: Int, alarmTime: Long) {
+    fun scheduleAlarm(alarmId: String, alarmTime: Long) {
         if (alarmTime > System.currentTimeMillis()) {
             val alarmIntent = Intent(context, AlarmReceiver::class.java).apply {
                 putExtra("ALARM_ID", alarmId)
             }
             val pendingIntent = PendingIntent.getBroadcast(
                 context,
-                alarmId,
+                alarmId.hashCode(),
                 alarmIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
@@ -92,14 +93,14 @@ class AlarmHandler @Inject constructor(
      *
      * @param alarmId The ID of the alarm to be canceled.
      */
-    fun cancelAlarm(alarmId: Int) {
+    fun cancelAlarm(alarmId: String) {
         val alarmIntent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("ALARM_ID", alarmId)
         }
 
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            alarmId,
+            alarmId.hashCode(),
             alarmIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -115,7 +116,7 @@ class AlarmHandler @Inject constructor(
     fun postponeAlarm(alarm: AlarmEntity) {
         createMedsLog(alarm.medId, TakenStatus.POSTPONED)
         val postponeTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5)
-        scheduleAlarm(alarm.id.toInt(), postponeTime)
+        scheduleAlarm(alarm.id, postponeTime)
         Timber.tag("ALARM HANDLER").d("Postponed scheduled alarm ${alarm.id} ")
     }
 
@@ -125,7 +126,7 @@ class AlarmHandler @Inject constructor(
      * @param alarmId The ID of the missed alarm.
      * @param alarmTime The original time of the missed alarm.
      */
-    fun missedAlarm(alarmId: Int, originalTime: Long, alarmTime: Long) {
+    fun missedAlarm(alarmId: String, originalTime: Long, alarmTime: Long) {
         val alarmIntent = Intent(context, AlarmReceiver::class.java).apply {
             action = "MISSED_CHECK_ACTION"
             putExtra("ALARM_ID", alarmId)
@@ -134,7 +135,7 @@ class AlarmHandler @Inject constructor(
         }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            alarmId,
+            alarmId.hashCode(),
             alarmIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -153,7 +154,7 @@ class AlarmHandler @Inject constructor(
      * @param missedCheckTime The time of the missed check.
      */
 
-    fun checkLogsForTakenOrPostponed(medId: Long, originalTime: Long, missedCheckTime: Long) {
+    fun checkLogsForTakenOrPostponed(medId: String, originalTime: Long, missedCheckTime: Long) {
         CoroutineScope(Dispatchers.IO).launch {
             val logEntries =
                 medsLogRepository.getLogInTimeframeByMedId(medId, originalTime, missedCheckTime)
@@ -168,7 +169,7 @@ class AlarmHandler @Inject constructor(
      *
      * @param medId The ID of the medication for which to reschedule alarms.
      */
-    fun scheduleNextAlarms(medId: Long) {
+    fun scheduleNextAlarms(medId: String) {
         CoroutineScope(Dispatchers.IO).launch {
             Timber.tag("ALARM HANDLER").d("Reschedule and regen alarms for med no. $medId")
             val currentTime = System.currentTimeMillis()
@@ -180,7 +181,7 @@ class AlarmHandler @Inject constructor(
                 alarmRepository.insertAll(newAlarmList)
 
                 newAlarmList.forEach { alarm ->
-                    scheduleAlarm(alarm.id.toInt(), alarm.timeInMillis)
+                    scheduleAlarm(alarm.id, alarm.timeInMillis)
                 }
             }
         }

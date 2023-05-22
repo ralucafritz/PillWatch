@@ -5,6 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pillwatch.data.model.UserEntity
+import com.example.pillwatch.data.repository.AlarmRepository
+import com.example.pillwatch.data.repository.MedsLogRepository
+import com.example.pillwatch.data.repository.UserMedsRepository
 import com.example.pillwatch.data.repository.UserRepository
 import com.example.pillwatch.di.ActivityScope
 import com.example.pillwatch.utils.AuthResultProperty
@@ -31,7 +35,10 @@ import kotlin.coroutines.suspendCoroutine
 @ActivityScope
 class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val userManager: UserManager
+    private val userManager: UserManager,
+    private val userMedsRepository: UserMedsRepository,
+    private val alarmRepository: AlarmRepository,
+    private val medsLogRepository: MedsLogRepository
 ) :
     ViewModel() {
 
@@ -112,25 +119,26 @@ class LoginViewModel @Inject constructor(
                         withContext(Dispatchers.IO) {
                             // find user in firebase
                             signInWithEmailAndPassword(email, password)
-                        }
-                        if (_firebaseListener.value!!) {
-                            // successful -> try to get user from local db
-                            val user = userRepository.getUserByEmail(email)
-                            if (user != null) {
-                                /**
-                                 * if found
-                                 * set the login status to true
-                                 * save the email for easier use
-                                 * save the id for easier use
-                                 * save the username for easier use
-                                 * */
-                                userManager.loginUser(user.id, user.email, user.username)
-                                _loginResult.postValue(true)
-                                Timber.tag("$FIREBASE $TAG").d("$FIREBASE $LOGIN_SUCCESS $user")
-                            } else {
-                                errorLogin(FIREBASE, NO_USER)
-                                Timber.tag("$FIREBASE $TAG").d("$FIREBASE $NO_USER")
-                                TODO("IMPLEMENT WHEN REALTIME DB WORKS")
+                            if (_firebaseListener.value!!) {
+                                // successful -> try to get user from local db
+                                val user = userRepository.getUserByEmail(email)
+                                if (user != null) {
+                                    /**
+                                     * if found
+                                     * set the login status to true
+                                     * save the email for easier use
+                                     * save the id for easier use
+                                     * save the username for easier use
+                                     * */
+                                    userManager.loginUser(user.id, user.email, user.username)
+                                    _loginResult.postValue(true)
+                                    Timber.tag("$FIREBASE $TAG").d("$FIREBASE $LOGIN_SUCCESS $user")
+                                } else {
+                                    errorLogin(FIREBASE, NO_USER)
+                                    Timber.tag("$FIREBASE $TAG").d("$FIREBASE $NO_USER")
+                                    // check if user is in the local database
+                                    localLogin(email, password)
+                                }
                             }
                         }
                     } catch (e: Exception) {
@@ -142,38 +150,49 @@ class LoginViewModel @Inject constructor(
                         val exceptionMessage = handleFirebaseException(e)
                         errorLogin(SignupViewModel.FIREBASE, exceptionMessage)
                     }
+                } else {
+                    localLogin(email, password)
                 }
             }
-            if (_loginResult.value == null) {
-                val user = withContext(Dispatchers.IO) { userRepository.getUserByEmail(email) }
+        }
+    }
 
-                if (user == null) {
-                    /**
-                     * user == null  => user is already in the database
-                     * set the login status to false
-                     * show error alert
-                     * log the error
-                     **/
-                    errorLogin("", NO_USER)
-                } else if (checkPassword(password, user.password)) {
-                    /**
-                     * if the user != null && password check passes=> was logged in successfully
-                     * set the login status to true
-                     * save the email for easier use
-                     * save the id for easier use
-                     * save the username for easier use -> in this case is null cause it's a new user
-                     **/
-                    userManager.loginUser(user.id,user.email, user.username)
-                    _loginResult.postValue(true)
+    private fun localLogin(email: String, password: String) {
+        viewModelScope.launch {
+            val user = withContext(Dispatchers.IO) { userRepository.getUserByEmail(email) }
+
+            if (user == null) {
+                /**
+                 * user == null  => user is already in the database
+                 * set the login status to false
+                 * show error alert
+                 * log the error
+                 **/
+                errorLogin("", NO_USER)
+            } else if (checkPassword(password, user.password)) {
+                /**
+                 * if the user != null && password check passes=> was logged in successfully
+                 * set the login status to true
+                 * save the email for easier use
+                 * save the id for easier use
+                 * save the username for easier use -> in this case is null cause it's a new user
+                 **/
+                val cloudUser = getDataFromCloudByEmail(user.email)
+                val username: String? = if (cloudUser != null) {
+                    cloudUser.username
                 } else {
-                    /**
-                     * confirm fails => incorrect password
-                     * set the login status to false
-                     * show error alert
-                     * log the error
-                     **/
-                    errorLogin("", INCORRECT_PWD)
+                    user.username
                 }
+                userManager.loginUser(user.id, user.email, username)
+                _loginResult.postValue(true)
+            } else {
+                /**
+                 * confirm fails => incorrect password
+                 * set the login status to false
+                 * show error alert
+                 * log the error
+                 **/
+                errorLogin("", INCORRECT_PWD)
             }
         }
     }
@@ -204,7 +223,7 @@ class LoginViewModel @Inject constructor(
                     if (authResult.success && authResult.email != null) {
                         // if the sign in is successful, insert the user into the database
                         val email = authResult.email!!
-                        val user = userRepository.signup(email)
+                        val user = userRepository.signup(email, "", true)
                         if (user != null) {
                             /**
                              * if the user != null => was created/logged in  successfully
@@ -213,14 +232,19 @@ class LoginViewModel @Inject constructor(
                              * save the id for easier use
                              * save the username for easier use
                              **/
-                            userManager.loginUser(user.id, user.email, user.username)
+                            val cloudUser = getDataFromCloudByEmail(user.email)
+                            val username: String? = if (cloudUser != null) {
+                                cloudUser.username
+                            } else {
+                                user.username
+                            }
+                            userManager.loginUser(user.id, user.email, username)
                             Timber.tag(TAG).w("$GOOGLE $LOGIN_SUCCESS")
                             true
                         } else {
                             _alertMsg.value = Pair("An error occurred", "Error")
                             false
                         }
-
                     } else {
                         _alertMsg.value = Pair("An error occurred", "Error")
                         false
@@ -293,6 +317,7 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
+
     fun isInternetConnected(bool: Boolean) {
         isConnected.value = bool
     }
@@ -310,4 +335,38 @@ class LoginViewModel @Inject constructor(
         Timber.tag(TAG).e(errMsg)
     }
 
+    private suspend fun getDataFromCloudByEmail(email: String): UserEntity? {
+        return withContext(Dispatchers.IO) {
+            val user = userRepository.getUserFromCloudByEmail(email)
+            user?.let {
+                userRepository.updateUsername(it.id, it.username ?: "")
+// Load userMeds for the userId
+                val userMedsList = userMedsRepository.getUserMedsFromCloudByUserId(it.id)
+                if (userMedsList.isEmpty()) {
+                    return@withContext it
+                }
+                userMedsList.forEach { userMed ->
+                    userMed?.let {
+                        userMedsRepository.insert(userMed)
+                        // Load alarms for the userMedsId
+                        val alarmsList = alarmRepository.getAlarmsFromCloudByMedId(userMed.id)
+                        alarmsList.forEach { alarm ->
+                            alarm?.let { alarmEntity ->
+                                alarmRepository.insert(alarmEntity)
+                            }
+                            // Load medsLog for the userMedsId
+                            val medsLogList =
+                                medsLogRepository.getMedsLogsFromCloudByMedId(userMed.id)
+                            medsLogList.forEach { medsLog ->
+                                medsLog?.let { medsLogEntity ->
+                                    medsLogRepository.insert(medsLogEntity)
+                                }
+                            }
+                        }
+                    }
+                }
+                user
+            }
+        }
+    }
 }

@@ -52,7 +52,7 @@ class MedPageViewModel @Inject constructor(
      *
      * @param id The ID of the medication.
      */
-    fun getMedEntity(id: Long) {
+    fun getMedEntity(id: String) {
         viewModelScope.launch {
             _medEntity.value = withContext(Dispatchers.IO) {
                 userMedsRepository.getMedById(id)
@@ -91,7 +91,7 @@ class MedPageViewModel @Inject constructor(
     private fun sortAlarms(updatedAlarm: AlarmEntity) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                alarmRepository.clearForMedId(medEntity.value!!.id)
+                alarmRepository.updateAlarm(updatedAlarm)
             }
             _alarmsList.value?.let {
                 val updatedList = it.map { alarm ->
@@ -102,9 +102,6 @@ class MedPageViewModel @Inject constructor(
                     }
                 }.sortedBy { alarm -> alarm.timeInMillis }
                 _alarmsList.value = updatedList
-            }
-            withContext(Dispatchers.IO) {
-                alarmRepository.insertAll(_alarmsList.value!!.toList())
             }
         }
     }
@@ -118,7 +115,7 @@ class MedPageViewModel @Inject constructor(
                 if(_alarmsList.value != null)
                     _alarmsList.value!!.forEach {
                         // Cancel all associated alarms
-                        alarmHandler.cancelAlarm(it.id.toInt())
+                        alarmHandler.cancelAlarm(it.id)
                     }
                 // Delete the medication from the repository
                 userMedsRepository.deleteById(_medEntity.value!!.id)

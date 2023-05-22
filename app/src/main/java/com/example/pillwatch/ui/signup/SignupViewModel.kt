@@ -2,6 +2,10 @@ package com.example.pillwatch.ui.signup
 
 import android.util.Patterns
 import androidx.lifecycle.*
+import com.example.pillwatch.data.model.UserEntity
+import com.example.pillwatch.data.repository.AlarmRepository
+import com.example.pillwatch.data.repository.MedsLogRepository
+import com.example.pillwatch.data.repository.UserMedsRepository
 import com.example.pillwatch.data.repository.UserRepository
 import com.example.pillwatch.di.ActivityScope
 import com.example.pillwatch.user.UserManager
@@ -25,7 +29,10 @@ import kotlin.coroutines.suspendCoroutine
 @ActivityScope
 class SignupViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val userManager: UserManager
+    private val userManager: UserManager,
+    private val userMedsRepository: UserMedsRepository,
+    private val alarmRepository: AlarmRepository,
+    private val medsLogRepository: MedsLogRepository
 ) : ViewModel() {
 
     // SIGN UP WITH EMAIL AND PASSWORD
@@ -60,8 +67,6 @@ class SignupViewModel @Inject constructor(
 
     val username: String
         get() = userManager.username
-
-    private val _firebaseListener = MutableLiveData<Boolean>()
 
     private val _alertMsg = MutableLiveData<Pair<String, String>>()
 
@@ -117,15 +122,17 @@ class SignupViewModel @Inject constructor(
                             firebaseAuth.createUserWithEmailAndPassword(email, password)
                                 .addOnCompleteListener {
                                     if (it.isSuccessful) {
-                                        _firebaseListener.postValue(true)
+                                        _signupResult.postValue(true)
                                         Timber.tag(TAG)
                                             .d("$FIREBASE $SIGNUP_SUCCESS: $firebaseUser ")
                                     } else {
-                                        _firebaseListener.postValue(false)
+                                        _signupResult.postValue(false)
                                         Timber.tag(TAG).d("$FIREBASE $SIGNUP_FAIL")
                                     }
                                 }
+
                         }
+                        localSignup(email, password)
                     } catch (e: Exception) {
                         /**
                          * failed -> log the error
@@ -135,19 +142,17 @@ class SignupViewModel @Inject constructor(
                         val exceptionMessage = handleFirebaseException(e)
                         errorSignup(FIREBASE, exceptionMessage)
                     }
+                } else {
+                    localSignup(email, password)
                 }
             }
-            // if the value of  @_signupResult is false => leave the coroutine  and function
-            // aka signup failed
+        }
+    }
 
-            if (_signupResult.value == false) {
-                return@launch
-            }
-
-            // otherwise, start the process of adding the user to the local database
-            val user = withContext(Dispatchers.IO) {
-                userRepository.signup(email, password)
-            }
+    private suspend fun localSignup(email: String, password: String) {
+        // otherwise, start the process of adding the user to the local database
+        withContext(Dispatchers.IO) {
+            val user = userRepository.signup(email, password, true)
             /**
              * if the user != null => was created successfully
              * set the login status to true
@@ -167,7 +172,6 @@ class SignupViewModel @Inject constructor(
             }
         }
     }
-
 
     // SIGN UP WITH GOOGLE
     fun signupWithGoogle(signInAccountTask: Task<GoogleSignInAccount>) {
@@ -194,9 +198,9 @@ class SignupViewModel @Inject constructor(
                 withContext(Dispatchers.IO) {
                     val authResult = signInWithCredential(credential)
                     if (authResult.success && authResult.email != null) {
-                        // Ii the sign in is successful, insert the user into the database
+                        // If the sign in is successful, insert the user into the database
                         val email = authResult.email!!
-                        val user = userRepository.signup(email)
+                        val user = userRepository.signup(email, "", true)
                         if (user != null) {
                             /**
                              * if the user != null => was created/ logged in  successfully
@@ -205,7 +209,13 @@ class SignupViewModel @Inject constructor(
                              * save the id for easier use
                              * save the username for easier use
                              **/
-                            userManager.loginUser(user.id, user.email, user.username)
+                            val cloudUser = getDataFromCloudByEmail(user.email)
+                            val username: String? = if (cloudUser != null) {
+                                cloudUser.username
+                            } else {
+                                user.username
+                            }
+                            userManager.loginUser(user.id, user.email, username)
                             true
                         } else {
                             _alertMsg.value = Pair("An error occurred", "Error")
@@ -246,7 +256,6 @@ class SignupViewModel @Inject constructor(
             is FirebaseAuthUserCollisionException -> {
                 EMAIL_TAKEN_ERR
             }
-
             else -> {
                 exception!!.stackTraceToString()
             }
@@ -268,6 +277,41 @@ class SignupViewModel @Inject constructor(
         }
 
         Timber.tag(TAG).e(errMsg)
+    }
+
+    private suspend fun getDataFromCloudByEmail(email: String): UserEntity? {
+        return withContext(Dispatchers.IO) {
+            val user = userRepository.getUserFromCloudByEmail(email)
+            user?.let {
+                userRepository.updateUsername(it.id, it.username ?: "")
+// Load userMeds for the userId
+                val userMedsList = userMedsRepository.getUserMedsFromCloudByUserId(it.id)
+                if (userMedsList.isEmpty()) {
+                    return@withContext it
+                }
+                userMedsList.forEach { userMed ->
+                    userMed?.let {
+                        userMedsRepository.insert(userMed)
+                        // Load alarms for the userMedsId
+                        val alarmsList = alarmRepository.getAlarmsFromCloudByMedId(userMed.id)
+                        alarmsList.forEach { alarm ->
+                            alarm?.let { alarmEntity ->
+                                alarmRepository.insert(alarmEntity)
+                            }
+                            // Load medsLog for the userMedsId
+                            val medsLogList =
+                                medsLogRepository.getMedsLogsFromCloudByMedId(userMed.id)
+                            medsLogList.forEach { medsLog ->
+                                medsLog?.let { medsLogEntity ->
+                                    medsLogRepository.insert(medsLogEntity)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            user
+        }
     }
 
 }

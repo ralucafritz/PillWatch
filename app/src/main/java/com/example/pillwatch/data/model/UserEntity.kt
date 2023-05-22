@@ -4,20 +4,22 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.pillwatch.utils.Role
+import com.google.firebase.encoders.annotations.Encodable
+import com.google.firebase.firestore.IgnoreExtraProperties
 import java.util.UUID
 
 @Entity(tableName = "users_table")
 data class UserEntity(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id")
-    val id: Long = 0L,
+    @PrimaryKey
+    val id: String = UUID.randomUUID().toString(),
 
     @ColumnInfo(name = "email")
     val email: String,
 
     @ColumnInfo(name = "username")
-    val username: String?,
+    var username: String?,
 
+    @Transient
     @ColumnInfo(name = "password")
     val password: String,
 

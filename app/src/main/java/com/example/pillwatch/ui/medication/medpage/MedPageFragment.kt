@@ -142,8 +142,8 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
     /**
      * Navigates to the medication page, the home page or the set alarm frequency page.
      */
-    private fun navigate(previousFragment: Int?, id: Long = -1L) {
-        if (id == -1L) {
+    private fun navigate(previousFragment: Int?, id: String = "") {
+        if (id == "") {
             when (previousFragment) {
                 R.id.medicationFragment -> {
                     this@MedPageFragment.findNavController().navigate(

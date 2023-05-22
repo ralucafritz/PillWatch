@@ -19,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.util.UUID
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -52,8 +53,8 @@ class AddMedViewModel @Inject constructor(
     private val severityModerate: MutableList<Pair<String, String>> = mutableListOf()
     private val severityLow: MutableList<Pair<String, String>> = mutableListOf()
 
-    private val _medAddedId = MutableLiveData<Long?>()
-    val medAddedId: LiveData<Long?>
+    private val _medAddedId = MutableLiveData<String?>()
+    val medAddedId: LiveData<String?>
         get() = _medAddedId
 
     private val _navigationCheck = MutableLiveData<Boolean?>()
@@ -135,7 +136,7 @@ class AddMedViewModel @Inject constructor(
                         _medAddedId.value = withContext(Dispatchers.IO) {
                             userMedsRepository.insert(
                                 UserMedsEntity(
-                                    0L,
+                                    UUID.randomUUID().toString(),
                                     name,
                                     userId,
                                     medId,
@@ -143,7 +144,7 @@ class AddMedViewModel @Inject constructor(
                                 )
                             )
                         }
-                        if (_medAddedId.value != null) {
+                        if (_medAddedId.value != null && _medAddedId.value != "") {
                             _navigationCheck.value = true
                         }
                     } else {
@@ -156,7 +157,7 @@ class AddMedViewModel @Inject constructor(
                     _medAddedId.value = withContext(Dispatchers.IO) {
                         userMedsRepository.insert(
                             UserMedsEntity(
-                                0L,
+                                UUID.randomUUID().toString(),
                                 medName.value!!,
                                 userId,
                                 null,
@@ -212,7 +213,7 @@ class AddMedViewModel @Inject constructor(
      * @param medId The ID of the selected medication.
      * @param userId The ID of the user.
      */
-    private fun checkInteraction(medId: Long, userId: Long) {
+    private fun checkInteraction(medId: Long, userId: String) {
         viewModelScope.launch {
             // get rxcui based on the medId from Db
             val medIdRxCui = withContext(Dispatchers.IO) {
@@ -357,5 +358,4 @@ class AddMedViewModel @Inject constructor(
         _navigationCheck.value = null
         _medAddedId.value = null
     }
-
 }

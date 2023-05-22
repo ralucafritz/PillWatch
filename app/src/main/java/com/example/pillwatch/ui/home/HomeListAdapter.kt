@@ -12,7 +12,7 @@ import java.util.Locale
 class HomeListAdapter(private val medList: MutableList<Pair<UserMedsEntity, Long>>) :
     RecyclerView.Adapter<HomeListAdapter.HomeViewHolder>() {
 
-    var onItemClick: ((Long) -> Unit)? = null
+    var onItemClick: ((String) -> Unit)? = null
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): HomeViewHolder {
         val binding =

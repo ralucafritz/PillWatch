@@ -60,7 +60,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getUserRole(userId: Long){
+    fun getUserRole(userId: String){
         viewModelScope.launch {
             _userRole.value = withContext(Dispatchers.IO) {
                 userRepository.getRoleById(userId)

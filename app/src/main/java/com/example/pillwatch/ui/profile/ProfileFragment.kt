@@ -7,18 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentProfileBinding
 import com.example.pillwatch.ui.main.MainActivity
-import com.example.pillwatch.ui.medication.medpage.MedPageFragmentDirections
-import com.example.pillwatch.ui.profile.ProfileFragment.Companion.countZero
-import com.example.pillwatch.ui.profile.ProfileFragment.Companion.emailNotFound
-import com.example.pillwatch.ui.profile.ProfileFragment.Companion.usernameNotFound
 import timber.log.Timber
 import javax.inject.Inject
 

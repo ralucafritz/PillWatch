@@ -87,7 +87,8 @@ class AlarmsListAdapter(
                             selectedTime.get(Calendar.DAY_OF_MONTH) != currentTime.get(Calendar.DAY_OF_MONTH))
                         {
                             selectedTime.set(Calendar.DAY_OF_MONTH, currentTime.get(Calendar.DAY_OF_MONTH))
-                        } else if(selectedTime.get(Calendar.DAY_OF_MONTH) == currentTime.get(Calendar.DAY_OF_MONTH)) {
+                        } else if(selectedTime.get(Calendar.HOUR_OF_DAY) < currentTime.get(Calendar.HOUR_OF_DAY) &&
+                            selectedTime.get(Calendar.DAY_OF_MONTH) == currentTime.get(Calendar.DAY_OF_MONTH)) {
                             selectedTime.add(Calendar.DAY_OF_MONTH, 1)
                         }
 
