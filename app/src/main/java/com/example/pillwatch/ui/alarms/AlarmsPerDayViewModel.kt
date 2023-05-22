@@ -119,9 +119,10 @@ class AlarmsPerDayViewModel @Inject constructor(
      */
     fun scheduleAlarms() {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
+             withContext(Dispatchers.IO) {
                 alarmRepository.clearForMedId(medId)
                 alarmRepository.insertAll(_alarmsList.value!!)
+                 _alarmsList.postValue(alarmRepository.getAlarmsByMedId(medId))
             }
             val enabledAlarms = _alarmsList.value!!.filter { it.isEnabled }
             enabledAlarms.forEach { alarm ->

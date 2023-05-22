@@ -53,7 +53,7 @@ class PillWatchApplication : Application() {
         val channel = NotificationChannel("pill_watch_channel", name, importance).apply {
             description = descriptionText
         }
-
+        channel.enableVibration(true)
         val notificationManager: NotificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
