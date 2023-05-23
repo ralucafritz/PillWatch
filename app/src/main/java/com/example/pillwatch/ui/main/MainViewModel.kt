@@ -38,12 +38,24 @@ class MainViewModel @Inject constructor(
     val currentFragmentId: LiveData<Int>
         get() = _currentFragmentId
 
+    private val _previousFragmentId = MutableLiveData<Int>()
+    val previousFragmentId: LiveData<Int>
+        get() = _previousFragmentId
+
     private val _userRole = MutableLiveData(Role.USER)
     val userRole: LiveData<Role?>
         get() = _userRole
 
+    private val _refreshUI = MutableLiveData<Boolean>()
+    val refreshUI: LiveData<Boolean>
+        get() = _refreshUI
+
     fun setCurrentFragmentId(id: Int) {
         _currentFragmentId.value = id
+    }
+
+    fun setPreviousFragment(id: Int) {
+        _previousFragmentId.value = id
     }
 
     fun logout() {
@@ -53,14 +65,14 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun showToast(){
+    fun showToast() {
         viewModelScope.launch {
             delay(2000)
             _showNotification.value = true
         }
     }
 
-    fun getUserRole(userId: Long){
+    fun getUserRole(userId: String) {
         viewModelScope.launch {
             _userRole.value = withContext(Dispatchers.IO) {
                 userRepository.getRoleById(userId)
@@ -100,7 +112,6 @@ class MainViewModel @Inject constructor(
     }
 
 
-
     private suspend fun cleanUserMeds() {
         withContext(Dispatchers.IO) {
             userMedsRepository.clear()
@@ -117,5 +128,51 @@ class MainViewModel @Inject constructor(
         withContext(Dispatchers.IO) {
             medsLogRepository.clear()
         }
+    }
+
+    fun getDataFromCloud() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                // Load userMeds for the userId
+                val userMedsList = userMedsRepository.getUserMedsFromCloudByUserId(userManager.id)
+                if (userMedsList.isEmpty()) {
+                    return@withContext
+                }
+                userMedsList.forEach { userMed ->
+                    userMed?.let {
+                        // Check if userMeds exists in the db
+                        val userMedsExists = userMedsRepository.getMedById(userMed.id)
+                        if (userMedsExists == null) {
+                            userMedsRepository.insert(userMed)
+                        }
+                        // Load alarms for the userMedsId
+                        val alarmsList = alarmRepository.getAlarmsFromCloudByMedId(userMed.id)
+                        alarmsList.forEach { alarm ->
+                            alarm?.let {
+                                // Check if alarm exists in the db
+                                val alarmExists = alarmRepository.getAlarmById(alarm.id)
+                                if (alarmExists == null) {
+                                    alarmRepository.insert(alarm)
+                                }
+                            }
+                        }
+                        // Load medsLog for the userMedsId
+                        val medsLogList =
+                            medsLogRepository.getMedsLogsFromCloudByMedId(userMed.id)
+                        medsLogList.forEach { medsLog ->
+                            medsLog?.let { medsLogEntity ->
+                                // Check if medsLog exists in the db
+                                val medsLogExists = medsLogRepository.getMedsLogById(medsLogEntity.id)
+                                if (medsLogExists == null) {
+                                    medsLogRepository.insert(medsLogEntity)
+                                }
+                            }
+                        }
+                    }
+                }
+                _refreshUI.postValue(true)
+            }
+        }
+        userManager.justLoggedInStatus = false
     }
 }

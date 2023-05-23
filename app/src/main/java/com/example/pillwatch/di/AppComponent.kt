@@ -2,6 +2,9 @@ package com.example.pillwatch.di
 
 import android.content.Context
 import com.example.pillwatch.alarms.AlarmReceiver
+import com.example.pillwatch.data.repository.AlarmRepository
+import com.example.pillwatch.data.repository.MedsLogRepository
+import com.example.pillwatch.data.repository.UserMedsRepository
 import com.example.pillwatch.ui.alarms.AlarmsPerDayFragment
 import com.example.pillwatch.ui.login.LoginComponent
 import com.example.pillwatch.ui.medication.medpage.MedPageFragment
@@ -33,4 +36,7 @@ interface AppComponent {
     fun inject(fragment: AlarmsPerDayFragment)
     fun inject(fragment: MedPageFragment)
     fun inject(alarmReceiver: AlarmReceiver)
+    fun provideUserMedsRepository(): UserMedsRepository
+    fun provideAlarmRepository(): AlarmRepository
+    fun provideMedsLogRepository(): MedsLogRepository
 }

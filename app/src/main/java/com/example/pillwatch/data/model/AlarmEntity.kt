@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.example.pillwatch.utils.AlarmTiming
+import java.util.UUID
 
 @Entity(
     tableName = "alarms_table",
@@ -17,12 +18,12 @@ import com.example.pillwatch.utils.AlarmTiming
     indices = [Index("medId")]
 )
 data class AlarmEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
-    val medId: Long,
-    var timeInMillis: Long,
-    var alarmTiming: AlarmTiming,
-    var isEnabled: Boolean,
-    var everyXHours: Int = 0
+    @PrimaryKey
+    val id: String = UUID.randomUUID().toString(),
+    val medId: String = "",
+    var timeInMillis: Long = 0L,
+    var alarmTiming: AlarmTiming = AlarmTiming.NO_REMINDERS,
+    var isEnabled: Boolean = true,
+    var everyXHours: Int = 4
 ) {
 }

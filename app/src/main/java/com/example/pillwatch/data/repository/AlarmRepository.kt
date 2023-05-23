@@ -3,35 +3,53 @@ package com.example.pillwatch.data.repository
 import androidx.lifecycle.LiveData
 import com.example.pillwatch.data.source.local.AlarmDao
 import com.example.pillwatch.data.model.AlarmEntity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class AlarmRepository(private val alarmDao: AlarmDao) {
+class AlarmRepository(
+    private val alarmDao: AlarmDao,
+    private val alarmFirestoreRepository: AlarmFirestoreRepository
+) {
 
-    fun insert(alarm: AlarmEntity): Long {
-        return alarmDao.insert(alarm)
+    suspend fun insert(alarm: AlarmEntity): String {
+        return withContext(Dispatchers.IO) {
+            alarmDao.insert(alarm)
+            alarm.id
+        }
     }
 
-    fun insertAll(alarmList: List<AlarmEntity>) {
-        alarmDao.insertAll(alarmList)
+    suspend fun insertAll(alarmList: List<AlarmEntity>) {
+        withContext(Dispatchers.IO) {
+            alarmDao.insertAll(alarmList)
+            alarmList.forEach {
+                alarmFirestoreRepository.addAlarm(it)
+            }
+        }
     }
 
-    fun updateAlarm(alarm: AlarmEntity) {
-        alarmDao.updateAlarm(alarm.id, alarm.timeInMillis, alarm.isEnabled)
+    suspend fun updateAlarm(alarm: AlarmEntity) {
+        withContext(Dispatchers.IO) {
+            alarmDao.updateAlarm(alarm.id, alarm.timeInMillis, alarm.isEnabled)
+            alarmFirestoreRepository.updateAlarm(alarm)
+        }
     }
 
-    fun clearForMedId(medId: Long) {
-        alarmDao.clearForMedId(medId)
+    suspend fun clearForMedId(medId: String) {
+        withContext(Dispatchers.IO) {
+            alarmFirestoreRepository.deleteAlarm(medId)
+            alarmDao.clearForMedId(medId)
+        }
     }
 
-    fun getAlarmById(alarmId: Long): AlarmEntity {
+    fun getAlarmById(alarmId: String): AlarmEntity {
         return alarmDao.getAlarmById(alarmId)
     }
 
-    fun getLastAlarmByMedId(medId: Long): AlarmEntity {
+    fun getLastAlarmByMedId(medId: String): AlarmEntity {
         return alarmDao.getLastAlarmByMedId(medId)
     }
 
-    fun getAlarmsByMedId(medId: Long): List<AlarmEntity> {
+    fun getAlarmsByMedId(medId: String): List<AlarmEntity> {
         return alarmDao.getAlarmsByMedId(medId)
     }
 
@@ -39,12 +57,24 @@ class AlarmRepository(private val alarmDao: AlarmDao) {
         return alarmDao.getAllAlarms()
     }
 
-    fun getNextAlarmBeforeMidnight(medId: Long, currentTimeInMillis: Long, midnightInMillis: Long): AlarmEntity? {
+    fun getNextAlarmBeforeMidnight(
+        medId: String,
+        currentTimeInMillis: Long,
+        midnightInMillis: Long
+    ): AlarmEntity? {
         return alarmDao.getNextAlarmBeforeMidnight(medId, currentTimeInMillis, midnightInMillis)
     }
 
-    fun clear() {
-        alarmDao.clear()
+    suspend fun clear() {
+        return withContext(Dispatchers.IO) {
+            alarmDao.clear()
+            alarmFirestoreRepository.cleanAlarms()
+        }
     }
 
+    suspend fun getAlarmsFromCloudByMedId(medId: String): List<AlarmEntity?> {
+        return withContext(Dispatchers.IO) {
+            alarmFirestoreRepository.getAlarmsByMedId(medId)
+        }
+    }
 }

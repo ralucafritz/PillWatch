@@ -1,8 +1,6 @@
 package com.example.pillwatch.user
 
-import com.example.pillwatch.R
 import com.example.pillwatch.storage.Storage
-import com.example.pillwatch.utils.Role
 import javax.inject.Inject
 
 class UserManager @Inject constructor(
@@ -19,15 +17,15 @@ class UserManager @Inject constructor(
     val email: String
         get() = storage.getString("email")
 
-    val id: Long
-        get() = storage.getLong("id")
+    val id: String
+        get() = storage.getString("id")
 
     init {
         checkLogin()
     }
 
     private fun checkLogin() {
-        if (id != -1L && email != "") {
+        if (id != "" && email != "") {
             loginUser(id, email, username)
         }
     }
@@ -37,11 +35,11 @@ class UserManager @Inject constructor(
         return userComponent != null
     }
 
-    fun loginUser(id: Long, email: String, username: String?): Boolean {
-        storage.setLong("id", id)
+    fun loginUser(id: String, email: String, username: String?): Boolean {
+        storage.setString("id", id)
         storage.setString("email", email)
         storage.setString("username", username ?: "")
-
+        storage.setBoolean("justLoggedIn", true)
         userJustLoggedIn()
         return true
     }
@@ -61,6 +59,12 @@ class UserManager @Inject constructor(
             storage.setAlarmNotificationMessage(message)
         }
 
+    var justLoggedInStatus: Boolean
+        get() = storage.getBoolean("justLoggedIn")
+        set(bool: Boolean) {
+            storage.setBoolean("justLoggedIn", bool)
+        }
+
     fun setMessageIndex(index: Int) {
         storage.setMessageIndex(index)
     }
@@ -69,10 +73,12 @@ class UserManager @Inject constructor(
         storage.setString("username", username)
     }
 
+
     fun logout() {
-        storage.setLong("id", -1L)
+        storage.setString("id", "")
         storage.setString("email", "")
         storage.setString("username", "")
+        storage.setBoolean("justLoggedIn", false)
         userComponent = null
     }
 

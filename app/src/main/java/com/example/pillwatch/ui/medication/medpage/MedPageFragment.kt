@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -136,14 +137,25 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
             adapter.updateAlarms(viewModel.alarmsList.value!!)
         }
 
+//        // This callback will only be called when MyFragment is at least Started.
+//        val callback = object : OnBackPressedCallback(true) {
+//            override fun handleOnBackPressed() {
+//                // Handle the back button event
+//                navigate(previousFragment, id)
+//            }
+//        }
+//
+//        // Enable the callback directly
+//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
         return binding.root
     }
 
     /**
      * Navigates to the medication page, the home page or the set alarm frequency page.
      */
-    private fun navigate(previousFragment: Int?, id: Long = -1L) {
-        if (id == -1L) {
+    private fun navigate(previousFragment: Int?, id: String = "") {
+        if (id == "") {
             when (previousFragment) {
                 R.id.medicationFragment -> {
                     this@MedPageFragment.findNavController().navigate(

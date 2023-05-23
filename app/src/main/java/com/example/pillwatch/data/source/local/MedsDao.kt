@@ -6,6 +6,10 @@ import com.example.pillwatch.data.model.MedsEntity
 
 @Dao
 interface MedsDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun upsert(meds: List<MedsEntity>)
+
     @Insert
     fun insertAll(medDataList: List<MedsEntity>)
 

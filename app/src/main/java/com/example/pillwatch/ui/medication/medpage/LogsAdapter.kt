@@ -21,7 +21,7 @@ class LogsAdapter(
 ) :
     RecyclerView.Adapter<LogsAdapter.LogsViewHolder>() {
 
-    var onItemClick: ((Long) -> Unit)? = null
+    var onItemClick: ((String) -> Unit)? = null
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): LogsViewHolder {
         val binding =

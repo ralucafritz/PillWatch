@@ -1,46 +1,80 @@
 package com.example.pillwatch.data.repository
 
-import android.provider.SyncStateContract.Helpers.insert
 import com.example.pillwatch.data.source.local.UserDao
 import com.example.pillwatch.data.model.UserEntity
 import com.example.pillwatch.utils.Role
 import com.example.pillwatch.utils.hashPassword
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.UUID
 
-class UserRepository(private val userDao: UserDao) {
+class UserRepository(
+    private val userDao: UserDao,
+    private val userFirestoreRepository: UserFirestoreRepository
+) {
 
-    suspend fun insert(email: String, password: String): UserEntity? {
+    suspend fun insert(
+        email: String,
+        password: String,
+        addToFirestore: Boolean = false
+    ): UserEntity {
         return withContext(Dispatchers.IO) {
             val hashedUser =
                 UserEntity(
-                    0L,
+                    UUID.randomUUID().toString(),
                     email,
                     null,
                     password,
                     null,
                     Role.USER
                 )
-            val id = userDao.insert(hashedUser)
-            hashedUser.copy(id = id)
-        }
+            userDao.insert(hashedUser)
 
+            if (addToFirestore) {
+                userFirestoreRepository.addUser(hashedUser)
+            }
+
+            hashedUser
+        }
     }
 
-    suspend fun signup(email: String, password: String = "") : UserEntity?{
+    suspend fun signup(
+        email: String,
+        password: String = "",
+        addToFirestore: Boolean = false
+    ): UserEntity? {
         return withContext(Dispatchers.IO) {
             val user = userDao.getUserByEmail(email)
-            if (user != null  ) {
-                if(password!=""){
+            if (user != null) {
+                if (password != "") {
                     null
-                }
-                else {
+                } else {
                     user
                 }
             } else {
-                val hashedPassword = hashPassword(password)
-                insert(email, hashedPassword)
+                val newPassword = if (password == "") {
+                    UUID.randomUUID().toString()
+                } else {
+                    password
+                }
+                val hashedPassword = hashPassword(newPassword)
+                insert(email, hashedPassword, addToFirestore)
             }
+        }
+    }
+
+    suspend fun signup(
+        userEntity: UserEntity
+    ) {
+        return withContext(Dispatchers.IO) {
+            userDao.insert(userEntity)
+        }
+    }
+
+
+    suspend fun getUserFromCloudByEmail(email: String): UserEntity? {
+        return withContext(Dispatchers.IO) {
+            userFirestoreRepository.getUserByEmail(email)
         }
     }
 
@@ -50,7 +84,7 @@ class UserRepository(private val userDao: UserDao) {
         }
     }
 
-    suspend fun getUserById(id: Long): UserEntity? {
+    suspend fun getUserById(id: String): UserEntity? {
         return withContext(Dispatchers.IO) {
             userDao.getUserById(id)
         }
@@ -59,16 +93,23 @@ class UserRepository(private val userDao: UserDao) {
     suspend fun clear() {
         withContext(Dispatchers.IO) {
             userDao.clear()
+            userFirestoreRepository.clearUsers()
         }
     }
 
-    suspend fun getIdByEmail(email: String): Long? {
+    suspend fun deleteUser(userId: String) {
+        withContext(Dispatchers.IO) {
+            userFirestoreRepository.deleteUser(userId)
+        }
+    }
+
+    suspend fun getIdByEmail(email: String): String? {
         return withContext(Dispatchers.IO) {
             userDao.getIdByEmail(email)
         }
     }
 
-    suspend fun getRoleById(userId:Long): Role? {
+    suspend fun getRoleById(userId: String): Role? {
         return withContext(Dispatchers.IO) {
             userDao.getRoleById(userId)
         }
@@ -80,23 +121,16 @@ class UserRepository(private val userDao: UserDao) {
         }
     }
 
-    suspend fun getUserNameById(id: Long): String? {
+    suspend fun getUserNameById(id: String): String? {
         return withContext(Dispatchers.IO) {
             userDao.getUserNameById(id)
         }
     }
 
-    suspend fun updateUserName(userId: Long, newName: String) {
+    suspend fun updateUsername(userId: String, username: String) {
         withContext(Dispatchers.IO) {
-            userDao.updateUserName(userId, newName)
-        }
-
-    }
-
-    suspend fun updateUserRole(userId: Long, newRole: Role) {
-        withContext(Dispatchers.IO) {
-            userDao.updateUserRole(userId, newRole)
+            userDao.updateUserName(userId, username)
+            userFirestoreRepository.updateUsername(userId, username)
         }
     }
-
 }

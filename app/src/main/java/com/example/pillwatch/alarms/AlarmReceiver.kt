@@ -40,15 +40,15 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         (context.applicationContext as PillWatchApplication).appComponent.inject(this)
         val action = intent.action
-        val alarmId = intent.getIntExtra("ALARM_ID", -1)
+        val alarmId = intent.getStringExtra("ALARM_ID")
 
-        if (alarmId == -1) {
+        if (alarmId.isNullOrEmpty()) {
             Timber.e("Invalid alarm ID")
             return
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            val alarm = alarmRepository.getAlarmById(alarmId!!.toLong())
+            val alarm = alarmRepository.getAlarmById(alarmId!!)
             if (alarm != null) {
                 when (action) {
                     "OK_ACTION" -> handleOkAction(alarm, context, intent)
@@ -95,24 +95,24 @@ class AlarmReceiver : BroadcastReceiver() {
             Timber.tag("ALARM RECEIVER").d("ok intent")
             val okIntent = Intent(context, AlarmReceiver::class.java).apply {
                 action = "OK_ACTION"
-                putExtra("ALARM_ID", alarm.id.toInt())
-                putExtra("NOTIFICATION_ID", alarm.id.toInt())
+                putExtra("ALARM_ID", alarm.id)
+                putExtra("NOTIFICATION_ID", alarm.id)
             }
             val okPendingIntent = PendingIntent.getBroadcast(
                 context,
-                alarm.id.toInt(),
+                alarm.id.hashCode(),
                 okIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
             Timber.tag("ALARM RECEIVER").d("postpone intent")
             val postponeIntent = Intent(context, AlarmReceiver::class.java).apply {
                 action = "POSTPONE_ACTION"
-                putExtra("ALARM_ID", alarm.id.toInt())
-                putExtra("NOTIFICATION_ID", alarm.id.toInt())
+                putExtra("ALARM_ID", alarm.id)
+                putExtra("NOTIFICATION_ID", alarm.id)
             }
             val postponePendingIntent = PendingIntent.getBroadcast(
                 context,
-                alarm.id.toInt(),
+                alarm.id.hashCode(),
                 postponeIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
@@ -145,7 +145,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 // for ActivityCompat#requestPermissions for more details.
                 return@launch
             }
-            notificationManager.notify(alarm.id.toInt(), notificationBuilder)
+            notificationManager.notify(alarm.id.hashCode(), notificationBuilder)
             Timber.tag("ALARM RECEIVER").d("alarm sound")
 
             // Play default alarm sound and vibrate for 30 seconds
@@ -158,7 +158,7 @@ class AlarmReceiver : BroadcastReceiver() {
             val currentTime = System.currentTimeMillis()
             val missedAlarmTime =
                 System.currentTimeMillis() + (60 * 60 * 1000) // 1 hour from now
-            alarmHandler.missedAlarm(alarm.id.toInt(), currentTime, missedAlarmTime)
+            alarmHandler.missedAlarm(alarm.id, currentTime, missedAlarmTime)
 
             // Schedule the next set of alarms
             alarmHandler.scheduleNextAlarms(med.id)

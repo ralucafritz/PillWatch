@@ -4,12 +4,13 @@ import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.utils.AlarmTiming
 import java.util.Calendar
 import java.util.UUID
+import kotlin.random.Random
 
 class AlarmGenerator {
 
     fun generateAlarms(
         alarmTiming: AlarmTiming,
-        medId: Long,
+        medId: String,
         everyXHours: Int,
         startHourInMillis: Long,
         regenCheck: Boolean = false
@@ -42,7 +43,7 @@ class AlarmGenerator {
                 set(Calendar.MILLISECOND, 0)
             }
             if (!isRegen) {
-                val alarm = AlarmEntity(UUID.randomUUID().mostSignificantBits and Long.MAX_VALUE, medId, calendar.timeInMillis, alarmTiming, true)
+                val alarm = AlarmEntity(UUID.randomUUID().toString(), medId, calendar.timeInMillis, alarmTiming, true, everyXHours)
                 alarmList.add(alarm)
             } else {
                 isRegen = false

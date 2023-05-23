@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @ActivityScope
 class UsernameCreationViewModel @Inject constructor(
-    private val repository: UserRepository,
+    private val userRepository: UserRepository,
     private val userManager: UserManager
 ) : ViewModel() {
 
@@ -55,15 +55,12 @@ class UsernameCreationViewModel @Inject constructor(
      */
     fun updateUsername() {
         viewModelScope.launch {
-            val userId = userManager.id
             withContext(Dispatchers.IO) {
-                repository.updateUserName(
-                    userId,
-                    username.value!!
-                )
+                val userId = userManager.id
+                userRepository.updateUsername(userId, username.value!!)
+                userManager.setUsername(username.value!!)
+                _updateComplete.postValue(true)
             }
-            userManager.setUsername(username.value!!)
-            _updateComplete.value = true
         }
     }
 }

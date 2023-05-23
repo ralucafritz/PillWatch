@@ -65,7 +65,6 @@ object ContextExtensions {
             snackbarTextView.setTextColor(ContextCompat.getColor(context, android.R.color.background_light))
         }
 
-
         // Make the text bold
         snackbarTextView.setTypeface(snackbarTextView.typeface, Typeface.BOLD)
 
@@ -160,10 +159,4 @@ object ContextExtensions {
         progressDialog.dismiss()
         showAlert(message, title)
     }
-
-    private fun Context.isDarkTheme(): Boolean {
-        return resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-    }
-
-
 }

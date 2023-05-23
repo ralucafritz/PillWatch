@@ -14,8 +14,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class AlarmSchedulerWorker @Inject constructor(
-    private val context: Context,
-    private val workerParams: WorkerParameters
+    context: Context,
+    workerParams: WorkerParameters
 ) : CoroutineWorker(context, workerParams) {
 
     @Inject
@@ -58,7 +58,7 @@ class AlarmSchedulerWorker @Inject constructor(
         }
     }
 
-    private fun scheduleAndGenerateAlarmsForMed(medId: Long, alarms: List<AlarmEntity>, currentTime: Long) {
+    private fun scheduleAndGenerateAlarmsForMed(medId: String, alarms: List<AlarmEntity>, currentTime: Long) {
         val medAlarms = alarms.filter { it.medId == medId && it.isEnabled }
 
         if (medAlarms.isNotEmpty()) {

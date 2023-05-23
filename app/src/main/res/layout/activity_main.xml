@@ -58,7 +58,7 @@
                     android:layout_gravity="start|center_vertical"
                     android:layout_marginStart="10dp"
                     android:src="@drawable/ic_menu"
-                    app:tint="?attr/colorOnPrimarySurface"
+                    app:tint="?attr/colorOnPrimary"
                     tools:ignore="ContentDescription,RtlSymmetry" />
 
                 <TextView
@@ -70,6 +70,7 @@
                     android:textColor="?attr/colorOnPrimary"
                     android:textSize="@dimen/text_size_big"
                     tools:text="RaluTest"
+                    android:drawableTint="?attr/colorOnPrimary"
                     app:drawableEndCompat="@drawable/ic_arrow_down" />
 
             </LinearLayout>
