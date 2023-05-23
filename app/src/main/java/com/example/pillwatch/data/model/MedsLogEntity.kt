@@ -20,7 +20,7 @@ import java.util.UUID
 data class MedsLogEntity(
     @PrimaryKey
     val id: String = UUID.randomUUID().toString(),
-    val medId: String,
-    val status: TakenStatus,
-    val timestamp: Long
+    val medId: String = "",
+    val status: TakenStatus = TakenStatus.MISSED,
+    val timestamp: Long = 0L
 )

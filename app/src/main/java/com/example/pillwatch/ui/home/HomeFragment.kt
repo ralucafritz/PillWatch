@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentHomeBinding
@@ -20,7 +21,8 @@ import javax.inject.Inject
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
-
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: HomeListAdapter
     @Inject
     lateinit var viewModel: HomeViewModel
 
@@ -47,27 +49,27 @@ class HomeFragment : Fragment() {
         // Lifecycle
         binding.lifecycleOwner = this
 
-        val recyclerView = binding.homeList
+        recyclerView = binding.homeList
         recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerViewImplementation()
+        binding.btnAdd.setOnClickListener {
+            startNavigation()
+        }
 
+        return binding.root
+    }
+
+    fun recyclerViewImplementation() {
         lifecycleScope.launch {
             val medsList = viewModel.getMedsList()
             if (medsList != null) {
-                val adapter = HomeListAdapter(medsList)
+                adapter = HomeListAdapter(medsList)
                 recyclerView.adapter = adapter
-
                 adapter.onItemClick = {
                     startNavigation(it)
                 }
             }
         }
-
-        binding.btnAdd.setOnClickListener {
-            startNavigation()
-        }
-
-
-        return binding.root
     }
 
     private fun startNavigation(medId: String = "") {

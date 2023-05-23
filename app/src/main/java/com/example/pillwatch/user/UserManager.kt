@@ -39,7 +39,7 @@ class UserManager @Inject constructor(
         storage.setString("id", id)
         storage.setString("email", email)
         storage.setString("username", username ?: "")
-
+        storage.setBoolean("justLoggedIn", true)
         userJustLoggedIn()
         return true
     }
@@ -59,6 +59,12 @@ class UserManager @Inject constructor(
             storage.setAlarmNotificationMessage(message)
         }
 
+    var justLoggedInStatus: Boolean
+        get() = storage.getBoolean("justLoggedIn")
+        set(bool: Boolean) {
+            storage.setBoolean("justLoggedIn", bool)
+        }
+
     fun setMessageIndex(index: Int) {
         storage.setMessageIndex(index)
     }
@@ -67,10 +73,12 @@ class UserManager @Inject constructor(
         storage.setString("username", username)
     }
 
+
     fun logout() {
         storage.setString("id", "")
         storage.setString("email", "")
         storage.setString("username", "")
+        storage.setBoolean("justLoggedIn", false)
         userComponent = null
     }
 

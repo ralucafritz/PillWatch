@@ -20,10 +20,10 @@ import java.util.UUID
 data class AlarmEntity(
     @PrimaryKey
     val id: String = UUID.randomUUID().toString(),
-    val medId: String,
-    var timeInMillis: Long,
-    var alarmTiming: AlarmTiming,
-    var isEnabled: Boolean,
+    val medId: String = "",
+    var timeInMillis: Long = 0L,
+    var alarmTiming: AlarmTiming = AlarmTiming.NO_REMINDERS,
+    var isEnabled: Boolean = true,
     var everyXHours: Int = 4
 ) {
 }

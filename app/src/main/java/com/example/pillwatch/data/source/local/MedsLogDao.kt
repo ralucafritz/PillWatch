@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.pillwatch.data.model.MedsLogEntity
+import com.example.pillwatch.data.model.UserMedsEntity
 import com.example.pillwatch.utils.TakenStatus
 
 @Dao
@@ -20,6 +21,9 @@ interface MedsLogDao {
 
     @Query("SELECT COUNT(*) FROM meds_log_table WHERE medId = :medId AND status = :status")
     fun getLogCountByStatus(medId: String, status: TakenStatus): Int
+
+    @Query("SELECT * FROM meds_log_table WHERE id = :id")
+    fun getMedsLogById(id: String): MedsLogEntity
 
     @Query("DELETE FROM meds_log_table")
     fun clear()

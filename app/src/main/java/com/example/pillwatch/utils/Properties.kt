@@ -1,8 +1,11 @@
 package com.example.pillwatch.utils
 
+import androidx.room.ColumnInfo
+import androidx.room.PrimaryKey
 import com.google.firebase.auth.AuthResult
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.util.UUID
 
 data class MedsDataShaProperty(
     val file: List<MedsDataProperty>,

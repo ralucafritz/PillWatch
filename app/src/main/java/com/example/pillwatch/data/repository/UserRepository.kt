@@ -52,7 +52,7 @@ class UserRepository(
                     user
                 }
             } else {
-                val newPassword = if(password == "" ) {
+                val newPassword = if (password == "") {
                     UUID.randomUUID().toString()
                 } else {
                     password
@@ -63,7 +63,16 @@ class UserRepository(
         }
     }
 
-    suspend fun getUserFromCloudByEmail(email:String): UserEntity? {
+    suspend fun signup(
+        userEntity: UserEntity
+    ) {
+        return withContext(Dispatchers.IO) {
+            userDao.insert(userEntity)
+        }
+    }
+
+
+    suspend fun getUserFromCloudByEmail(email: String): UserEntity? {
         return withContext(Dispatchers.IO) {
             userFirestoreRepository.getUserByEmail(email)
         }

@@ -12,7 +12,7 @@ class MedsLogRepository(
     private val medsLogFirestoreRepository: MedsLogFirestoreRepository
 ) {
 
-    suspend  fun insert(medsLog: MedsLogEntity): String {
+    suspend fun insert(medsLog: MedsLogEntity): String {
         return withContext(Dispatchers.IO) {
             medsLogFirestoreRepository.addMedsLog(medsLog)
             medsLogDao.insert(medsLog)
@@ -26,7 +26,11 @@ class MedsLogRepository(
         }
     }
 
-    suspend fun getLogInTimeframeByMedId(medId: String, startTime: Long, endTime: Long): List<MedsLogEntity> {
+    suspend fun getLogInTimeframeByMedId(
+        medId: String,
+        startTime: Long,
+        endTime: Long
+    ): List<MedsLogEntity> {
         return withContext(Dispatchers.IO) {
             medsLogDao.getLogInTimeframeByMedId(medId, startTime, endTime)
         }
@@ -42,6 +46,12 @@ class MedsLogRepository(
         return withContext(Dispatchers.IO) {
             medsLogFirestoreRepository.cleanMedsLogs()
             medsLogDao.clear()
+        }
+    }
+
+    suspend fun getMedsLogById(id: String): MedsLogEntity {
+        return withContext(Dispatchers.IO) {
+            medsLogDao.getMedsLogById(id)
         }
     }
 

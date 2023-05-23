@@ -9,6 +9,7 @@ import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
@@ -22,9 +23,15 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.pillwatch.PillWatchApplication
+import com.example.pillwatch.R
 import com.example.pillwatch.R.*
 import com.example.pillwatch.alarms.AlarmSchedulerWorker
 import com.example.pillwatch.databinding.ActivityMainBinding
+import com.example.pillwatch.ui.alarms.AlarmsPerDayFragment
+import com.example.pillwatch.ui.alarms.AlarmsPerDayFragmentArgs
+import com.example.pillwatch.ui.alarms.AlarmsPerDayFragmentDirections
+import com.example.pillwatch.ui.home.HomeFragment
+import com.example.pillwatch.ui.medication.medpage.MedPageFragmentDirections
 import com.example.pillwatch.ui.splash.SplashActivity
 import com.example.pillwatch.user.UserManager
 import com.example.pillwatch.utils.Role
@@ -74,6 +81,16 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
 
         setThemeAccordingToPreference()
+
+        if (userManager.justLoggedInStatus) {
+            mainViewModel.getDataFromCloud()
+        }
+
+        mainViewModel.refreshUI.observe(this) {
+            if (it != null && it) {
+                refreshHomeFragment()
+            }
+        }
 
         // Firebase Messaging token retrieval
         val firebaseMessaging = FirebaseMessaging.getInstance()
@@ -142,7 +159,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             drawerView.setNavigationItemSelectedListener { item ->
                 when (item.itemId) {
                     id.nav_logout -> {
-                       logout()
+                        logout()
                     }
 
                     id.nav_clean -> {
@@ -192,6 +209,34 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
     }
 
+    override fun onBackPressed() {
+        mainViewModel.currentFragmentId.value?.let {
+            when (mainViewModel.currentFragmentId.value) {
+                R.id.medPageFragment -> {
+                    when (mainViewModel.previousFragmentId.value) {
+                        R.id.medicationFragment -> navController.navigate(id.medicationFragment)
+                        else -> navController.navigate(id.homeFragment)
+                    }
+                }
+                else -> super.onBackPressed()
+            }
+        }
+    }
+
+    fun refreshHomeFragment() {
+        val currentFragmentId = mainViewModel.currentFragmentId.value
+
+        if (currentFragmentId == R.id.homeFragment) {
+            val navHostFragment =
+                supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+            val currentFragment = navHostFragment?.childFragmentManager?.fragments?.firstOrNull()
+
+            if (currentFragment is HomeFragment) {
+                currentFragment.recyclerViewImplementation()
+            }
+        }
+    }
+
     private fun showMessage() {
         val messageIds = arrayOf(
             string.healthcare,
@@ -228,6 +273,9 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
      * @param bool Determines whether the ToolbarFrame and BottomNavigationView should be visible or not based on the provided boolean value.
      */
     fun navBarToolbarBottomNav(bool: Boolean, fragmentId: Int) {
+        mainViewModel.setPreviousFragment(
+            mainViewModel.currentFragmentId.value ?: R.id.homeFragment
+        )
         mainViewModel.setCurrentFragmentId(fragmentId)
         if (bool) {
             binding.toolbarFrame.visibility = View.VISIBLE
@@ -254,7 +302,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
      * @return The ID of the previous fragment.
      */
     fun getPreviousFragment(): Int? {
-        return mainViewModel.currentFragmentId.value
+        return mainViewModel.previousFragmentId.value
     }
 
     private fun scheduleAlarmSchedulerWorker(context: Context, userId: String) {
@@ -277,7 +325,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         workManager.enqueue(oneTimeWorkRequest)
     }
 
-    fun logout(){
+    fun logout() {
         mainViewModel.logout()
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         val intent = Intent(this@MainActivity, SplashActivity::class.java)

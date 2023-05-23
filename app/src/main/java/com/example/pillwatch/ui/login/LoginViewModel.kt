@@ -11,12 +11,16 @@ import com.example.pillwatch.data.repository.MedsLogRepository
 import com.example.pillwatch.data.repository.UserMedsRepository
 import com.example.pillwatch.data.repository.UserRepository
 import com.example.pillwatch.di.ActivityScope
-import com.example.pillwatch.utils.AuthResultProperty
-import com.example.pillwatch.utils.extensions.FirebaseUtils.firebaseAuth
-import com.example.pillwatch.utils.ValidationProperty
-import com.example.pillwatch.utils.checkPassword
+import com.example.pillwatch.ui.login.LoginViewModel.Companion.INCORRECT_PWD
+import com.example.pillwatch.ui.login.LoginViewModel.Companion.LOGIN_FAIL
+import com.example.pillwatch.ui.login.LoginViewModel.Companion.NO_USER
 import com.example.pillwatch.ui.signup.SignupViewModel
 import com.example.pillwatch.user.UserManager
+import com.example.pillwatch.utils.AuthResultProperty
+import com.example.pillwatch.utils.ValidationProperty
+import com.example.pillwatch.utils.checkPassword
+import com.example.pillwatch.utils.extensions.FirebaseUtils.firebaseAuth
+import com.example.pillwatch.utils.hashPassword
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
@@ -24,10 +28,10 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.GoogleAuthProvider
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
-import java.lang.Exception
-import java.lang.NullPointerException
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -130,7 +134,13 @@ class LoginViewModel @Inject constructor(
                                      * save the id for easier use
                                      * save the username for easier use
                                      * */
-                                    userManager.loginUser(user.id, user.email, user.username)
+                                    val cloudUser = getDataFromCloudByEmail(user.email, password)
+                                    val username: String? = if (cloudUser != null) {
+                                        cloudUser.username
+                                    } else {
+                                        user.username
+                                    }
+                                    userManager.loginUser(user.id, user.email, username)
                                     _loginResult.postValue(true)
                                     Timber.tag("$FIREBASE $TAG").d("$FIREBASE $LOGIN_SUCCESS $user")
                                 } else {
@@ -168,7 +178,11 @@ class LoginViewModel @Inject constructor(
                  * show error alert
                  * log the error
                  **/
-                errorLogin("", NO_USER)
+//                errorLogin("", NO_USER)
+                val cloudUser = getDataFromCloudByEmail(email, password)
+                cloudUser?.let {
+                    userManager.loginUser(cloudUser.id, cloudUser.email, cloudUser.username)
+                }
             } else if (checkPassword(password, user.password)) {
                 /**
                  * if the user != null && password check passes=> was logged in successfully
@@ -177,12 +191,6 @@ class LoginViewModel @Inject constructor(
                  * save the id for easier use
                  * save the username for easier use -> in this case is null cause it's a new user
                  **/
-                val cloudUser = getDataFromCloudByEmail(user.email)
-                val username: String? = if (cloudUser != null) {
-                    cloudUser.username
-                } else {
-                    user.username
-                }
                 userManager.loginUser(user.id, user.email, username)
                 _loginResult.postValue(true)
             } else {
@@ -214,16 +222,16 @@ class LoginViewModel @Inject constructor(
     private suspend fun insertWithGoogle(idToken: String): Boolean {
         return withContext(Dispatchers.Main) {
             if (idToken == "") {
-                false
+                return@withContext false
             } else {
                 // get the Google credential and sign in
                 val credential = GoogleAuthProvider.getCredential(idToken, null)
-                withContext(Dispatchers.IO) {
+                return@withContext withContext(Dispatchers.IO) {
                     val authResult = signInWithCredential(credential)
                     if (authResult.success && authResult.email != null) {
                         // if the sign in is successful, insert the user into the database
                         val email = authResult.email!!
-                        val user = userRepository.signup(email, "", true)
+                        var user = userRepository.getUserByEmail(email)
                         if (user != null) {
                             /**
                              * if the user != null => was created/logged in  successfully
@@ -232,19 +240,31 @@ class LoginViewModel @Inject constructor(
                              * save the id for easier use
                              * save the username for easier use
                              **/
-                            val cloudUser = getDataFromCloudByEmail(user.email)
-                            val username: String? = if (cloudUser != null) {
-                                cloudUser.username
-                            } else {
-                                user.username
+                            val cloudUser = getDataFromCloudByEmail(email)
+                            cloudUser?.let {
+                                userManager.loginUser(
+                                    cloudUser.id,
+                                    cloudUser.email,
+                                    cloudUser.username
+                                )
                             }
-                            userManager.loginUser(user.id, user.email, username)
-                            Timber.tag(TAG).w("$GOOGLE $LOGIN_SUCCESS")
-                            true
                         } else {
-                            _alertMsg.value = Pair("An error occurred", "Error")
-                            false
+                            // If user does not exist in local database, fetch the user data from cloud.
+                            user = getDataFromCloudByEmail(email)
+                            if (user != null) {
+                                userManager.loginUser(user.id, user.email, user.username)
+                            } else {
+                                user = userRepository.signup(email, "")
+                                if (user != null) {
+                                    userManager.loginUser(user.id, user.email, user.username)
+                                } else {
+                                    _alertMsg.value = Pair("An error occurred", "Error")
+                                    return@withContext  false
+                                }
+                            }
                         }
+                        Timber.tag(TAG).w("$GOOGLE $LOGIN_SUCCESS")
+                        true
                     } else {
                         _alertMsg.value = Pair("An error occurred", "Error")
                         false
@@ -253,6 +273,7 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
+
 
     private suspend fun signInWithCredential(
         credential: AuthCredential
@@ -323,7 +344,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun errorLogin(str: String = "", error: String = "") {
-        _toastMsg.value = error
+        _toastMsg.postValue(error)
         _loginResult.postValue(false)
 
         var errMsg = "$str $LOGIN_FAIL "
@@ -335,35 +356,18 @@ class LoginViewModel @Inject constructor(
         Timber.tag(TAG).e(errMsg)
     }
 
-    private suspend fun getDataFromCloudByEmail(email: String): UserEntity? {
+    private suspend fun getDataFromCloudByEmail(
+        email: String,
+        password: String = ""
+    ): UserEntity? {
         return withContext(Dispatchers.IO) {
             val user = userRepository.getUserFromCloudByEmail(email)
             user?.let {
-                userRepository.updateUsername(it.id, it.username ?: "")
-// Load userMeds for the userId
-                val userMedsList = userMedsRepository.getUserMedsFromCloudByUserId(it.id)
-                if (userMedsList.isEmpty()) {
-                    return@withContext it
-                }
-                userMedsList.forEach { userMed ->
-                    userMed?.let {
-                        userMedsRepository.insert(userMed)
-                        // Load alarms for the userMedsId
-                        val alarmsList = alarmRepository.getAlarmsFromCloudByMedId(userMed.id)
-                        alarmsList.forEach { alarm ->
-                            alarm?.let { alarmEntity ->
-                                alarmRepository.insert(alarmEntity)
-                            }
-                            // Load medsLog for the userMedsId
-                            val medsLogList =
-                                medsLogRepository.getMedsLogsFromCloudByMedId(userMed.id)
-                            medsLogList.forEach { medsLog ->
-                                medsLog?.let { medsLogEntity ->
-                                    medsLogRepository.insert(medsLogEntity)
-                                }
-                            }
-                        }
-                    }
+                val checkUserInDb = userRepository.getUserById(user.id)
+                if (checkUserInDb == null) {
+                    userRepository.signup(user)
+                } else if (checkUserInDb.username != it.username) {
+                    userRepository.updateUsername(it.id, it.username ?: "")
                 }
                 user
             }

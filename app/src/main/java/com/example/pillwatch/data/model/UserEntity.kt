@@ -14,18 +14,18 @@ data class UserEntity(
     val id: String = UUID.randomUUID().toString(),
 
     @ColumnInfo(name = "email")
-    val email: String,
+    val email: String="",
 
     @ColumnInfo(name = "username")
-    var username: String?,
+    var username: String? =null,
 
     @Transient
     @ColumnInfo(name = "password")
-    val password: String,
+    val password: String = "",
 
     @ColumnInfo(name = "idToken")
-    val idToken: String?,
+    val idToken: String? = null,
 
     @ColumnInfo(name = "role")
-    val role: Role
+    val role: Role = Role.USER
 )

@@ -25,8 +25,8 @@ import java.util.UUID
 data class UserMedsEntity(
     @PrimaryKey
     val id: String = UUID.randomUUID().toString(),
-    val tradeName: String,
-    val userId: String,
+    val tradeName: String = "",
+    val userId: String = "",
     val medId: Long? = null,
     val concentration: String? = "",
     val isArchived: Boolean? = false
