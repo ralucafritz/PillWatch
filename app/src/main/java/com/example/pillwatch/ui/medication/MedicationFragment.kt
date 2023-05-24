@@ -10,14 +10,13 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentMedicationBinding
 import com.example.pillwatch.ui.main.MainActivity
-import kotlinx.coroutines.launch
+import com.example.pillwatch.utils.FilterOption
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -34,6 +33,13 @@ class MedicationFragment : Fragment() {
         (requireActivity().application as PillWatchApplication).appComponent.userManager().userComponent!!.inject(
             this
         )
+    }
+
+    companion object {
+        const val NO_MEDICATION_ARCHIVED = "No archived medication found.\n Have a great day!"
+        const val NO_MEDICATION_NON_ARCHIVED =
+            "No non-archived medication found.\n Have a great day!"
+        const val NO_MEDICATION = "No medication found. Have a great day"
     }
 
     override fun onCreateView(
@@ -53,18 +59,49 @@ class MedicationFragment : Fragment() {
 
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        lifecycleScope.launch {
-            val medsList = viewModel.getMedsList()
-            if (medsList.isNotEmpty()) {
+        viewModel.getMedsList()
+
+        binding.btnFilter.setOnClickListener {
+            viewModel.toggleFilter()
+        }
+
+        viewModel.currentFilterOption.observe(viewLifecycleOwner) { filterOption ->
+            val iconRes = when (filterOption) {
+                FilterOption.ALL -> {
+                    binding.emptyListTxt.text = NO_MEDICATION
+                    R.drawable.ic_filter_off
+                }
+
+                FilterOption.ARCHIVED -> {
+                    binding.emptyListTxt.text = NO_MEDICATION_ARCHIVED
+                    R.drawable.ic_filter
+                }
+
+                else -> {
+                    binding.emptyListTxt.text = NO_MEDICATION_NON_ARCHIVED
+                    R.drawable.ic_filter
+                }
+            }
+            var filterTxt = "Filter: "
+            val optionTxt = filterOption.label
+            filterTxt += optionTxt
+            binding.btnFilter.text = filterTxt
+            binding.btnFilter.setIconResource(iconRes)
+        }
+
+        viewModel.filteredMedsList.observe(viewLifecycleOwner) { medsList ->
+            if (!medsList.isNullOrEmpty()) {
+                toggleVisibility(false)
                 viewModel.getLogs()
-                viewModel.logs.observe(viewLifecycleOwner) {logs->
+                viewModel.logs.observe(viewLifecycleOwner) { logs ->
                     val adapter = MedsListAdapter(requireContext(), medsList, logs)
                     recyclerView.adapter = adapter
-
                     adapter.onItemClick = {
                         startNavigation(it)
                     }
                 }
+            } else {
+                toggleVisibility(true)
             }
         }
 
@@ -81,9 +118,19 @@ class MedicationFragment : Fragment() {
         return binding.root
     }
 
+    private fun toggleVisibility(bool: Boolean) {
+        if (bool) {
+            binding.emptyListTxt.visibility = View.VISIBLE
+            binding.medsList.visibility = View.GONE
+        } else {
+            binding.emptyListTxt.visibility = View.GONE
+            binding.medsList.visibility = View.VISIBLE
+        }
+    }
+
     private fun startNavigation(medId: String = "") {
         try {
-            if(medId == "") {
+            if (medId == "") {
                 this@MedicationFragment.findNavController().navigate(
                     MedicationFragmentDirections.actionMedicationFragmentToAddMedFragment()
                 )

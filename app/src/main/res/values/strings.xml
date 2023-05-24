@@ -58,6 +58,8 @@
     <string name="theme">Theme</string>
     <string name="sign_out">Sign out</string>
     <string name="log_out">Log out</string>
+    <string name="no_meds_home">No medication left for today.\n Have a great day!</string>
+    <string name="no_meds_medication">No medication history found.\n Have a great day!</string>
 
     <string-array name="concentration_measures">
         <item>-</item>

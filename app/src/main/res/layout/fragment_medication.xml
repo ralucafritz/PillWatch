@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.example.pillwatch.ui.medication.MedicationViewModel" />
@@ -23,36 +24,75 @@
             tools:ignore="ContentDescription,VisualLintBounds"
             tools:srcCompat="@drawable/toolbar_rectangle" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_filter"
+            android:layout_width="170dp"
+            android:layout_height="51dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="Filter: Non-Archived"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="14sp"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="4dp"
+            app:icon="@drawable/ic_filter"
+            app:iconGravity="start"
+            app:iconSize="24dp"
+            app:iconTint="?attr/colorOnPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_background" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_add"
+            android:layout_width="170dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="Add a medication"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="14dp"
+            app:backgroundTint="?attr/colorPrimary"
+            app:cornerRadius="4dp"
+            app:icon="@drawable/ic_alarm_1"
+            app:iconGravity="start"
+            app:iconSize="28dp"
+            app:iconTint="?attr/colorOnPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_background" />
+
+        <TextView
+            android:id="@+id/empty_list_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="70dp"
+            android:text="@string/no_meds_medication"
+            android:textAlignment="center"
+            android:textStyle="bold|italic"
+            android:textColor="?attr/colorCredits"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_filter" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/meds_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_margin="20dp"
-            tools:itemCount="10"
-            tools:listitem="@layout/item_meds_list"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/btn_add"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_background">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <Button
-            android:id="@+id/btn_add"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginEnd="60dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/slightly_rounded_button"
-            android:text="@string/add_a_med"
-            android:textSize="@dimen/btn_text_size"
             app:layout_constraintBottom_toTopOf="@id/bottom_nav"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:drawable="@drawable/ic_alarm_1"/>
-
+            app:layout_constraintTop_toBottomOf="@id/btn_filter"
+            tools:itemCount="10"
+            tools:listitem="@layout/item_meds_list">
+        </androidx.recyclerview.widget.RecyclerView>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav"

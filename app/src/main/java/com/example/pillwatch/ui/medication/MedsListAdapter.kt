@@ -8,12 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pillwatch.R
 import com.example.pillwatch.data.model.UserMedsEntity
 import com.example.pillwatch.databinding.ItemMedsListBinding
+import timber.log.Timber
 
 class MedsListAdapter(
     private val context: Context,
     private val medList: List<UserMedsEntity>,
-    private val logList: List<List< Int>>
-    ) :
+    private val logList: List<List<Int>>
+) :
     RecyclerView.Adapter<MedsListAdapter.MedsViewHolder>() {
 
     var onItemClick: ((String) -> Unit)? = null
@@ -30,10 +31,13 @@ class MedsListAdapter(
     }
 
     override fun onBindViewHolder(holder: MedsViewHolder, position: Int) {
-        holder.bind(medList[position], logList[position], context)
+        if (position < medList.size) {
+            val logIndex = if (position < logList.size) position else logList.size - 1
+            holder.bind(medList[position], logList[logIndex], context)
 
-        holder.itemView.setOnClickListener {
-            onItemClick?.invoke(medList[position].id)
+            holder.itemView.setOnClickListener {
+                onItemClick?.invoke(medList[position].id)
+            }
         }
     }
 
@@ -63,7 +67,7 @@ class MedsListAdapter(
             if (logs.isNotEmpty()) {
                 val textTaken = "${logs[0] ?: 0} taken"
                 val textPostponed = "${logs[1] ?: 0} postponed"
-                val textMissed =  "${logs[2] ?: 0} missed"
+                val textMissed = "${logs[2] ?: 0} missed"
                 binding.takenLog.text = textTaken
                 binding.postponedLog.text = textPostponed
                 binding.missedLog.text = textMissed

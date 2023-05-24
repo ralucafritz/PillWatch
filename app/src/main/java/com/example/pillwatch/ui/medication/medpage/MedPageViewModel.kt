@@ -103,6 +103,9 @@ class MedPageViewModel @Inject constructor(
                 }.sortedBy { alarm -> alarm.timeInMillis }
                 _alarmsList.value = updatedList
             }
+            if(updatedAlarm.isEnabled && !medEntity.value!!.isArchived) {
+                alarmHandler.rescheduleAlarm(updatedAlarm)
+            }
         }
     }
 
@@ -119,6 +122,25 @@ class MedPageViewModel @Inject constructor(
                     }
                 // Delete the medication from the repository
                 userMedsRepository.deleteById(_medEntity.value!!.id)
+            }
+        }
+    }
+
+    fun archive(bool: Boolean) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                userMedsRepository.archiveMed(medEntity.value!!.id, bool)
+                val updatedMedEntity = userMedsRepository.getMedById(medEntity.value!!.id)
+                _medEntity.postValue(updatedMedEntity)
+                if(bool) {
+                    _alarmsList.value?.forEach {
+                        alarmHandler.scheduleAlarm(it.id, it.timeInMillis)
+                    }
+                } else {
+                    _alarmsList.value?.forEach {
+                        alarmHandler.cancelAlarm(it.id)
+                    }
+                }
             }
         }
     }

@@ -18,15 +18,29 @@ class UserMedsRepository(
         }
     }
 
-    fun insertAll(userMedsList: List<UserMedsEntity>) {
-        userMedsDao.insertAll(userMedsList)
-        userMedsList.forEach {
-            userMedsFirestoreRepository.addUserMed(it)
+    suspend fun insertAll(userMedsList: List<UserMedsEntity>) {
+        return withContext(Dispatchers.IO) {
+            userMedsDao.insertAll(userMedsList)
+            userMedsList.forEach {
+                userMedsFirestoreRepository.addUserMed(it)
+            }
+        }
+    }
+
+    suspend fun archiveMed(id: String, isArchived: Boolean) {
+        withContext(Dispatchers.IO) {
+            userMedsDao.archiveMed(id, isArchived)
+            val userMed = userMedsDao.getMedById(id)
+            userMedsFirestoreRepository.updateUserMed(userMed)
         }
     }
 
     fun getAllMedsForUser(userId: String): List<UserMedsEntity> {
         return userMedsDao.getMedsForUserId(userId)
+    }
+
+    fun getAllNonArchivedMedsForUser(userId: String): List<UserMedsEntity> {
+        return userMedsDao.getAllNonArchivedMedsForUser(userId)
     }
 
     fun getMedIdForMedsForUser(userId: String): List<Long?> {
@@ -51,7 +65,7 @@ class UserMedsRepository(
     suspend fun updateMed(medEntity: UserMedsEntity) {
         withContext(Dispatchers.IO) {
             userMedsDao.update(medEntity)
-            userMedsFirestoreRepository.updateUserMeds(medEntity)
+            userMedsFirestoreRepository.updateUserMed(medEntity)
         }
     }
 
