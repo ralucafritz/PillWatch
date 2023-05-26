@@ -3,7 +3,10 @@ package com.example.pillwatch.data.repository
 import androidx.lifecycle.LiveData
 import com.example.pillwatch.data.source.local.AlarmDao
 import com.example.pillwatch.data.model.AlarmEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 
 class AlarmRepository(
@@ -34,7 +37,7 @@ class AlarmRepository(
         }
     }
 
-    suspend fun clearForMedId(medId: String) {
+    suspend fun clearForMedId(medId: String): Deferred<Unit> = CoroutineScope(Dispatchers.IO).async {
         withContext(Dispatchers.IO) {
             alarmFirestoreRepository.deleteAlarm(medId)
             alarmDao.clearForMedId(medId)

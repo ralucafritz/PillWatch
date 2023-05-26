@@ -62,8 +62,10 @@ class AlarmReceiver : BroadcastReceiver() {
 
     private fun handleOkAction(alarm: AlarmEntity,  context: Context, intent: Intent) {
         val notificationId = intent.getIntExtra("NOTIFICATION_ID", -1)
+        Timber.tag("ALARM RECEIVER").d(" notification with ID: $notificationId")
         if (notificationId != -1) {
             val notificationManager = NotificationManagerCompat.from(context)
+            Timber.tag("ALARM RECEIVER").d("Canceling notification with ID: $notificationId")
             notificationManager.cancel(notificationId)
         }
         stopAlarmService(context)
@@ -74,6 +76,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val notificationId = intent.getIntExtra("NOTIFICATION_ID", -1)
         if (notificationId != -1) {
             val notificationManager = NotificationManagerCompat.from(context)
+            Timber.d("Canceling notification with ID: $notificationId")
             notificationManager.cancel(notificationId)
         }
         stopAlarmService(context)
@@ -96,7 +99,7 @@ class AlarmReceiver : BroadcastReceiver() {
             val okIntent = Intent(context, AlarmReceiver::class.java).apply {
                 action = "OK_ACTION"
                 putExtra("ALARM_ID", alarm.id)
-                putExtra("NOTIFICATION_ID", alarm.id)
+                putExtra("NOTIFICATION_ID", alarm.id.hashCode())
             }
             val okPendingIntent = PendingIntent.getBroadcast(
                 context,
@@ -108,7 +111,7 @@ class AlarmReceiver : BroadcastReceiver() {
             val postponeIntent = Intent(context, AlarmReceiver::class.java).apply {
                 action = "POSTPONE_ACTION"
                 putExtra("ALARM_ID", alarm.id)
-                putExtra("NOTIFICATION_ID", alarm.id)
+                putExtra("NOTIFICATION_ID", alarm.id.hashCode())
             }
             val postponePendingIntent = PendingIntent.getBroadcast(
                 context,

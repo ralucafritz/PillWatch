@@ -56,6 +56,10 @@ class AlarmsPerDayViewModel @Inject constructor(
     val alarmsList: LiveData<List<AlarmEntity>>
         get() = _alarmsList
 
+    private val _navigationCheck = MutableLiveData<Boolean>()
+    val navigationCheck: LiveData<Boolean>
+        get() = _navigationCheck
+
     /**
      * Updates the start hour for generating alarms.
      *
@@ -117,16 +121,16 @@ class AlarmsPerDayViewModel @Inject constructor(
      */
     fun scheduleAlarms() {
         viewModelScope.launch {
-             withContext(Dispatchers.IO) {
-                alarmRepository.clearForMedId(medId) }
             withContext(Dispatchers.IO) {
+                alarmRepository.clearForMedId(medId).await()
                 alarmRepository.insertAll(_alarmsList.value!!)
-                 _alarmsList.postValue(alarmRepository.getAlarmsByMedId(medId))
+                _alarmsList.postValue(alarmRepository.getAlarmsByMedId(medId))
             }
             val enabledAlarms = _alarmsList.value!!.filter { it.isEnabled }
             enabledAlarms.forEach { alarm ->
                 alarmHandler.scheduleAlarm(alarm.id, alarm.timeInMillis)
             }
+            _navigationCheck.value = true
         }
     }
 }
