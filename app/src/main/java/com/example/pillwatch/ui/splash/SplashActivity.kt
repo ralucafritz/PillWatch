@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
@@ -29,6 +30,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userManager = (application as PillWatchApplication).appComponent.userManager()
+        setThemeAccordingToPreference()
 
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -94,5 +96,16 @@ class SplashActivity : AppCompatActivity() {
             .commit()
         binding.fragmentHolder.visibility = View.VISIBLE
         binding.mainSplash.visibility = View.INVISIBLE
+    }
+
+    /**
+     * Sets the theme of the activity based on the saved theme preference.
+     */
+    private fun setThemeAccordingToPreference() {
+        when (userManager.theme) {
+            "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            "system" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
     }
 }
