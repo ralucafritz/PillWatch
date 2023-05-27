@@ -13,6 +13,7 @@ import android.os.Vibrator
 
 class AlarmService : Service() {
 
+    private var postponedTimes: Int = 0
     private var mediaPlayer: MediaPlayer? = null
     private var vibrator: Vibrator? = null
 
@@ -24,7 +25,10 @@ class AlarmService : Service() {
         val action = intent?.action
 
         when (action) {
-            "START_ALARM" -> startAlarm()
+            "START_ALARM" -> {
+                postponedTimes = intent.getIntExtra("POSTPONED_TIMES", 0) ?: 0
+                startAlarm()
+            }
             "STOP_ALARM" -> stopAlarm()
         }
 
@@ -35,11 +39,8 @@ class AlarmService : Service() {
         val alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
         mediaPlayer = MediaPlayer.create(this, alarmUri)
 
-
         mediaPlayer?.start()
         startVibration()
-
-
 
         Handler(Looper.getMainLooper()).postDelayed({
             if(mediaPlayer!=null) {
@@ -51,22 +52,33 @@ class AlarmService : Service() {
     }
 
     private fun stopAlarm() {
-        mediaPlayer?.stop()
-        mediaPlayer?.release()
+        if (mediaPlayer?.isPlaying == true) {
+            mediaPlayer?.stop()
+            mediaPlayer?.release()
+        }
         mediaPlayer = null
-        stopVibration()
+
+        if (vibrator?.hasVibrator() == true) {
+            stopVibration()
+        }
+
         stopSelf()
     }
 
     private fun startVibration() {
-        vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            vibrator?.vibrate(
-                VibrationEffect.createWaveform(
-                    longArrayOf(0, 1000, 500),
-                    intArrayOf(0, VibrationEffect.DEFAULT_AMPLITUDE, 0),
-                    0
-                )
+        val vibrationPattern = when {
+            postponedTimes > 2 -> longArrayOf(0, 800, 200)
+            postponedTimes > 1 -> longArrayOf(0, 1000, 500)
+            else -> longArrayOf(0, 1500, 1000)
+        }
+
+        vibrator?.vibrate(
+            VibrationEffect.createWaveform(
+                vibrationPattern,
+                intArrayOf(0, VibrationEffect.DEFAULT_AMPLITUDE, 0),
+                0
             )
+        )
     }
 
     private fun stopVibration() {

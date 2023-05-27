@@ -41,26 +41,32 @@ class AlarmReceiver : BroadcastReceiver() {
         (context.applicationContext as PillWatchApplication).appComponent.inject(this)
         val action = intent.action
         val alarmId = intent.getStringExtra("ALARM_ID")
-
+        val postponedTimes = intent.getIntExtra("POSTPONED_TIMES", -1)
         if (alarmId.isNullOrEmpty()) {
             Timber.e("Invalid alarm ID")
             return
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            val alarm = alarmRepository.getAlarmById(alarmId!!)
+            val alarm = alarmRepository.getAlarmById(alarmId)
             if (alarm != null) {
                 when (action) {
                     "OK_ACTION" -> handleOkAction(alarm, context, intent)
-                    "POSTPONE_ACTION" -> handlePostponeAction(alarm, context, intent)
+                    "POSTPONE_ACTION" -> handlePostponeAction(
+                        alarm,
+                        context,
+                        intent,
+                        postponedTimes
+                    )
+
                     "MISSED_CHECK_ACTION" -> handleMissedAction(alarm, intent)
-                    else -> handleAlarmTriggered(context, alarm)
+                    else -> handleAlarmTriggered(context, alarm, postponedTimes)
                 }
             }
         }
     }
 
-    private fun handleOkAction(alarm: AlarmEntity,  context: Context, intent: Intent) {
+    private fun handleOkAction(alarm: AlarmEntity, context: Context, intent: Intent) {
         val notificationId = intent.getIntExtra("NOTIFICATION_ID", -1)
         Timber.tag("ALARM RECEIVER").d(" notification with ID: $notificationId")
         if (notificationId != -1) {
@@ -72,15 +78,21 @@ class AlarmReceiver : BroadcastReceiver() {
         alarmHandler.createMedsLog(alarm.medId, TakenStatus.TAKEN)
     }
 
-    private fun handlePostponeAction(alarm: AlarmEntity,  context: Context,intent: Intent) {
+    private fun handlePostponeAction(
+        alarm: AlarmEntity,
+        context: Context,
+        intent: Intent,
+        postponedTimes: Int
+    ) {
         val notificationId = intent.getIntExtra("NOTIFICATION_ID", -1)
         if (notificationId != -1) {
             val notificationManager = NotificationManagerCompat.from(context)
             Timber.d("Canceling notification with ID: $notificationId")
             notificationManager.cancel(notificationId)
         }
+        Timber.d("Postponed times: ${postponedTimes + 1}")
         stopAlarmService(context)
-        alarmHandler.postponeAlarm(alarm)
+        alarmHandler.postponeAlarm(alarm, postponedTimes + 1)
     }
 
     private fun handleMissedAction(alarm: AlarmEntity, intent: Intent) {
@@ -92,7 +104,7 @@ class AlarmReceiver : BroadcastReceiver() {
         Timber.tag("ALARM RECEIVER").d("Missed scheduled alarm")
     }
 
-    private fun handleAlarmTriggered(context: Context, alarm: AlarmEntity) {
+    private fun handleAlarmTriggered(context: Context, alarm: AlarmEntity, postponedTimes: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             val med = userMedsRepository.getMedById(alarm.medId)
             Timber.tag("ALARM RECEIVER").d("ok intent")
@@ -100,6 +112,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 action = "OK_ACTION"
                 putExtra("ALARM_ID", alarm.id)
                 putExtra("NOTIFICATION_ID", alarm.id.hashCode())
+                putExtra("POSTPONED_TIMES", postponedTimes)
             }
             val okPendingIntent = PendingIntent.getBroadcast(
                 context,
@@ -112,6 +125,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 action = "POSTPONE_ACTION"
                 putExtra("ALARM_ID", alarm.id)
                 putExtra("NOTIFICATION_ID", alarm.id.hashCode())
+                putExtra("POSTPONED_TIMES", postponedTimes)
             }
             val postponePendingIntent = PendingIntent.getBroadcast(
                 context,
@@ -154,7 +168,9 @@ class AlarmReceiver : BroadcastReceiver() {
             // Play default alarm sound and vibrate for 30 seconds
             val startAlarmIntent = Intent(context, AlarmService::class.java).apply {
                 action = "START_ALARM"
+                putExtra("POSTPONED_TIMES", postponedTimes)
             }
+
             context.startService(startAlarmIntent)
 
             // Schedule a missed check alarm in 1 hour
@@ -168,7 +184,7 @@ class AlarmReceiver : BroadcastReceiver() {
         }
     }
 
-    private fun stopAlarmService(context: Context){
+    private fun stopAlarmService(context: Context) {
         val stopAlarmIntent = Intent(context, AlarmService::class.java).apply {
             action = "STOP_ALARM"
         }

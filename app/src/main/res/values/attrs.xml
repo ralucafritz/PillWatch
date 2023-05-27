@@ -31,4 +31,5 @@
     <attr name='backgroundGrey' format="color"/>
     <attr name='onBackgroundGrey' format="color"/>
     <attr name ='colorCredits' format='color'/>
+    <attr name='colorWarning' format="color"/>
 </resources>

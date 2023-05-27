@@ -56,5 +56,6 @@
         <item name="backgroundGrey">#26222E</item>
         <item name="onBackgroundGrey">#FEFEFF</item>
         <item name="colorCredits">#52625B71</item>
+        <item name="colorWarning">#FF9933</item>
     </style>
 </resources>

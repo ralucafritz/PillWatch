@@ -6,9 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.activity.OnBackPressedCallback
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -54,8 +55,8 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
         // Binding
         binding = FragmentMedPageBinding.inflate(inflater)
 
-        val previousFragment = (requireActivity() as MainActivity).getPreviousFragment()
         (requireActivity() as MainActivity).navBarToolbarBottomNav(false, R.id.medPageFragment)
+        val previousFragment = (requireActivity() as MainActivity).getPreviousFragment()
 
         val id = AlarmsPerDayFragmentArgs.fromBundle(requireArguments()).id
 
@@ -193,6 +194,7 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
                 }
             }
         } else {
+
             this@MedPageFragment.findNavController().navigate(
                 MedPageFragmentDirections.actionMedPageFragmentToAlarmFrequencyFragment(id)
             )
@@ -239,9 +241,15 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
         val logsRecyclerView = dialogView.findViewById<RecyclerView>(R.id.logsRecyclerView)
         logsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val adapter = LogsAdapter(requireContext(), viewModel.logs.value!!)
-        logsRecyclerView.adapter = adapter
-
+        if(!viewModel.logs.value!!.isNullOrEmpty()) {
+            dialogView.findViewById<TextView>(R.id.empty_list_txt).visibility = View.INVISIBLE
+            logsRecyclerView.visibility = View.VISIBLE
+            val adapter = LogsAdapter(requireContext(), viewModel.logs.value!!)
+            logsRecyclerView.adapter = adapter
+        } else {
+            dialogView.findViewById<TextView>(R.id.empty_list_txt).visibility = View.VISIBLE
+            logsRecyclerView.visibility = View.GONE
+        }
         val alertDialogBuilder = AlertDialog.Builder(requireContext(), R.style.RoundedDialogStyle)
             .setTitle(R.string.medication_logs)
             .setView(dialogView)

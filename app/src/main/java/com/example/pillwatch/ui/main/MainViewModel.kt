@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pillwatch.R
 import com.example.pillwatch.data.repository.AlarmRepository
 import com.example.pillwatch.data.repository.MedsRepository
 import com.example.pillwatch.data.repository.MedsLogRepository
@@ -34,7 +35,7 @@ class MainViewModel @Inject constructor(
     val showNotification: LiveData<Boolean>
         get() = _showNotification
 
-    private val _currentFragmentId = MutableLiveData<Int>()
+    private val _currentFragmentId = MutableLiveData(R.id.homeFragment)
     val currentFragmentId: LiveData<Int>
         get() = _currentFragmentId
 

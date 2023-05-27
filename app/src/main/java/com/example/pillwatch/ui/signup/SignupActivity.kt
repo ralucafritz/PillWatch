@@ -65,10 +65,10 @@ class SignupActivity : AppCompatActivity() {
                                 .commit()
                             binding.mainSignup.visibility = View.GONE
                         }
-                    } else {
-                        toast(result.message)
                     }
                 }
+            } else {
+                toast(result.message)
             }
         }
 

@@ -1,5 +1,6 @@
 package com.example.pillwatch.ui.addmed
 
+import androidx.appcompat.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,9 +14,9 @@ import com.example.pillwatch.PillWatchApplication
 import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentAddMedBinding
 import com.example.pillwatch.ui.main.MainActivity
+import com.example.pillwatch.utils.extensions.ContextExtensions.dismissProgressDialog
+import com.example.pillwatch.utils.extensions.ContextExtensions.showProgressDialog
 import com.example.pillwatch.utils.extensions.ContextExtensions.snackbar
-import com.example.pillwatch.utils.extensions.ContextExtensions.toast
-import com.example.pillwatch.utils.extensions.ContextExtensions.toastTop
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -27,6 +28,7 @@ import javax.inject.Inject
 class AddMedFragment : Fragment() {
 
     private lateinit var binding: FragmentAddMedBinding
+    private lateinit var progressDialog: AlertDialog
 
     @Inject
     lateinit var viewModel: AddMedViewModel
@@ -65,6 +67,14 @@ class AddMedFragment : Fragment() {
             }
         }
 
+        viewModel.showProgressDialog.observe(viewLifecycleOwner) {
+            if(it) {
+                progressDialog = requireContext().showProgressDialog("Checking for interactions")
+            } else {
+                requireContext().dismissProgressDialog(progressDialog)
+            }
+        }
+
         viewModel.navigationCheck.observe(viewLifecycleOwner) {
             if (viewModel.navigationCheck.value != null && viewModel.navigationCheck.value!!) {
                 try {
@@ -76,13 +86,13 @@ class AddMedFragment : Fragment() {
                     if(viewModel.interactionChecked.value != null) {
                         binding.root.snackbar(
                             getString(R.string.cannot_check_interaction),
-                            R.attr.colorMissed,
+                            R.attr.colorWarning,
                             5000
                         )
                     } else {
                         binding.root.snackbar(
                             getString(R.string.interaction),
-                            R.attr.colorMissed,
+                            R.attr.colorWarning,
                             10000
                         )
                     }

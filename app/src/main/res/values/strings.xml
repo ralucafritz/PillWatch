@@ -60,6 +60,8 @@
     <string name="log_out">Log out</string>
     <string name="no_meds_home">No medication left for today.\n Have a great day!</string>
     <string name="no_meds_medication">No medication history found.\n Have a great day!</string>
+    <string name="please_wait">Please wait</string>
+    <string name="no_logs_available_for_this_medication">No logs available for this medication.</string>
 
     <string-array name="concentration_measures">
         <item>-</item>

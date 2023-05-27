@@ -44,8 +44,8 @@ class ProfileFragment : Fragment() {
         // Binding
         binding = FragmentProfileBinding.inflate(inflater)
 
-        val previousFragment = (requireActivity() as MainActivity).getPreviousFragment()
         (requireActivity() as MainActivity).navBarToolbarBottomNav(false, R.id.profileFragment)
+        val previousFragment = (requireActivity() as MainActivity).getPreviousFragment()
 
         // ViewModel
         binding.viewModel = viewModel
@@ -137,6 +137,7 @@ class ProfileFragment : Fragment() {
                 val editedField = editField.text.toString()
                 viewModel.updateUsername(editedField)
                 binding.usernameValue.text = editedField
+                (requireActivity() as MainActivity).setToolbarUsername()
             }
             .setNegativeButton(android.R.string.cancel, null)
 
