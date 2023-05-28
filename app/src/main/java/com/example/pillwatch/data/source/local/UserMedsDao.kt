@@ -14,8 +14,14 @@ interface UserMedsDao {
     @Insert
     fun insertAll(userMedList: List<UserMedsEntity>)
 
+    @Query("UPDATE user_meds_table SET isArchived = :isArchived WHERE id = :id")
+    fun archiveMed(id: String, isArchived: Boolean)
+
     @Query("SELECT * FROM user_meds_table WHERE userId = :userId")
     fun getMedsForUserId(userId: String): List<UserMedsEntity>
+
+    @Query("SELECT * FROM user_meds_table WHERE userId = :userId AND isArchived = :isArchived")
+    fun getAllNonArchivedMedsForUser(userId: String, isArchived: Boolean = false): List<UserMedsEntity>
 
     @Query("SELECT medId FROM user_meds_table WHERE userId = :userId")
     fun getMedIdForUserMedsByUserId(userId: String): List<Long?>

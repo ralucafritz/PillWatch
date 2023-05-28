@@ -6,9 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.activity.OnBackPressedCallback
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -54,8 +55,8 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
         // Binding
         binding = FragmentMedPageBinding.inflate(inflater)
 
-        val previousFragment = (requireActivity() as MainActivity).getPreviousFragment()
         (requireActivity() as MainActivity).navBarToolbarBottomNav(false, R.id.medPageFragment)
+        val previousFragment = (requireActivity() as MainActivity).getPreviousFragment()
 
         val id = AlarmsPerDayFragmentArgs.fromBundle(requireArguments()).id
 
@@ -69,6 +70,7 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
 
         viewModel.medEntity.observe(viewLifecycleOwner) {
             if (it != null) {
+                toggleArchived()
                 viewModel.getAlarms()
                 viewModel.getLogs()
                 generateUI(it)
@@ -134,21 +136,43 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
 
         // update the alarms list in the adapter when it changes in the ViewModel
         viewModel.alarmsList.observe(viewLifecycleOwner) {
-            adapter.updateAlarms(viewModel.alarmsList.value!!)
+            if(!it.isNullOrEmpty()) {
+                toggleVisibility(false)
+                adapter.updateAlarms(viewModel.alarmsList.value!!)
+            } else {
+                toggleVisibility(true)
+            }
         }
 
-//        // This callback will only be called when MyFragment is at least Started.
-//        val callback = object : OnBackPressedCallback(true) {
-//            override fun handleOnBackPressed() {
-//                // Handle the back button event
-//                navigate(previousFragment, id)
-//            }
-//        }
-//
-//        // Enable the callback directly
-//        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+        binding.btnArchive.setOnClickListener {
+            viewModel.archive(!viewModel.medEntity.value!!.isArchived)
+            if(!viewModel.medEntity.value!!.isArchived) {
+                requireContext().toastTop("Medication archived")
+            } else {
+                requireContext().toastTop("Medication unarchived")
+            }
+        }
 
         return binding.root
+    }
+
+    private fun toggleArchived() {
+        val bool = viewModel.medEntity.value!!.isArchived
+        if (bool) {
+            binding.btnArchive.setImageResource(R.drawable.ic_unarchive)
+        } else {
+            binding.btnArchive.setImageResource(R.drawable.ic_archive)
+        }
+    }
+
+    private fun toggleVisibility(bool: Boolean) {
+        if (bool) {
+            binding.emptyListTxt.visibility = View.VISIBLE
+            binding.alarmsList.visibility = View.GONE
+        } else {
+            binding.emptyListTxt.visibility = View.GONE
+            binding.alarmsList.visibility = View.VISIBLE
+        }
     }
 
     /**
@@ -170,6 +194,7 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
                 }
             }
         } else {
+
             this@MedPageFragment.findNavController().navigate(
                 MedPageFragmentDirections.actionMedPageFragmentToAlarmFrequencyFragment(id)
             )
@@ -182,6 +207,7 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
      * @param med The UserMedsEntity object representing the medication.
      */
     private fun generateUI(med: UserMedsEntity) {
+        toggleArchived()
         binding.medName.text = med.tradeName
         binding.medConc.text = med.concentration
         if (med.medId != null) {
@@ -215,9 +241,15 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
         val logsRecyclerView = dialogView.findViewById<RecyclerView>(R.id.logsRecyclerView)
         logsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val adapter = LogsAdapter(requireContext(), viewModel.logs.value!!)
-        logsRecyclerView.adapter = adapter
-
+        if(!viewModel.logs.value!!.isNullOrEmpty()) {
+            dialogView.findViewById<TextView>(R.id.empty_list_txt).visibility = View.INVISIBLE
+            logsRecyclerView.visibility = View.VISIBLE
+            val adapter = LogsAdapter(requireContext(), viewModel.logs.value!!)
+            logsRecyclerView.adapter = adapter
+        } else {
+            dialogView.findViewById<TextView>(R.id.empty_list_txt).visibility = View.VISIBLE
+            logsRecyclerView.visibility = View.GONE
+        }
         val alertDialogBuilder = AlertDialog.Builder(requireContext(), R.style.RoundedDialogStyle)
             .setTitle(R.string.medication_logs)
             .setView(dialogView)

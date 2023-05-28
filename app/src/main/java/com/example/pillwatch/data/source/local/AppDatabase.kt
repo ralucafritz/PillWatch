@@ -21,7 +21,7 @@ import com.example.pillwatch.data.model.UserMedsEntity
         AlarmEntity::class,
         MedsLogEntity::class,
         UserMedsEntity::class],
-    version = 6,
+    version = 7,
     exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 

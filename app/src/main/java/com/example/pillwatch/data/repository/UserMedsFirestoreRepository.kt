@@ -31,7 +31,7 @@ class UserMedsFirestoreRepository {
         return userMedsRef.get()
     }
 
-    fun updateUserMeds(userMedsEntity: UserMedsEntity) {
+    fun updateUserMed(userMedsEntity: UserMedsEntity) {
         val data = mapOf(
             "id" to userMedsEntity.id,
             "tradeName" to userMedsEntity.tradeName,

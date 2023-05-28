@@ -29,6 +29,6 @@ data class UserMedsEntity(
     val userId: String = "",
     val medId: Long? = null,
     val concentration: String? = "",
-    val isArchived: Boolean? = false
+    val isArchived: Boolean = false
 ) {
 }

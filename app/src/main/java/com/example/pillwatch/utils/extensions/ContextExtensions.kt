@@ -2,8 +2,6 @@ package com.example.pillwatch.utils.extensions
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.content.res.Configuration
-import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -14,7 +12,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.AttrRes
@@ -140,9 +137,8 @@ object ContextExtensions {
         title: String,
     ): AlertDialog {
         val progressDialog = AlertDialog.Builder(this, R.style.RoundedDialogStyle)
-            .setView(ProgressBar(this))
+            .setView(LayoutInflater.from(this).inflate(R.layout.dialog_progress, null))
             .setTitle(title)
-            .setMessage("Please wait...")
             .setCancelable(false)
             .create()
 
@@ -153,10 +149,12 @@ object ContextExtensions {
 
     fun Context.dismissProgressDialog(
         progressDialog: AlertDialog,
-        title: String,
-        message: String
+        title: String="",
+        message: String=""
     ) {
         progressDialog.dismiss()
-        showAlert(message, title)
+        if(title != "") {
+            showAlert(message, title)
+        }
     }
 }

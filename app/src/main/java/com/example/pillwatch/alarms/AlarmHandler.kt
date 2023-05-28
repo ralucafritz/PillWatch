@@ -39,7 +39,7 @@ class AlarmHandler @Inject constructor(
     /**
      * Creates a medication log entry for the specified alarm and status.
      *
-     * @param alarm The alarm for which the log entry is created.
+     * @param medId The medication for which the log entry is created.
      * @param status The status of the medication (taken, postponed, missed).
      */
     fun createMedsLog(medId: String, status: TakenStatus) {
@@ -68,10 +68,13 @@ class AlarmHandler @Inject constructor(
      * @param alarmId The ID of the alarm.
      * @param alarmTime The time at which the alarm should be triggered.
      */
-    fun scheduleAlarm(alarmId: String, alarmTime: Long) {
+    fun scheduleAlarm(alarmId: String, alarmTime: Long, postponedTimes: Int = 0) {
         if (alarmTime > System.currentTimeMillis()) {
             val alarmIntent = Intent(context, AlarmReceiver::class.java).apply {
                 putExtra("ALARM_ID", alarmId)
+                if(postponedTimes != 0) {
+                    putExtra("POSTPONED_TIMES", postponedTimes)
+                }
             }
             val pendingIntent = PendingIntent.getBroadcast(
                 context,
@@ -113,10 +116,10 @@ class AlarmHandler @Inject constructor(
      *
      * @param alarm The alarm to be postponed.
      */
-    fun postponeAlarm(alarm: AlarmEntity) {
+    fun postponeAlarm(alarm: AlarmEntity, postponedTimes: Int) {
         createMedsLog(alarm.medId, TakenStatus.POSTPONED)
         val postponeTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5)
-        scheduleAlarm(alarm.id, postponeTime)
+        scheduleAlarm(alarm.id, postponeTime, postponedTimes)
         Timber.tag("ALARM HANDLER").d("Postponed scheduled alarm ${alarm.id} ")
     }
 
@@ -177,7 +180,7 @@ class AlarmHandler @Inject constructor(
             if (currentTime > lastAlarm.timeInMillis) {
                 val newAlarmList = generateAlarms(lastAlarm, currentTime)
 
-                alarmRepository.clearForMedId(medId)
+                alarmRepository.clearForMedId(medId).await()
                 alarmRepository.insertAll(newAlarmList)
 
                 newAlarmList.forEach { alarm ->

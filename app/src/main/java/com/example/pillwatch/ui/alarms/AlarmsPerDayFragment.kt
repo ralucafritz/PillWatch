@@ -86,14 +86,20 @@ class AlarmsPerDayFragment : Fragment(), OnAlarmUpdatedListener {
 
         binding.buttonNext.setOnClickListener {
             viewModel.scheduleAlarms()
-            try {
-                this.findNavController().navigate(
-                    AlarmsPerDayFragmentDirections.actionAlarmsPerDayFragmentToMedPageFragment(
-                        viewModel.medId
+        }
+
+        viewModel.navigationCheck.observe(viewLifecycleOwner) {
+            if (it != null && it) {
+                try {
+                    this.findNavController().navigate(
+                        AlarmsPerDayFragmentDirections.actionAlarmsPerDayFragmentToMedPageFragment(
+                            viewModel.medId
+                        )
                     )
-                )
-            } catch (e: Exception) {
-                Timber.tag("AlarmsPerDayFragment").e("Error found for AlarmsPerDayNavigation: $e")
+                } catch (e: Exception) {
+                    Timber.tag("AlarmsPerDayFragment")
+                        .e("Error found for AlarmsPerDayNavigation: $e")
+                }
             }
         }
 
@@ -111,7 +117,7 @@ class AlarmsPerDayFragment : Fragment(), OnAlarmUpdatedListener {
      * @param updatedAlarm The updated AlarmEntity object.
      */
     override fun onAlarmUpdated(updatedAlarm: AlarmEntity) {
-            viewModel.updateAlarm(updatedAlarm)
+        viewModel.updateAlarm(updatedAlarm)
     }
 
     // set the start hour value to the current hour and the nearest 5-minute increment.

@@ -9,7 +9,6 @@ import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
@@ -27,11 +26,7 @@ import com.example.pillwatch.R
 import com.example.pillwatch.R.*
 import com.example.pillwatch.alarms.AlarmSchedulerWorker
 import com.example.pillwatch.databinding.ActivityMainBinding
-import com.example.pillwatch.ui.alarms.AlarmsPerDayFragment
-import com.example.pillwatch.ui.alarms.AlarmsPerDayFragmentArgs
-import com.example.pillwatch.ui.alarms.AlarmsPerDayFragmentDirections
 import com.example.pillwatch.ui.home.HomeFragment
-import com.example.pillwatch.ui.medication.medpage.MedPageFragmentDirections
 import com.example.pillwatch.ui.splash.SplashActivity
 import com.example.pillwatch.user.UserManager
 import com.example.pillwatch.utils.Role
@@ -114,13 +109,9 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
              *      Toolbar initialization
              *      Toolbar title changed to the username saved in SharedPreferences
              */
-            binding.toolbarUsername.text = userManager.username
+            setToolbarUsername()
             setSupportActionBar(toolbar)
 
-            /**
-             *      This function sets the @currentFragmentId MutableLiveData value in the ViewModel
-             *      @param bool is used to determine if the ToolbarFrame should be visible or not
-             */
             bottomNavigationView.setupWithNavController(navController)
 
             appBarConfigurationNavBottom = AppBarConfiguration(
@@ -139,9 +130,9 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                 string.nav_open,
                 string.nav_close
             )
+            actionBarDrawerToggle.isDrawerIndicatorEnabled = false
             drawerLayout.addDrawerListener(actionBarDrawerToggle)
             actionBarDrawerToggle.syncState()
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
             /**
              *      HamburgerIcon click listener for opening and closing the drawer
@@ -181,7 +172,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                             )
                         }
                     }
-
                     else -> {
                         navController.popBackStack(mainViewModel.currentFragmentId.value!!, true)
                         navController.navigate(item.itemId)
@@ -210,25 +200,38 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     override fun onBackPressed() {
-        mainViewModel.currentFragmentId.value?.let {
-            when (mainViewModel.currentFragmentId.value) {
-                R.id.medPageFragment -> {
-                    when (mainViewModel.previousFragmentId.value) {
-                        R.id.medicationFragment -> navController.navigate(id.medicationFragment)
-                        else -> navController.navigate(id.homeFragment)
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            // Close the navigation drawer if it is open
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            mainViewModel.currentFragmentId.value?.let {
+                when (mainViewModel.currentFragmentId.value) {
+                    id.medPageFragment -> {
+                        when (mainViewModel.previousFragmentId.value) {
+                            id.medicationFragment -> {
+                                navController.navigate(
+                                id.medicationFragment
+                            )
+                            }
+
+                            else -> {
+                                navController.navigate(id.homeFragment)
+                            }
+                        }
                     }
+
+                    else -> super.onBackPressed()
                 }
-                else -> super.onBackPressed()
             }
         }
     }
 
-    fun refreshHomeFragment() {
+    private fun refreshHomeFragment() {
         val currentFragmentId = mainViewModel.currentFragmentId.value
 
-        if (currentFragmentId == R.id.homeFragment) {
+        if (currentFragmentId == id.homeFragment) {
             val navHostFragment =
-                supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+                supportFragmentManager.findFragmentById(id.nav_host_fragment) as? NavHostFragment
             val currentFragment = navHostFragment?.childFragmentManager?.fragments?.firstOrNull()
 
             if (currentFragment is HomeFragment) {
@@ -253,14 +256,10 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         // Get the string for the next message
         val nextMessage = getString(messageIds[nextIndex])
 
-        binding.root.snackbar(nextMessage, attr.colorMissed, 10000, 110)
+        binding.root.snackbar(nextMessage, attr.colorWarning, 10000, 110)
 
         // Store the index of the next message
         userManager.setMessageIndex(nextIndex)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return actionBarDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -274,7 +273,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
      */
     fun navBarToolbarBottomNav(bool: Boolean, fragmentId: Int) {
         mainViewModel.setPreviousFragment(
-            mainViewModel.currentFragmentId.value ?: R.id.homeFragment
+            mainViewModel.currentFragmentId.value ?: mainViewModel.previousFragmentId.value!!
         )
         mainViewModel.setCurrentFragmentId(fragmentId)
         if (bool) {
@@ -331,6 +330,10 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         val intent = Intent(this@MainActivity, SplashActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    fun setToolbarUsername(){
+        binding.toolbarUsername.text = userManager.username
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {

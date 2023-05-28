@@ -56,5 +56,6 @@
         <item name="backgroundGrey">#ECE2FA</item>
         <item name="onBackgroundGrey">#4A4A4A</item>
         <item name="colorCredits">#7E625B71</item>
+        <item name="colorWarning">#FF9933</item>
     </style>
 </resources>

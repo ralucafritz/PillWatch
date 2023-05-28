@@ -68,10 +68,14 @@ class AddMedViewModel @Inject constructor(
     private val _interactionChecked = MutableLiveData<Boolean>()
     val interactionChecked: LiveData<Boolean>
         get() = _interactionChecked
-
+    
     private val _showToast = MutableLiveData<String>()
     val showToast: LiveData<String>
         get() = _showToast
+
+    private val _showProgressDialog = MutableLiveData<Boolean>()
+    val showProgressDialog: LiveData<Boolean>
+        get() = _showProgressDialog
 
     /**
      * Searches for medication names based on the entered text.
@@ -215,6 +219,7 @@ class AddMedViewModel @Inject constructor(
      */
     private fun checkInteraction(medId: Long, userId: String) {
         viewModelScope.launch {
+            _showProgressDialog.value = true
             // get rxcui based on the medId from Db
             val medIdRxCui = withContext(Dispatchers.IO) {
                 medsRepository.getRxCuiForMed(medId)
@@ -228,6 +233,7 @@ class AddMedViewModel @Inject constructor(
                 getInteractionDataFromAPI(medIdRxCui, rxCuiList)
             } else {
                 addMedCheck.value = true
+                _showProgressDialog.value = false
             }
         }
     }
@@ -280,6 +286,7 @@ class AddMedViewModel @Inject constructor(
                     _isAlertNeeded.value = true
                 } else {
                     addMedCheck.value = true
+                    _showProgressDialog.value = false
                 }
             } catch (e: Exception) {
                 Timber.tag("INTERACTION").e("Server error $e.printStackTrace().toString()")
@@ -297,6 +304,7 @@ class AddMedViewModel @Inject constructor(
         val moderateCount = severityModerate.size
         val lowCount = severityLow.size
         val messagePair = checkSeverity(lowCount, moderateCount, highCount)
+        _showProgressDialog.value = false
         if (messagePair.second > 0) {
             context.showAlert(
                 messagePair.first,

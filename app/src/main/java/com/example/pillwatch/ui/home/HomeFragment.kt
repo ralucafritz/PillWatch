@@ -23,6 +23,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: HomeListAdapter
+
     @Inject
     lateinit var viewModel: HomeViewModel
 
@@ -62,13 +63,26 @@ class HomeFragment : Fragment() {
     fun recyclerViewImplementation() {
         lifecycleScope.launch {
             val medsList = viewModel.getMedsList()
-            if (medsList != null) {
+            if (!medsList.isNullOrEmpty()) {
+                toggleVisibility(false)
                 adapter = HomeListAdapter(medsList)
                 recyclerView.adapter = adapter
                 adapter.onItemClick = {
                     startNavigation(it)
                 }
+            } else {
+                toggleVisibility(true)
             }
+        }
+    }
+
+    private fun toggleVisibility(bool: Boolean) {
+        if (bool) {
+            binding.emptyListTxt.visibility = View.VISIBLE
+            binding.homeList.visibility = View.GONE
+        } else {
+            binding.emptyListTxt.visibility = View.GONE
+            binding.homeList.visibility = View.VISIBLE
         }
     }
 
