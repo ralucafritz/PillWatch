@@ -1,6 +1,7 @@
 package com.example.pillwatch.ui.settings
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentSettingsBinding
 import com.example.pillwatch.ui.main.MainActivity
 import com.example.pillwatch.user.UserManager
+import java.util.Locale
 import javax.inject.Inject
 
 class SettingsFragment : Fragment() {
@@ -57,6 +59,10 @@ class SettingsFragment : Fragment() {
             showThemeDialog()
         }
 
+        binding.languageSetting.setOnClickListener {
+            showLanguageDialog()
+        }
+
         binding.signOut.setOnClickListener {
             (requireActivity() as MainActivity).logout()
         }
@@ -65,7 +71,7 @@ class SettingsFragment : Fragment() {
             showEditDialog()
         }
 
-        setDisplayThemeText()
+        setDisplayText()
 
         return binding.root
     }
@@ -91,14 +97,22 @@ class SettingsFragment : Fragment() {
             .show()
     }
 
-    private fun setDisplayThemeText() {
+    private fun setDisplayText() {
         val themeValue = userManager.theme
         val themeValues = resources.getStringArray(R.array.theme_values)
         val themeEntries = resources.getStringArray(R.array.theme_entries)
 
-        val index = themeValues.indexOf(themeValue)
+        val themeIndex = themeValues.indexOf(themeValue)
 
-        binding.themeSettingCurrent.text = themeEntries[index]
+        binding.themeSettingCurrent.text = themeEntries[themeIndex]
+
+        val languageValue = userManager.language
+        val languageValues = resources.getStringArray(R.array.language_values)
+        val languageEntries = resources.getStringArray(R.array.language_entries)
+
+        val languageIndex = languageValues.indexOf(languageValue)
+
+        binding.languageSettingCurrent.text = languageEntries[languageIndex]
     }
 
     private fun showThemeDialog() {
@@ -109,7 +123,7 @@ class SettingsFragment : Fragment() {
         val selectedIndex = themeValues.indexOf(currentTheme)
 
         AlertDialog.Builder(requireContext(), R.style.RoundedDialogStyle)
-            .setTitle("Choose theme")
+            .setTitle(resources.getString(R.string.title_theme_dialog))
             .setSingleChoiceItems(themes, selectedIndex) { dialog, which ->
                 userManager.theme = themeValues[which]
                 binding.themeSettingCurrent.text = themes[which]
@@ -118,18 +132,47 @@ class SettingsFragment : Fragment() {
                     showRestartDialog()
                 }
             }
-            .setNegativeButton(android.R.string.cancel, null)
+            .setNegativeButton(resources.getString(R.string.cancel), null)
             .show()
+    }
+
+    private fun showLanguageDialog() {
+        val entries = resources.getStringArray(R.array.language_entries)
+        val values = resources.getStringArray(R.array.language_values)
+        val currentLanguage = userManager.language
+        val selectedIndex = values.indexOf(currentLanguage)
+
+        AlertDialog.Builder(requireContext(), R.style.RoundedDialogStyle)
+            .setTitle(resources.getString(R.string.title_language_dialog))
+            .setSingleChoiceItems(entries, selectedIndex) { dialog, which ->
+                userManager.language = values[which]
+                setLocale(values[which])
+                binding.languageSettingCurrent.text = entries[which]
+                dialog.dismiss()
+                if(userManager.language != currentLanguage) {
+                    showRestartDialog()
+                }
+            }
+            .setNegativeButton(resources.getString(R.string.cancel), null)
+            .show()
+    }
+
+    private fun setLocale(lang: String) {
+        val locale = Locale(lang)
+        Locale.setDefault(locale)
+        val config = Configuration()
+        config.locale = locale
+        resources.updateConfiguration(config, resources.displayMetrics)
     }
 
     private fun showRestartDialog() {
         AlertDialog.Builder(requireContext(), R.style.RoundedDialogStyle)
-            .setTitle("Apply Theme")
-            .setMessage("The theme will be applied when the app restarts. Do you want to restart now?")
+            .setTitle(resources.getString(R.string.apply_changes))
+            .setMessage(resources.getString(R.string.restart_message))
             .setPositiveButton("Restart") { _, _ ->
                 requireActivity().recreate()
             }
-            .setNegativeButton("Later", null)
+            .setNegativeButton(resources.getString(R.string.later), null)
             .show()
     }
 }

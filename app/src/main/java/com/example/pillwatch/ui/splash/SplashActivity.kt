@@ -1,6 +1,7 @@
 package com.example.pillwatch.ui.splash
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ import com.example.pillwatch.ui.main.MedsAPIViewModel
 import com.example.pillwatch.ui.splash.welcome.WelcomeFragment
 import com.example.pillwatch.user.UserManager
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 class SplashActivity : AppCompatActivity() {
@@ -31,7 +33,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         userManager = (application as PillWatchApplication).appComponent.userManager()
         setThemeAccordingToPreference()
-
+        setLanguageAccordingToPreference()
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.mainSplash.visibility = View.VISIBLE
@@ -107,5 +109,11 @@ class SplashActivity : AppCompatActivity() {
             "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             "system" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
+    }
+    /**
+     * Sets the language of the activity based on the saved preference.
+     */
+    private fun setLanguageAccordingToPreference() {
+//        (application as PillWatchApplication).setLocale(userManager.language)
     }
 }

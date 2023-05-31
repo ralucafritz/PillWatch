@@ -3,6 +3,7 @@ package com.example.pillwatch.ui.main
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -40,6 +41,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

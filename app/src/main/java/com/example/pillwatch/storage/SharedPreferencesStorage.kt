@@ -73,4 +73,12 @@ class SharedPreferencesStorage @Inject constructor(context: Context) : Storage {
     override fun getAlarmNotificationMessage(): String {
          return sharedPreferences.getString("alarmNotificationMessage", "Time to take your medication:")!!
     }
+
+    override fun getLanguage(): String {
+        return sharedPreferences.getString("language", "ro")!!
+    }
+
+    override fun setLanguage(language: String) {
+        setString("language", language)
+    }
 }

@@ -1,12 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">PillWatch</string>
+    <string name="app_name">Pill Watch</string>
     <string name="text_test">Text Test</string>
     <string name="meds_on_time">Taking your meds on time was never easier</string>
     <string name="warning_text_welcome">This app is not intended as a replacement of a professional medical advice.</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="log_in">Log In</string>
     <string name="get_started_button_txt">Get started</string>
-    <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
@@ -50,7 +50,7 @@
     <string name="username_">Username:</string>
     <string name="email_">Email:</string>
     <string name="active_med_count">Active med count:</string>
-    <string name="credits">© PillWatch 2023</string>
+    <string name="credits">© Pill Watch 2023</string>
     <string name="healthcare">In order to ensure safe and appropriate management, talk to your healthcare practitioner if you believe you are experiencing, or may experience, a drug interaction.</string>
     <string name="interaction">Warning: If no interactions are found between two drugs, it does not necessarily mean that no interactions exist. Always consult with a healthcare professional.</string>
     <string name="medical_advice">This app does not provide medical advice. Please consult a qualified healthcare professional for personalized medical guidance.</string>
@@ -62,6 +62,25 @@
     <string name="no_meds_medication">No medication history found.\n Have a great day!</string>
     <string name="please_wait">Please wait</string>
     <string name="no_logs_available_for_this_medication">No logs available for this medication.</string>
+
+    <string name="invalid_email_err">Invalid email.</string>
+    <string name="short_pwd_err">Password is too short. Minimum 8 characters.</string>
+    <string name="empty_fields_err">Please fill all the fields.</string>
+    <string name="incorrect_pwd">Incorrect password.</string>
+    <string name="no_user">The user with that email was not found</string>
+    <string name="login_success">Login successful.</string>
+    <string name="login_fail">Login failed.</string>
+
+    <string name="apply_changes">Apply changes</string>
+    <string name="restart_message">The changes will be applied when the app restarts. Do you want to restart now?</string>
+
+    <string  name="later">Later</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="language">Language</string>
+
+    <string name="title_language_dialog">Choose language:</string>
+    <string name="title_theme_dialog">Choose theme:</string>
 
     <string-array name="concentration_measures">
         <item>-</item>
@@ -89,6 +108,17 @@
         <item>light</item>
         <item>dark</item>
         <item>system</item>
+    </string-array>
+
+    <string-array name="language_entries">
+        <item>English</item>
+        <item>Română</item>
+    </string-array>
+
+
+    <string-array name="language_values">
+        <item>en</item>
+        <item>ro</item>
     </string-array>
 
 </resources>
