@@ -39,6 +39,10 @@ class UserMedsRepository(
         return userMedsDao.getMedsForUserId(userId)
     }
 
+    fun isArchived(medId: String): Boolean {
+        return userMedsDao.isArchived(medId)
+    }
+
     fun getAllNonArchivedMedsForUser(userId: String): List<UserMedsEntity> {
         return userMedsDao.getAllNonArchivedMedsForUser(userId)
     }
