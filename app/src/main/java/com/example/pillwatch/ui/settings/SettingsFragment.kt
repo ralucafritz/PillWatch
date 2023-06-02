@@ -59,9 +59,9 @@ class SettingsFragment : Fragment() {
             showThemeDialog()
         }
 
-        binding.languageSetting.setOnClickListener {
-            showLanguageDialog()
-        }
+//        binding.languageSetting.setOnClickListener {
+//            showLanguageDialog()
+//        }
 
         binding.signOut.setOnClickListener {
             (requireActivity() as MainActivity).logout()
@@ -106,13 +106,13 @@ class SettingsFragment : Fragment() {
 
         binding.themeSettingCurrent.text = themeEntries[themeIndex]
 
-        val languageValue = userManager.language
-        val languageValues = resources.getStringArray(R.array.language_values)
-        val languageEntries = resources.getStringArray(R.array.language_entries)
-
-        val languageIndex = languageValues.indexOf(languageValue)
-
-        binding.languageSettingCurrent.text = languageEntries[languageIndex]
+//        val languageValue = userManager.language
+//        val languageValues = resources.getStringArray(R.array.language_values)
+//        val languageEntries = resources.getStringArray(R.array.language_entries)
+//
+//        val languageIndex = languageValues.indexOf(languageValue)
+//
+//        binding.languageSettingCurrent.text = languageEntries[languageIndex]
     }
 
     private fun showThemeDialog() {
@@ -136,34 +136,25 @@ class SettingsFragment : Fragment() {
             .show()
     }
 
-    private fun showLanguageDialog() {
-        val entries = resources.getStringArray(R.array.language_entries)
-        val values = resources.getStringArray(R.array.language_values)
-        val currentLanguage = userManager.language
-        val selectedIndex = values.indexOf(currentLanguage)
-
-        AlertDialog.Builder(requireContext(), R.style.RoundedDialogStyle)
-            .setTitle(resources.getString(R.string.title_language_dialog))
-            .setSingleChoiceItems(entries, selectedIndex) { dialog, which ->
-                userManager.language = values[which]
-                setLocale(values[which])
-                binding.languageSettingCurrent.text = entries[which]
-                dialog.dismiss()
-                if(userManager.language != currentLanguage) {
-                    showRestartDialog()
-                }
-            }
-            .setNegativeButton(resources.getString(R.string.cancel), null)
-            .show()
-    }
-
-    private fun setLocale(lang: String) {
-        val locale = Locale(lang)
-        Locale.setDefault(locale)
-        val config = Configuration()
-        config.locale = locale
-        resources.updateConfiguration(config, resources.displayMetrics)
-    }
+//    private fun showLanguageDialog() {
+//        val entries = resources.getStringArray(R.array.language_entries)
+//        val values = resources.getStringArray(R.array.language_values)
+//        val currentLanguage = userManager.language
+//        val selectedIndex = values.indexOf(currentLanguage)
+//
+//        AlertDialog.Builder(requireContext(), R.style.RoundedDialogStyle)
+//            .setTitle(resources.getString(R.string.title_language_dialog))
+//            .setSingleChoiceItems(entries, selectedIndex) { dialog, which ->
+//                userManager.language = values[which]
+//                binding.languageSettingCurrent.text = entries[which]
+//                dialog.dismiss()
+//                if(userManager.language != currentLanguage) {
+//                    showRestartDialog()
+//                }
+//            }
+//            .setNegativeButton(resources.getString(R.string.cancel), null)
+//            .show()
+//    }
 
     private fun showRestartDialog() {
         AlertDialog.Builder(requireContext(), R.style.RoundedDialogStyle)

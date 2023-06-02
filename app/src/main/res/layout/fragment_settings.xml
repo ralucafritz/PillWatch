@@ -84,54 +84,54 @@
                 android:layout_marginTop="20dp"
                 android:background="#97625B71" />
 
-            <LinearLayout
-                android:id="@+id/language_setting"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="20dp"
-                android:orientation="horizontal">
+<!--            <LinearLayout-->
+<!--                android:id="@+id/language_setting"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="40dp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:orientation="horizontal">-->
 
-                <TextView
-                    android:id="@+id/language_setting_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="@string/language"
-                    android:textAppearance="?attr/textAppearanceListItem"
-                    android:textSize="@dimen/text_size_med"
-                    android:textStyle="bold" />
+<!--                <TextView-->
+<!--                    android:id="@+id/language_setting_text"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:clickable="true"-->
+<!--                    android:focusable="true"-->
+<!--                    android:text="@string/language"-->
+<!--                    android:textAppearance="?attr/textAppearanceListItem"-->
+<!--                    android:textSize="@dimen/text_size_med"-->
+<!--                    android:textStyle="bold" />-->
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginEnd="2dp"
-                    android:layout_weight="1" />
+<!--                <View-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    android:layout_marginStart="2dp"-->
+<!--                    android:layout_marginEnd="2dp"-->
+<!--                    android:layout_weight="1" />-->
 
-                <TextView
-                    android:id="@+id/language_setting_current"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="30dp"
-                    android:textSize="@dimen/text_size_medium"
-                    tools:text="English" />
+<!--                <TextView-->
+<!--                    android:id="@+id/language_setting_current"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="30dp"-->
+<!--                    android:textSize="@dimen/text_size_medium"-->
+<!--                    tools:text="English" />-->
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginEnd="2dp"
-                    android:layout_weight="1" />
-            </LinearLayout>
+<!--                <View-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    android:layout_marginStart="2dp"-->
+<!--                    android:layout_marginEnd="2dp"-->
+<!--                    android:layout_weight="1" />-->
+<!--            </LinearLayout>-->
 
-            <View
-                android:id="@+id/separating_line_2"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="20dp"
-                android:background="#97625B71" />
+<!--            <View-->
+<!--                android:id="@+id/separating_line_2"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="2dp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:background="#97625B71" />-->
 
             <TextView
                 android:id="@+id/alarm_notifications"
@@ -141,7 +141,7 @@
                 android:layout_marginTop="20dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:text="Change alarm notifications"
+                android:text="@string/change_alarm_notifications"
                 android:textAppearance="?attr/textAppearanceListItem"
                 android:textSize="@dimen/text_size_med"
                 android:textStyle="bold"

@@ -60,7 +60,7 @@ class SplashActivity : AppCompatActivity() {
                     // User exists in the database
                     binding.mainSplash.visibility = View.VISIBLE
                     binding.fragmentHolder.visibility = View.INVISIBLE
-                    viewModel.setMessage()
+                    viewModel.setMessage(resources.getString(R.string.welcome))
                     // Set welcome message
                     viewModel.welcomeMessage.observe(this) { welcomeMessage ->
                         binding.welcomeMessage.text = welcomeMessage
