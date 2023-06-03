@@ -82,7 +82,7 @@ class MedicationFragment : Fragment() {
                     R.drawable.ic_filter
                 }
             }
-            var filterTxt = "Filter: "
+            var filterTxt = resources.getString(R.string.filter) + ": "
             val optionTxt = filterOption.label
             filterTxt += optionTxt
             binding.btnFilter.text = filterTxt

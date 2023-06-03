@@ -82,4 +82,7 @@
     <string name="title_language_dialog">Choose language:</string>
     <string name="title_theme_dialog">Choose theme:</string>
     <string name="change_alarm_notifications">Change alarm notifications</string>
+
+    <string name="filter">Filter</string>
+    <string name="filter_default">Filter: Non-Archived</string>
 </resources>

@@ -82,4 +82,6 @@
     <string name="title_language_dialog">Alege limba:</string>
     <string name="title_theme_dialog">Alege tema:</string>
     <string name="change_alarm_notifications">Change alarm notifications</string>
+    <string name="filter">Filtrează</string>
+    <string name="filter_default">Filtrează: Nearhivate</string>
 </resources>
