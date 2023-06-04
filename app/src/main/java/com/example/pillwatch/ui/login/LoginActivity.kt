@@ -45,6 +45,15 @@ class LoginActivity : AppCompatActivity() {
 
         binding.viewModel = viewModel
 
+        viewModel.INVALID_EMAIL_ERR = resources.getString(R.string.invalid_email_err)
+        viewModel.SHORT_PWD_ERR= resources.getString(R.string.short_pwd_err)
+        viewModel.EMPTY_FIELDS_ERR = resources.getString(R.string.empty_fields_err)
+        viewModel.INCORRECT_PWD = resources.getString(R.string.incorrect_pwd)
+        viewModel.NO_USER = resources.getString(R.string.no_user)
+        viewModel.LOGIN_SUCCESS = resources.getString(R.string.login_success)
+        viewModel.LOGIN_FAIL = resources.getString(R.string.login_fail)
+
+
         binding.lifecycleOwner = this
 
         // login btn on click

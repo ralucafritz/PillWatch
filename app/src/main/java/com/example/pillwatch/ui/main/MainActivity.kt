@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                     }
 
                     id.nav_update -> {
-                        val progressDialog = showProgressDialog("Checking for updates")
+                        val progressDialog = showProgressDialog(resources.getString(R.string.check_for_updates))
                         lifecycleScope.launch {
                             withContext(Dispatchers.IO) {
                                 medsAPIViewModel.getMedsDataFromAPI(false)

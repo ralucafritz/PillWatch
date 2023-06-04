@@ -9,14 +9,11 @@ import com.example.pillwatch.data.repository.UserMedsRepository
 import com.example.pillwatch.data.repository.UserRepository
 import com.example.pillwatch.di.ActivityScope
 import com.example.pillwatch.ui.login.LoginViewModel
-import com.example.pillwatch.ui.signup.SignupViewModel.Companion.EMAIL_TAKEN_ERR
-import com.example.pillwatch.ui.signup.SignupViewModel.Companion.SIGNUP_FAIL
 import com.example.pillwatch.user.UserManager
 import com.example.pillwatch.utils.AuthResultProperty
 import com.example.pillwatch.utils.extensions.FirebaseUtils.firebaseUser
 import com.example.pillwatch.utils.ValidationProperty
 import com.example.pillwatch.utils.extensions.FirebaseUtils.firebaseAuth
-import com.example.pillwatch.utils.hashPassword
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
@@ -42,16 +39,17 @@ class SignupViewModel @Inject constructor(
     // SIGN UP WITH EMAIL AND PASSWORD
     companion object {
         const val TAG = "Auth"
-        const val INVALID_EMAIL_ERR = "Invalid email."
-        const val EMAIL_TAKEN_ERR = "Email already in use."
-        const val SHORT_PWD_ERR = "Password is too short. Minimum 8 characters."
-        const val MATCHING_PWD_ERR = "The passwords need to match."
-        const val EMPTY_FIELDS_ERR = "Please fill all the fields."
-        const val SIGNUP_SUCCESS = "Signup successful."
-        const val SIGNUP_FAIL = "Signup failed."
         const val GOOGLE = "Google"
         const val FIREBASE = "Firebase"
     }
+
+    var INVALID_EMAIL_ERR = ""
+    var EMAIL_TAKEN_ERR = ""
+    var SHORT_PWD_ERR = ""
+    var MATCHING_PWD_ERR = ""
+    var EMPTY_FIELDS_ERR = ""
+    var SIGNUP_SUCCESS = ""
+    var SIGNUP_FAIL = ""
 
     private val _signupResult = MutableLiveData<Boolean>()
     val signupResult: LiveData<Boolean>
@@ -236,7 +234,7 @@ class SignupViewModel @Inject constructor(
                                 }
                             }
                         }
-                        Timber.tag(LoginViewModel.TAG).w("${LoginViewModel.GOOGLE} ${LoginViewModel.LOGIN_SUCCESS}")
+                        Timber.tag(TAG).w("${GOOGLE} ${SIGNUP_SUCCESS}")
                         true
                     } else {
                         _alertMsg.value = Pair("An error occurred", "Error")

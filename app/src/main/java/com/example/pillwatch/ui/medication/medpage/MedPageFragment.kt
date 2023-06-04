@@ -9,7 +9,6 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -30,16 +29,12 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-private const val MEDICATION_NOT_FOUND_ERROR_MESSAGE = "Error: Medication not found."
-private const val MED_DELETED_SUCCESS_MESSAGE_TEMPLATE = "Med %s deleted successfully."
-private const val MED_LOGS_EMPTY = "Error: Lost not found."
 
 class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
     private lateinit var binding: FragmentMedPageBinding
 
     @Inject
     lateinit var viewModel: MedPageViewModel
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
@@ -59,6 +54,10 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
         val previousFragment = (requireActivity() as MainActivity).getPreviousFragment()
 
         val id = AlarmsPerDayFragmentArgs.fromBundle(requireArguments()).id
+
+        val MEDICATION_NOT_FOUND_ERROR_MESSAGE = resources.getString(R.string.med_not_found)
+        val TEMPLATE_DELETE_SUCCESSFULLY = resources.getString(R.string.deleted_success)
+        val MED_LOGS_EMPTY = resources.getString(R.string.med_logs_empty)
 
         // Lifecycle
         binding.lifecycleOwner = this
@@ -82,9 +81,9 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
 
         viewModel.hasAlarms.observe(viewLifecycleOwner) {
             if (it != null && it) {
-                binding.btnAdd.text = "Regenerate alarms"
+                binding.btnAdd.text = resources.getString(R.string.regenerate_alarms)
             } else {
-                binding.btnAdd.text = "Add alarms"
+                binding.btnAdd.text = resources.getString(R.string.add_alarms)
             }
         }
 
@@ -109,7 +108,7 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
             navigate(R.id.medicationFragment)
             requireContext().toastTop(
                 String.format(
-                    MED_DELETED_SUCCESS_MESSAGE_TEMPLATE,
+                    "%s $TEMPLATE_DELETE_SUCCESSFULLY",
                     viewModel.medEntity.value!!.tradeName
                 )
             )
@@ -147,9 +146,9 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
         binding.btnArchive.setOnClickListener {
             viewModel.archive(!viewModel.medEntity.value!!.isArchived)
             if(!viewModel.medEntity.value!!.isArchived) {
-                requireContext().toastTop("Medication archived")
+                requireContext().toastTop(resources.getString(R.string.archived))
             } else {
-                requireContext().toastTop("Medication unarchived")
+                requireContext().toastTop(resources.getString(R.string.unarchived))
             }
         }
 

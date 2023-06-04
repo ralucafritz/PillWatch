@@ -11,16 +11,12 @@ import com.example.pillwatch.data.repository.MedsLogRepository
 import com.example.pillwatch.data.repository.UserMedsRepository
 import com.example.pillwatch.data.repository.UserRepository
 import com.example.pillwatch.di.ActivityScope
-import com.example.pillwatch.ui.login.LoginViewModel.Companion.INCORRECT_PWD
-import com.example.pillwatch.ui.login.LoginViewModel.Companion.LOGIN_FAIL
-import com.example.pillwatch.ui.login.LoginViewModel.Companion.NO_USER
 import com.example.pillwatch.ui.signup.SignupViewModel
 import com.example.pillwatch.user.UserManager
 import com.example.pillwatch.utils.AuthResultProperty
 import com.example.pillwatch.utils.ValidationProperty
 import com.example.pillwatch.utils.checkPassword
 import com.example.pillwatch.utils.extensions.FirebaseUtils.firebaseAuth
-import com.example.pillwatch.utils.hashPassword
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
@@ -39,25 +35,23 @@ import kotlin.coroutines.suspendCoroutine
 @ActivityScope
 class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val userManager: UserManager,
-    private val userMedsRepository: UserMedsRepository,
-    private val alarmRepository: AlarmRepository,
-    private val medsLogRepository: MedsLogRepository
+    private val userManager: UserManager
 ) :
     ViewModel() {
 
     companion object {
         const val TAG = "Auth"
-        const val INVALID_EMAIL_ERR = "Invalid email."
-        const val SHORT_PWD_ERR = "Password is too short. Minimum 8 characters."
-        const val EMPTY_FIELDS_ERR = "Please fill all the fields."
-        const val INCORRECT_PWD = "Incorrect password."
-        const val NO_USER = "The user with that email was not found"
-        const val LOGIN_SUCCESS = "Login successful."
-        const val LOGIN_FAIL = "Login failed."
         const val GOOGLE = "Google"
         const val FIREBASE = "Firebase"
     }
+
+    var INVALID_EMAIL_ERR = ""
+    var SHORT_PWD_ERR= ""
+    var EMPTY_FIELDS_ERR = ""
+    var INCORRECT_PWD = ""
+    var NO_USER = ""
+    var LOGIN_SUCCESS = ""
+    var LOGIN_FAIL = ""
 
     private val _loginResult = MutableLiveData<Boolean>()
     val loginResult: LiveData<Boolean>

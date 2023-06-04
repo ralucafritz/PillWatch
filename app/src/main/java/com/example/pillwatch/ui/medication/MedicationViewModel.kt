@@ -1,9 +1,11 @@
 package com.example.pillwatch.ui.medication
 
+import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pillwatch.R
 import com.example.pillwatch.data.model.UserMedsEntity
 import com.example.pillwatch.data.repository.MedsLogRepository
 import com.example.pillwatch.data.repository.UserMedsRepository
@@ -91,7 +93,7 @@ class MedicationViewModel @Inject constructor(
      *
      * @return The share text for the medication history.
      */
-    fun getMedsShareText(): String {
+    fun getMedsShareText(message: String): String {
         val medsList = _userMedsList.value ?: return ""
 
         val now = Calendar.getInstance()
@@ -99,7 +101,7 @@ class MedicationViewModel @Inject constructor(
         val formattedDate = dateFormat.format(now.time)
 
         val shareText = buildString {
-            append("Hey, here's my medicine history from PillWatch as of today, $formattedDate! \n\n")
+            append("${message}, $formattedDate! \n\n")
             medsList.forEachIndexed { index, med ->
                 append("No. ${index + 1} ${med.tradeName}")
                 med.concentration?.let { concentration ->

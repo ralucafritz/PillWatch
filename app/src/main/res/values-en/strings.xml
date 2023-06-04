@@ -71,6 +71,17 @@
     <string name="login_success">Login successful.</string>
     <string name="login_fail">Login failed.</string>
 
+    <string name="email_taken_err">Email already in use.</string>
+    <string name="matching_pwd_err">The passwords need to match.</string>
+    <string name="signup_success">Signup successful.</string>
+    <string name="signup_fail">Signup failed.</string>
+
+    <string name="short_username">Username is too short. Minimum 4 characters.</string>
+
+    <string name="no_username">No username found</string>
+    <string name="no_email_found">No email found</string>
+    <string name="count_zero">No meds found</string>
+
     <string name="apply_changes">Apply changes</string>
     <string name="restart_message">The changes will be applied when the app restarts. Do you want to restart now?</string>
 
@@ -85,4 +96,26 @@
 
     <string name="filter">Filter</string>
     <string name="filter_default">Filter: Non-Archived</string>
+
+    <string name="archived">Medication archived</string>
+    <string name="unarchived">Medication unarchived</string>
+
+    <string name="regenerate_alarms">Regenerate alarms</string>
+
+    <string name="med_not_found">Error: Medication not found.</string>
+    <string name="deleted_success"> deleted successfully.</string>
+    <string name="med_logs_empty">Error: Logs not found.</string>
+
+    <string name="no_medication_archived">No archived medication found.\n Have a great day!</string>
+    <string name="no_medication_non_archived">No non-archived medication found.\n Have a great day!</string>
+    <string name="no_medication">No medication found. Have a great day!</string>
+
+    <string name="medicine_list">My medicine list: </string>
+    <string name="share_using">Share using </string>
+    <string name="share_message">Hey, here\'s my medicine history from PillWatch as of today</string>
+
+    <string name="taken">Taken</string>
+    <string name="postponed">Postponed</string>
+    <string name="missed">Missed</string>
+
 </resources>

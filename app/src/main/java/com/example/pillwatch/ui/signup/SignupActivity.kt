@@ -45,6 +45,14 @@ class SignupActivity : AppCompatActivity() {
 
         binding.viewModel = viewModel
 
+        viewModel.INVALID_EMAIL_ERR = resources.getString(R.string.invalid_email_err)
+        viewModel.EMAIL_TAKEN_ERR = resources.getString(R.string.email_taken_err)
+        viewModel.SHORT_PWD_ERR = resources.getString(R.string.short_pwd_err)
+        viewModel.MATCHING_PWD_ERR = resources.getString(R.string.matching_pwd_err)
+        viewModel.EMPTY_FIELDS_ERR = resources.getString(R.string.empty_fields_err)
+        viewModel.SIGNUP_SUCCESS =  resources.getString(R.string.signup_success)
+        viewModel.SIGNUP_FAIL = resources.getString(R.string.signup_fail)
+
         binding.lifecycleOwner = this
 
         // signup btn on click

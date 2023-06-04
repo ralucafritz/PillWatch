@@ -35,13 +35,6 @@ class MedicationFragment : Fragment() {
         )
     }
 
-    companion object {
-        const val NO_MEDICATION_ARCHIVED = "No archived medication found.\n Have a great day!"
-        const val NO_MEDICATION_NON_ARCHIVED =
-            "No non-archived medication found.\n Have a great day!"
-        const val NO_MEDICATION = "No medication found. Have a great day"
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,6 +47,10 @@ class MedicationFragment : Fragment() {
 
         // ViewModel
         binding.viewModel = viewModel
+
+        val NO_MEDICATION_ARCHIVED = resources.getString(R.string.no_medication_archived)
+        val NO_MEDICATION_NON_ARCHIVED = resources.getString(R.string.no_medication_non_archived)
+        val NO_MEDICATION = resources.getString(R.string.no_medication)
 
         val recyclerView = binding.medsList
 
@@ -157,10 +154,10 @@ class MedicationFragment : Fragment() {
             R.id.action_share -> {
                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
-                    putExtra(Intent.EXTRA_SUBJECT, "My medicine list:")
-                    putExtra(Intent.EXTRA_TEXT, viewModel.getMedsShareText())
+                    putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.medicine_list))
+                    putExtra(Intent.EXTRA_TEXT, viewModel.getMedsShareText(resources.getString(R.string.share_message)))
                 }
-                startActivity(Intent.createChooser(shareIntent, "Share using"))
+                startActivity(Intent.createChooser(shareIntent, resources.getString(R.string.share_using)))
                 true
             }
 

@@ -71,6 +71,18 @@
     <string name="login_success">Conectare reușită.</string>
     <string name="login_fail">Conectare eșuată.</string>
 
+    <string name="email_taken_err">Adresa de email este deja utilizată.</string>
+    <string name="matching_pwd_err">Parolele trebuie să se potrivească.</string>
+    <string name="signup_success">Înregistrare reușită.</string>
+    <string name="signup_fail">Înregistrare eșuată.</string>
+
+    <string name="short_username">Numele este prea scurt. Minim 4 caractere.</string>
+
+    <string name="no_username">Numele nu a fost găsit </string>
+    <string name="no_email_found">Email-ul nu a fost găsit</string>
+    <string name="count_zero">0 medicamente găsite</string>
+
+
     <string name="apply_changes">Aplicați modificările</string>
     <string name="restart_message">Modificările vor fi aplicate după restartarea aplicației. Doriți să restartați aplicația acum?</string>
 
@@ -83,7 +95,28 @@
     <string name="title_theme_dialog">Alege tema:</string>
     <string name="change_alarm_notifications">Editează notificarea alarmelor</string>
     <string name="filter">Filtrează</string>
-    <string name="filter_default">Filtrează: Nearhivate</string>
+    <string name="filter_default">Filtrează: Ne-arhivate</string>
+
+    <string name="archived">Medicament arhivat</string>
+    <string name="unarchived">Medicament dezarhivat</string>
+
+    <string name="regenerate_alarms">Regenerare alarme</string>
+
+    <string name="med_not_found">Eroare: Medicamentul nu a fost găsit.</string>
+    <string name="deleted_success"> sters cu success.</string>
+    <string name="med_logs_empty">Eroare: Istoricul nu a fost găsit.</string>
+
+    <string name="no_medication_archived">Nu s-au găsit medicamente arhivate.\n O zi frumoasă în continuare!</string>
+    <string name="no_medication_non_archived">Nu s-au găsit medicamente ne-arhivate.\n O zi frumoasă în continuare!</string>
+    <string name="no_medication">Nu s-au găsit medicamente. O zi frumoasă în continuare!</string>
+
+    <string name="medicine_list">Lista medicamentelor mele: </string>
+    <string name="share_using">Distribuie folosind </string>
+    <string name="share_message">Bună, uite istoricul medicamentelor mele din aplicația PillWatch până astăzi</string>
+
+    <string name="taken">Luat</string>
+    <string name="postponed">Amânat</string>
+    <string name="missed">Pierdut</string>
 
     <string-array name="concentration_measures">
         <item>-</item>
