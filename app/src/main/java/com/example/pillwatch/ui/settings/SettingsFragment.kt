@@ -87,7 +87,7 @@ class SettingsFragment : Fragment() {
         editSecondary.visibility = View.GONE
 
         AlertDialog.Builder(requireContext(), R.style.RoundedDialogStyle)
-            .setTitle("Change Alarm Notification")
+            .setTitle(getString(R.string.title_edit_notif_dialog))
             .setView(dialogView)
             .setPositiveButton(android.R.string.ok) { _, _ ->
                 val editedField = editField.text.toString()

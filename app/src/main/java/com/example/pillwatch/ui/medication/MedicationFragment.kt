@@ -80,7 +80,7 @@ class MedicationFragment : Fragment() {
                 }
             }
             var filterTxt = resources.getString(R.string.filter) + ": "
-            val optionTxt = filterOption.label
+            val optionTxt = getString(filterOption.labelResId)
             filterTxt += optionTxt
             binding.btnFilter.text = filterTxt
             binding.btnFilter.setIconResource(iconRes)

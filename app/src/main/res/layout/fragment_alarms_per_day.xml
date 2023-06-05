@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginBottom="48dp"
-            android:text="Set alarms:"
+            android:text="@string/set_alarms"
             android:textColor="?attr/colorPrimaryContainer"
             android:textSize="@dimen/text_size_xl"
             app:layout_constraintBottom_toTopOf="@+id/background"

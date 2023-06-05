@@ -43,7 +43,7 @@
     <string name="concentration">Concentrație</string>
     <string name="starting_hour">Oră de început:</string>
     <string name="share">Distribuie</string>
-    <string name="choose_reminder_frequency">Alege frecvența notificărilor:</string>
+    <string name="choose_reminder_frequency">Alege frecvența alarmelor:</string>
     <string name="medication_name">Numele medicamentului:</string>
     <string name="medication_logs">Istoricul administrării medicamentului:</string>
     <string name="add_alarms">Adaugați alarme</string>
@@ -100,6 +100,10 @@
     <string name="archived">Medicament arhivat</string>
     <string name="unarchived">Medicament dezarhivat</string>
 
+    <string name="filter_option_archived">Arhivate</string>
+    <string name="filter_option_nonarchived">Ne-arhivate</string>
+    <string name="filter_option_all">Toate</string>
+
     <string name="regenerate_alarms">Regenerare alarme</string>
 
     <string name="med_not_found">Eroare: Medicamentul nu a fost găsit.</string>
@@ -118,6 +122,33 @@
     <string name="postponed">Amânat</string>
     <string name="missed">Pierdut</string>
 
+    <string name="every_x_hours">La fiecare X ore</string>
+    <string name="once_a_day">O dată pe zi</string>
+    <string name="twice_a_day">De două ori pe zi</string>
+    <string name="three_times">De trei ori pe zi</string>
+    <string name="four_times">De patru ori pe zi</string>
+    <string name="no_reminders">Fară alarme</string>
+
+    <string name="title_edit_notif_dialog">Editează notificarea alarmei</string>
+    <string name="set_alarms">Setează alarmele:</string>
+    <string name="every">La fiecare</string>
+    <string name="hours">ore</string>
+
+    <string name="yes">Da</string>
+    <string name="no">Nu</string>
+
+    <string name="interaction_alert_title">ALERTĂ! INTERACȚIUNE GĂSITĂ!</string>
+    <string name="interaction_alert_msg">Următoarele interacțiuni au fost găsite între acest medicament și celelalte medicamente din lista dvs:</string>
+
+    <string name="low_severity">severitate scăzută</string>
+    <string name="moderate_severity">severitate moderată</string>
+    <string name="high_severity">severitate ridicată</string>
+
+    <string name="proceed_question">Doriți să continuați?</string>
+    <string name="add_name_toast">Vă rugăm adăugați numele unui medicament.</string>
+
+    <string name="check_interaction">Se verifică interacțiunile chimice</string>
+
     <string-array name="concentration_measures">
         <item>-</item>
         <item>mg</item>
@@ -135,9 +166,9 @@
     </string-array>
 
     <string-array name="theme_entries">
-        <item>Light</item>
-        <item>Dark</item>
-        <item>System Default</item>
+        <item>Luminoasă</item>
+        <item>Întunecată</item>
+        <item>Setare implicită</item>
     </string-array>
 
     <string-array name="theme_values">

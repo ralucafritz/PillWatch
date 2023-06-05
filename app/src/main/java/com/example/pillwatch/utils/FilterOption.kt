@@ -1,7 +1,9 @@
 package com.example.pillwatch.utils
 
-enum class FilterOption(val label: String) {
-    NON_ARCHIVED("Nearhivate"),
-    ARCHIVED("Arhivate"),
-    ALL("Toate")
+import com.example.pillwatch.R
+
+enum class FilterOption(val labelResId: Int) {
+    NON_ARCHIVED(R.string.filter_option_nonarchived),
+    ARCHIVED(R.string.filter_option_archived),
+    ALL(R.string.filter_option_all)
 }

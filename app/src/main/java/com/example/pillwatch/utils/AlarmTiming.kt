@@ -1,10 +1,12 @@
 package com.example.pillwatch.utils
 
-enum class AlarmTiming(val label: String) {
-    EVERY_X_HOURS("Every X hours"),
-    ONCE_A_DAY("Once a day"),
-    TWICE_A_DAY("Twice a day"),
-    THREE_TIMES("Three times a day"),
-    FOUR_TIMES("Four times a day"),
-    NO_REMINDERS("No reminder needed")
+import com.example.pillwatch.R
+
+enum class AlarmTiming(val labelResId: Int) {
+    EVERY_X_HOURS(R.string.every_x_hours),
+    ONCE_A_DAY(R.string.once_a_day),
+    TWICE_A_DAY(R.string.twice_a_day),
+    THREE_TIMES(R.string.three_times),
+    FOUR_TIMES(R.string.four_times),
+    NO_REMINDERS(R.string.no_reminders),
 }

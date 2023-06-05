@@ -100,6 +100,10 @@
     <string name="archived">Medication archived</string>
     <string name="unarchived">Medication unarchived</string>
 
+    <string name="filter_option_archived">Archived</string>
+    <string name="filter_option_nonarchived">Non-Archived</string>
+    <string name="filter_option_all">All</string>
+
     <string name="regenerate_alarms">Regenerate alarms</string>
 
     <string name="med_not_found">Error: Medication not found.</string>
@@ -118,4 +122,36 @@
     <string name="postponed">Postponed</string>
     <string name="missed">Missed</string>
 
+    <string name="every_x_hours">Every X hours</string>
+    <string name="once_a_day">Once a day</string>
+    <string name="twice_a_day">Twice a day</string>
+    <string name="three_times">Three times a day</string>
+    <string name="four_times">Four times a day</string>
+    <string name="no_reminders">No reminder needed</string>
+
+    <string name="title_edit_notif_dialog">Change Alarm Notification</string>
+    <string name="set_alarms">Set alarms:</string>
+    <string name="every">Every</string>
+    <string name="hours">hours</string>
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="interaction_alert_title">INTERACTION ALERT!</string>
+    <string name="interaction_alert_msg">The following interaction/s have been detected between this medicine and the other medicine on your list:</string>
+
+    <string name="low_severity">low severity</string>
+    <string name="moderate_severity">moderate severity</string>
+    <string name="high_severity">high severity</string>
+
+    <string name="proceed_question">Do you still wish to proceed?</string>
+    <string name="add_name_toast">Please write a name for the medication you wish to add.</string>
+
+    <string name="check_interaction">Checking for interactions</string>
+
+    <string-array name="theme_entries">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>System Default</item>
+    </string-array>
 </resources>
