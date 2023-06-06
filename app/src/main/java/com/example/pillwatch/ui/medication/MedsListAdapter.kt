@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pillwatch.R
 import com.example.pillwatch.data.model.UserMedsEntity
 import com.example.pillwatch.databinding.ItemMedsListBinding
+import com.example.pillwatch.utils.TakenStatus
 import timber.log.Timber
 
 class MedsListAdapter(
@@ -65,9 +66,9 @@ class MedsListAdapter(
             }
             // Set the log counts for taken, postponed, and missed
             if (logs.isNotEmpty()) {
-                val textTaken = "${logs[0] ?: 0} taken"
-                val textPostponed = "${logs[1] ?: 0} postponed"
-                val textMissed = "${logs[2] ?: 0} missed"
+                val textTaken = "${logs[0] ?: 0} ${context.resources.getString(TakenStatus.TAKEN.labelResId).toLowerCase()}"
+                val textPostponed = "${logs[1] ?: 0} ${context.resources.getString(TakenStatus.POSTPONED.labelResId).toLowerCase()}"
+                val textMissed = "${logs[2] ?: 0} ${context.resources.getString(TakenStatus.MISSED.labelResId).toLowerCase()}"
                 binding.takenLog.text = textTaken
                 binding.postponedLog.text = textPostponed
                 binding.missedLog.text = textMissed

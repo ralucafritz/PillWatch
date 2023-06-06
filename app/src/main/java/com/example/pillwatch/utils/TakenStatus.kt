@@ -1,7 +1,9 @@
 package com.example.pillwatch.utils
 
-enum class TakenStatus(val label: String) {
-    TAKEN("Taken"),
-    POSTPONED("Postponed"),
-    MISSED("Missed")
+import com.example.pillwatch.R
+
+enum class TakenStatus(val labelResId: Int) {
+    TAKEN(R.string.taken),
+    POSTPONED(R.string.postponed),
+    MISSED(R.string.missed)
 }

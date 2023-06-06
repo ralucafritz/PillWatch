@@ -180,7 +180,7 @@ class AlarmsPerDayFragment : Fragment(), OnAlarmUpdatedListener {
 
     // update the text of the value component based on the current value of the SeekBar
     private fun changeValueText(value: Int) {
-        val newText = "Every $value hours"
+        val newText =  "${getString(R.string.every)} $value ${getString(R.string.hours)}"
         binding.valueText.text = newText
     }
 

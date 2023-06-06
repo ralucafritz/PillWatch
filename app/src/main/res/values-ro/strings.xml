@@ -43,7 +43,7 @@
     <string name="concentration">Concentrație</string>
     <string name="starting_hour">Oră de început:</string>
     <string name="share">Distribuie</string>
-    <string name="choose_reminder_frequency">Alege frecvența alarmelor:</string>
+    <string name="choose_reminder_frequency">Alege frecvența notificărilor:</string>
     <string name="medication_name">Numele medicamentului:</string>
     <string name="medication_logs">Istoricul administrării medicamentului:</string>
     <string name="add_alarms">Adaugați alarme</string>
@@ -58,10 +58,10 @@
     <string name="theme">Temă</string>
     <string name="sign_out">Deconectare</string>
     <string name="log_out">Deconectare</string>
-    <string name="no_meds_home">Nu mai trebuie administrat niciun medicament astăzi.\n O zi frumoasă în continuare!</string>
-    <string name="no_meds_medication">Nu s-a găsit istoricul medicamentelor.\n O zi frumoasă în continuare!</string>
+    <string name="no_meds_home">Nu mai este niciun medicament pentru astăzi.\n O zi frumoasă în continuare!</string>
+    <string name="no_meds_medication">Nu s-a găsit nicio istorie a medicamentelor.\n O zi frumoasă în continuare!</string>
     <string name="please_wait">Vă rugăm să așteptați.</string>
-    <string name="no_logs_available_for_this_medication">Nu există istoric disponibil pentru acest medicament.</string>
+    <string name="no_logs_available_for_this_medication">Nu există istorie de administrări disponibilă pentru acest medicament.</string>
 
     <string name="invalid_email_err">Email invalid.</string>
     <string name="short_pwd_err">Parolă prea scurtă. Minim 8 caractere.</string>
@@ -70,18 +70,6 @@
     <string name="no_user">Nu s-a găsit utilizatorul cu această adresă de email</string>
     <string name="login_success">Conectare reușită.</string>
     <string name="login_fail">Conectare eșuată.</string>
-
-    <string name="email_taken_err">Adresa de email este deja utilizată.</string>
-    <string name="matching_pwd_err">Parolele trebuie să se potrivească.</string>
-    <string name="signup_success">Înregistrare reușită.</string>
-    <string name="signup_fail">Înregistrare eșuată.</string>
-
-    <string name="short_username">Numele este prea scurt. Minim 4 caractere.</string>
-
-    <string name="no_username">Numele nu a fost găsit </string>
-    <string name="no_email_found">Email-ul nu a fost găsit</string>
-    <string name="count_zero">0 medicamente găsite</string>
-
 
     <string name="apply_changes">Aplicați modificările</string>
     <string name="restart_message">Modificările vor fi aplicate după restartarea aplicației. Doriți să restartați aplicația acum?</string>
@@ -93,99 +81,7 @@
 
     <string name="title_language_dialog">Alege limba:</string>
     <string name="title_theme_dialog">Alege tema:</string>
-    <string name="change_alarm_notifications">Editează notificarea alarmelor</string>
+    <string name="change_alarm_notifications">Change alarm notifications</string>
     <string name="filter">Filtrează</string>
-    <string name="filter_default">Filtrează: Ne-arhivate</string>
-
-    <string name="archived">Medicament arhivat</string>
-    <string name="unarchived">Medicament dezarhivat</string>
-
-    <string name="filter_option_archived">Arhivate</string>
-    <string name="filter_option_nonarchived">Ne-arhivate</string>
-    <string name="filter_option_all">Toate</string>
-
-    <string name="regenerate_alarms">Regenerare alarme</string>
-
-    <string name="med_not_found">Eroare: Medicamentul nu a fost găsit.</string>
-    <string name="deleted_success"> sters cu success.</string>
-    <string name="med_logs_empty">Eroare: Istoricul nu a fost găsit.</string>
-
-    <string name="no_medication_archived">Nu s-au găsit medicamente arhivate.\n O zi frumoasă în continuare!</string>
-    <string name="no_medication_non_archived">Nu s-au găsit medicamente ne-arhivate.\n O zi frumoasă în continuare!</string>
-    <string name="no_medication">Nu s-au găsit medicamente. O zi frumoasă în continuare!</string>
-
-    <string name="medicine_list">Lista medicamentelor mele: </string>
-    <string name="share_using">Distribuie folosind </string>
-    <string name="share_message">Bună, uite istoricul medicamentelor mele din aplicația PillWatch până astăzi</string>
-
-    <string name="taken">Luat</string>
-    <string name="postponed">Amânat</string>
-    <string name="missed">Pierdut</string>
-
-    <string name="every_x_hours">La fiecare X ore</string>
-    <string name="once_a_day">O dată pe zi</string>
-    <string name="twice_a_day">De două ori pe zi</string>
-    <string name="three_times">De trei ori pe zi</string>
-    <string name="four_times">De patru ori pe zi</string>
-    <string name="no_reminders">Fară alarme</string>
-
-    <string name="title_edit_notif_dialog">Editează notificarea alarmei</string>
-    <string name="set_alarms">Setează alarmele:</string>
-    <string name="every">La fiecare</string>
-    <string name="hours">ore</string>
-
-    <string name="yes">Da</string>
-    <string name="no">Nu</string>
-
-    <string name="interaction_alert_title">ALERTĂ! INTERACȚIUNE GĂSITĂ!</string>
-    <string name="interaction_alert_msg">Următoarele interacțiuni au fost găsite între acest medicament și celelalte medicamente din lista dvs:</string>
-
-    <string name="low_severity">severitate scăzută</string>
-    <string name="moderate_severity">severitate moderată</string>
-    <string name="high_severity">severitate ridicată</string>
-
-    <string name="proceed_question">Doriți să continuați?</string>
-    <string name="add_name_toast">Vă rugăm adăugați numele unui medicament.</string>
-
-    <string name="check_interaction">Se verifică interacțiunile chimice</string>
-
-    <string-array name="concentration_measures">
-        <item>-</item>
-        <item>mg</item>
-        <item>ml</item>
-        <item>g</item>
-        <item>%</item>
-        <item>UI</item>
-        <item>MU</item>
-        <item>micrograms</item>
-        <item>mg/ml</item>
-        <item>mg/g</item>
-        <item>µg/ml</item>
-        <item>MU/ml</item>
-        <item>UI/ml</item>
-    </string-array>
-
-    <string-array name="theme_entries">
-        <item>Luminoasă</item>
-        <item>Întunecată</item>
-        <item>Setare implicită</item>
-    </string-array>
-
-    <string-array name="theme_values">
-        <item>light</item>
-        <item>dark</item>
-        <item>system</item>
-    </string-array>
-
-    <string-array name="language_entries">
-        <item>English</item>
-        <item>Română</item>
-    </string-array>
-
-
-    <string-array name="language_values">
-        <item>en</item>
-        <item>ro</item>
-    </string-array>
-
+    <string name="filter_default">Filtrează: Nearhivate</string>
 </resources>

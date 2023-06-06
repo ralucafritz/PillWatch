@@ -47,7 +47,7 @@ class LogsAdapter(
 
         fun bind(log: MedsLogEntity, context: Context) {
             binding.timestamp.text = formatTimestamp(log.timestamp)
-            binding.status.text = log.status.label
+            binding.status.text = context.resources.getString(log.status.labelResId)
 
             val statusColor = getStatusColor(log.status, context)
             val backgroundDrawable = binding.status.background

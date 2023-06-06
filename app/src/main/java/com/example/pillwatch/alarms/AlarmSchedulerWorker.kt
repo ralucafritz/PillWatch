@@ -48,7 +48,9 @@ class AlarmSchedulerWorker @Inject constructor(
 
             // check if the current time is past the last alarm for each UserMedEntity
             userMedEntities.forEach { userMed ->
-                scheduleAndGenerateAlarmsForMed(userMed.id, alarms, currentTime)
+                if(!userMed.isArchived) {
+                    scheduleAndGenerateAlarmsForMed(userMed.id, alarms, currentTime)
+                }
             }
 
             Result.success()

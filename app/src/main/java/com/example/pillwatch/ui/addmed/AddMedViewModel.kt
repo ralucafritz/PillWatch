@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pillwatch.R
 import com.example.pillwatch.data.model.MedsEntity
 import com.example.pillwatch.data.model.UserMedsEntity
 import com.example.pillwatch.data.repository.MedsRepository
@@ -69,8 +70,8 @@ class AddMedViewModel @Inject constructor(
     val interactionChecked: LiveData<Boolean>
         get() = _interactionChecked
     
-    private val _showToast = MutableLiveData<String>()
-    val showToast: LiveData<String>
+    private val _showToast = MutableLiveData<Int>()
+    val showToast: LiveData<Int>
         get() = _showToast
 
     private val _showProgressDialog = MutableLiveData<Boolean>()
@@ -175,7 +176,7 @@ class AddMedViewModel @Inject constructor(
                 }
             }
         } else {
-            _showToast.value = "Please write a name for the medication you wish to add."
+            _showToast.value = R.string.add_name_toast
         }
     }
 
@@ -303,14 +304,14 @@ class AddMedViewModel @Inject constructor(
         val highCount = severityHigh.size
         val moderateCount = severityModerate.size
         val lowCount = severityLow.size
-        val messagePair = checkSeverity(lowCount, moderateCount, highCount)
+        val messagePair = checkSeverity(lowCount, moderateCount, highCount, context)
         _showProgressDialog.value = false
         if (messagePair.second > 0) {
             context.showAlert(
                 messagePair.first,
-                "INTERACTION ALERT!",
-                "Yes",
-                "No"
+                context.resources.getString(R.string.interaction_alert_title),
+                context.resources.getString(R.string.yes),
+                context.resources.getString(R.string.no)
             ) { positiveButtonPressed -> addMedCheck.value = positiveButtonPressed }
         } else {
             addMedCheck.value = true
@@ -331,30 +332,31 @@ class AddMedViewModel @Inject constructor(
     private fun checkSeverity(
         lowCount: Int,
         moderateCount: Int,
-        highCount: Int
+        highCount: Int,
+        context: Context
     ): Pair<String, Int> {
         val builder =
-            StringBuilder("The following interaction/s have been detected between this medicine and the other medicine on your list: \n\n")
+            StringBuilder(context.resources.getString(R.string.interaction_alert_msg))
         var count = 0
         if (lowCount > 0) {
             val severityLowPairs =
                 severityLow.filter { it.first == _selectedMed.value?.rxCui || it.second == _selectedMed.value?.rxCui }
-            builder.append("- ${severityLowPairs.size} low severity\n")
+            builder.append("\n- ${severityLowPairs.size} ${context.resources.getString(R.string.low_severity)}\n")
             count += severityLowPairs.size
         }
         if (moderateCount > 0) {
             val severityModeratePairs =
                 severityModerate.filter { it.first == _selectedMed.value?.rxCui || it.second == _selectedMed.value?.rxCui }
-            builder.append("- ${severityModeratePairs.size} moderate severity\n")
+            builder.append("\n- ${severityModeratePairs.size} ${context.resources.getString(R.string.moderate_severity)}\n")
             count += severityModeratePairs.size
         }
         if (highCount > 0) {
             val severityHighPairs =
                 severityHigh.filter { it.first == _selectedMed.value?.rxCui || it.second == _selectedMed.value?.rxCui }
-            builder.append("- ${severityHighPairs.size} high severity\n")
+            builder.append("\n- ${severityHighPairs.size} ${context.resources.getString(R.string.high_severity)}\n")
             count += severityHighPairs.size
         }
-        builder.append("\n\n Do you still wish to proceed?")
+        builder.append("\n\n ${context.resources.getString(R.string.proceed_question)}")
 
         return Pair(builder.toString(), count)
     }

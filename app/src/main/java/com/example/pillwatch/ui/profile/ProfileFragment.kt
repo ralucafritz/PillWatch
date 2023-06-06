@@ -30,12 +30,6 @@ class ProfileFragment : Fragment() {
         )
     }
 
-    companion object {
-        const val usernameNotFound = "No username found"
-        const val emailNotFound = "No email found"
-        const val countZero = "No meds found"
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -74,6 +68,10 @@ class ProfileFragment : Fragment() {
      * Generates the UI for the profile page
      */
     private fun generateUI() {
+        val usernameNotFound = getString(R.string.no_username)
+        val emailNotFound = getString(R.string.no_email_found)
+        val countZero = getString(R.string.count_zero)
+
         if (viewModel.username != "") {
             binding.usernameValue.text = viewModel.username
         } else {

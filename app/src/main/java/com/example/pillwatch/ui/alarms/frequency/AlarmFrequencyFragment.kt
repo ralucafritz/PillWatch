@@ -74,7 +74,7 @@ class AlarmFrequencyFragment : Fragment() {
         val defaultOption = AlarmTiming.EVERY_X_HOURS
         for (enumValue in AlarmTiming.values()) {
             val radioButton = RadioButton(requireContext())
-            radioButton.text = enumValue.label
+            radioButton.text = getString(enumValue.labelResId)
             radioButton.tag = enumValue
             radioButton.setOnCheckedChangeListener { buttonView, isChecked ->
                 if (isChecked) {

@@ -11,6 +11,8 @@ interface Storage {
     fun getInt(key:String): Int
     fun setTheme(theme: String)
     fun getTheme(): String
+    fun getLanguage(): String
+    fun setLanguage(language: String)
     fun setMessageIndex(index: Int)
     fun getMessageIndex(): Int
     fun setAlarmNotificationMessage(message: String)

@@ -19,10 +19,8 @@ class UsernameCreationViewModel @Inject constructor(
     private val userManager: UserManager
 ) : ViewModel() {
 
-    companion object {
-        const val SHORT_USERNAME = "Username is too short. Minimum 4 characters."
-        const val EMPTY_FIELDS_ERR = "Please fill all the fields."
-    }
+    var SHORT_USERNAME = ""
+    var EMPTY_FIELDS_ERR = ""
 
     private val _username = MutableLiveData<String>()
     val username: LiveData<String>

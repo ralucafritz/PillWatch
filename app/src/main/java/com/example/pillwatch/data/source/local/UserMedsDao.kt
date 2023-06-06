@@ -20,6 +20,9 @@ interface UserMedsDao {
     @Query("SELECT * FROM user_meds_table WHERE userId = :userId")
     fun getMedsForUserId(userId: String): List<UserMedsEntity>
 
+    @Query("SELECT isArchived FROM user_meds_table WHERE id = :medId")
+    fun isArchived(medId: String): Boolean
+
     @Query("SELECT * FROM user_meds_table WHERE userId = :userId AND isArchived = :isArchived")
     fun getAllNonArchivedMedsForUser(userId: String, isArchived: Boolean = false): List<UserMedsEntity>
 

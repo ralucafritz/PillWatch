@@ -69,7 +69,7 @@ class AddMedFragment : Fragment() {
 
         viewModel.showProgressDialog.observe(viewLifecycleOwner) {
             if(it) {
-                progressDialog = requireContext().showProgressDialog("Checking for interactions")
+                progressDialog = requireContext().showProgressDialog(getString(R.string.check_interaction))
             } else {
                 requireContext().dismissProgressDialog(progressDialog)
             }
@@ -133,7 +133,7 @@ class AddMedFragment : Fragment() {
         viewModel.showToast.observe(viewLifecycleOwner) {
             if(it!=null) {
                 binding.root.snackbar(
-                    it,
+                    getString(it),
                     R.attr.colorMissed,
                     5000
                 )

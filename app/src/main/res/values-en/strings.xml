@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pill Watch</string>
+    <string name="text_test">Text Test</string>
+    <string name="meds_on_time">Taking your meds on time was never easier</string>
+    <string name="warning_text_welcome">This app is not intended as a replacement of a professional medical advice.</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="log_in">Log In</string>
+    <string name="get_started_button_txt">Get started</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="signup_btn">Sign up</string>
+    <string name="confirm_password"><font size="18">Confirm Password</font></string>
+    <string name="password"><font size="18">Password</font></string>
+    <string name="email"><font size="18">Email</font></string>
+    <string name="sign_up">Sign up</string>
+    <string name="dont_have_an_account">Don\'t have an account?</string>
+    <string name="log_in_btn">Log in</string>
+    <string name="or">or</string>
+    <string name="log_in_with_google">Log in with Google</string>
+    <string name="sign_up_with_google">Sign up with Google</string>
+    <string name="choose_an_username">Choose an username:</string>
+    <string name="username">Username</string>
+    <string name="next">Next</string>
+    <string name="settings">Settings</string>
+    <string name="medication">Medication</string>
+    <string name="home">Home</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+    <string name="profile">Profile</string>
+    <string name="check_for_updates">Check for meds updates</string>
+    <string name="an_app_for_your_needs">An app for your needs</string>
+    <string name="add_a_med">Add a med</string>
+    <string name="medName">MedName</string>
+    <string name="add_the_medicine_name">Add the medicine name:</string>
+    <string name="medicine_name">Medicine name</string>
+    <string name="concentration">concentration</string>
+    <string name="starting_hour">Starting hour:</string>
+    <string name="share">Share</string>
+    <string name="choose_reminder_frequency">Choose reminder frequency:</string>
+    <string name="medication_name">Medication name:</string>
+    <string name="medication_logs">Medication logs:</string>
+    <string name="add_alarms">Add alarms</string>
+    <string name="username_">Username:</string>
+    <string name="email_">Email:</string>
+    <string name="active_med_count">Active med count:</string>
+    <string name="credits">© Pill Watch 2023</string>
+    <string name="healthcare">In order to ensure safe and appropriate management, talk to your healthcare practitioner if you believe you are experiencing, or may experience, a drug interaction.</string>
+    <string name="interaction">Warning: If no interactions are found between two drugs, it does not necessarily mean that no interactions exist. Always consult with a healthcare professional.</string>
+    <string name="medical_advice">This app does not provide medical advice. Please consult a qualified healthcare professional for personalized medical guidance.</string>
+    <string name="cannot_check_interaction">Couldn\'t verify the interaction of this med with the existing medications.</string>
+    <string name="theme">Theme</string>
+    <string name="sign_out">Sign out</string>
+    <string name="log_out">Log out</string>
+    <string name="no_meds_home">No medication left for today.\n Have a great day!</string>
+    <string name="no_meds_medication">No medication history found.\n Have a great day!</string>
+    <string name="please_wait">Please wait</string>
+    <string name="no_logs_available_for_this_medication">No logs available for this medication.</string>
+
+    <string name="invalid_email_err">Invalid email.</string>
+    <string name="short_pwd_err">Password is too short. Minimum 8 characters.</string>
+    <string name="empty_fields_err">Please fill all the fields.</string>
+    <string name="incorrect_pwd">Incorrect password.</string>
+    <string name="no_user">The user with that email was not found</string>
+    <string name="login_success">Login successful.</string>
+    <string name="login_fail">Login failed.</string>
+
+    <string name="email_taken_err">Email already in use.</string>
+    <string name="matching_pwd_err">The passwords need to match.</string>
+    <string name="signup_success">Signup successful.</string>
+    <string name="signup_fail">Signup failed.</string>
+
+    <string name="short_username">Username is too short. Minimum 4 characters.</string>
+
+    <string name="no_username">No username found</string>
+    <string name="no_email_found">No email found</string>
+    <string name="count_zero">No meds found</string>
+
+    <string name="apply_changes">Apply changes</string>
+    <string name="restart_message">The changes will be applied when the app restarts. Do you want to restart now?</string>
+
+    <string  name="later">Later</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="language">Language</string>
+
+    <string name="title_language_dialog">Choose language:</string>
+    <string name="title_theme_dialog">Choose theme:</string>
+    <string name="change_alarm_notifications">Change alarm notifications</string>
+
+    <string name="filter">Filter</string>
+    <string name="filter_default">Filter: Non-Archived</string>
+
+    <string name="archived">Medication archived</string>
+    <string name="unarchived">Medication unarchived</string>
+
+    <string name="filter_option_archived">Archived</string>
+    <string name="filter_option_nonarchived">Non-Archived</string>
+    <string name="filter_option_all">All</string>
+
+    <string name="regenerate_alarms">Regenerate alarms</string>
+
+    <string name="med_not_found">Error: Medication not found.</string>
+    <string name="deleted_success"> deleted successfully.</string>
+    <string name="med_logs_empty">Error: Logs not found.</string>
+
+    <string name="no_medication_archived">No archived medication found.\n Have a great day!</string>
+    <string name="no_medication_non_archived">No non-archived medication found.\n Have a great day!</string>
+    <string name="no_medication">No medication found. Have a great day!</string>
+
+    <string name="medicine_list">My medicine list: </string>
+    <string name="share_using">Share using </string>
+    <string name="share_message">Hey, here\'s my medicine history from PillWatch as of today</string>
+
+    <string name="taken">Taken</string>
+    <string name="postponed">Postponed</string>
+    <string name="missed">Missed</string>
+
+    <string name="every_x_hours">Every X hours</string>
+    <string name="once_a_day">Once a day</string>
+    <string name="twice_a_day">Twice a day</string>
+    <string name="three_times">Three times a day</string>
+    <string name="four_times">Four times a day</string>
+    <string name="no_reminders">No reminder needed</string>
+
+    <string name="title_edit_notif_dialog">Change Alarm Notification</string>
+    <string name="set_alarms">Set alarms:</string>
+    <string name="every">Every</string>
+    <string name="hours">hours</string>
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="interaction_alert_title">INTERACTION ALERT!</string>
+    <string name="interaction_alert_msg">The following interaction/s have been detected between this medicine and the other medicine on your list:</string>
+
+    <string name="low_severity">low severity</string>
+    <string name="moderate_severity">moderate severity</string>
+    <string name="high_severity">high severity</string>
+
+    <string name="proceed_question">Do you still wish to proceed?</string>
+    <string name="add_name_toast">Please write a name for the medication you wish to add.</string>
+
+    <string name="check_interaction">Checking for interactions</string>
+
+    <string-array name="theme_entries">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>System Default</item>
+    </string-array>
+</resources>

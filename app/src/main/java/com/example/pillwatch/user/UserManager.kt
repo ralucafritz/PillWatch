@@ -50,6 +50,12 @@ class UserManager @Inject constructor(
             storage.setTheme(themeSetting)
         }
 
+    var language: String
+        get() = storage.getLanguage()
+        set(language: String) {
+            storage.setLanguage(language)
+        }
+
     val messageIndex: Int
         get() = storage.getMessageIndex()
 

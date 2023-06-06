@@ -8,6 +8,7 @@ import com.example.pillwatch.alarms.AlarmGenerator
 import com.example.pillwatch.alarms.AlarmHandler
 import com.example.pillwatch.data.model.AlarmEntity
 import com.example.pillwatch.data.repository.AlarmRepository
+import com.example.pillwatch.data.repository.UserMedsRepository
 import com.example.pillwatch.utils.AlarmTiming
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,7 +27,8 @@ import javax.inject.Inject
 class AlarmsPerDayViewModel @Inject constructor(
     private val alarmRepository: AlarmRepository,
     private val alarmGenerator: AlarmGenerator,
-    private val alarmHandler: AlarmHandler
+    private val alarmHandler: AlarmHandler,
+    private val userMedsRepository: UserMedsRepository
 ) :
     ViewModel() {
     // MutableLiveData to hold the value of "everyXHours"
@@ -121,14 +123,17 @@ class AlarmsPerDayViewModel @Inject constructor(
      */
     fun scheduleAlarms() {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
+            val isArchived = withContext(Dispatchers.IO) {
                 alarmRepository.clearForMedId(medId).await()
                 alarmRepository.insertAll(_alarmsList.value!!)
                 _alarmsList.postValue(alarmRepository.getAlarmsByMedId(medId))
+                userMedsRepository.isArchived(medId)
             }
-            val enabledAlarms = _alarmsList.value!!.filter { it.isEnabled }
-            enabledAlarms.forEach { alarm ->
-                alarmHandler.scheduleAlarm(alarm.id, alarm.timeInMillis)
+            if(!isArchived) {
+                val enabledAlarms = _alarmsList.value!!.filter { it.isEnabled }
+                enabledAlarms.forEach { alarm ->
+                    alarmHandler.scheduleAlarm(alarm.id, alarm.timeInMillis)
+                }
             }
             _navigationCheck.value = true
         }

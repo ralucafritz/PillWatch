@@ -29,7 +29,7 @@ class SplashViewModel @Inject constructor(
     val username: LiveData<String>
         get() = _username
 
-    private val _welcomeMessage = MutableLiveData("Welcome")
+    private val _welcomeMessage = MutableLiveData<String>()
     val welcomeMessage: LiveData<String>
         get() = _welcomeMessage
 
@@ -49,10 +49,10 @@ class SplashViewModel @Inject constructor(
      * Sets the welcome message for the user and triggers a delay before enabling the UI.
      * The welcome message includes the username retrieved from the user manager.
      */
-    fun setMessage() {
+    fun setMessage(message: String) {
         viewModelScope.launch {
             _username.value = userManager.username
-            _welcomeMessage.value = "Welcome ${_username.value}"
+            _welcomeMessage.value = "$message ${_username.value}"
             delay(2000)
             _uiStatus.value = true
         }

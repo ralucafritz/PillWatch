@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.pillwatch.R
 import com.example.pillwatch.databinding.FragmentUsernameCreationBinding
 import com.example.pillwatch.ui.login.LoginActivity
 import com.example.pillwatch.ui.signup.SignupActivity
@@ -36,6 +37,9 @@ class UsernameCreationFragment : Fragment() {
     ): View {
         // Binding
         binding = FragmentUsernameCreationBinding.inflate(inflater)
+
+        viewModel.SHORT_USERNAME = resources.getString(R.string.short_username)
+        viewModel.EMPTY_FIELDS_ERR = resources.getString(R.string.empty_fields_err)
 
         // next button
         binding.buttonNext.setOnClickListener {
