@@ -5,7 +5,13 @@ import com.example.pillwatch.utils.extensions.Extensions.asDeferredCustom
 import com.example.pillwatch.utils.extensions.FirebaseUtils
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.tasks.asDeferred
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
@@ -56,22 +62,12 @@ class AlarmFirestoreRepository {
             }
     }
 
-    fun deleteAlarm(medId: String) {
-        alarmsRef.whereEqualTo("medId", medId).get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    alarmsRef.document(document.id).delete()
-                        .addOnSuccessListener {
-                            Timber.tag(TAG).d("DocumentSnapshot successfully deleted!")
-                        }
-                        .addOnFailureListener { e ->
-                            Timber.tag(TAG).e("Error deleting document $e")
-                        }
-                }
-            }
-            .addOnFailureListener { e ->
-                Timber.tag(TAG).e("Error getting documents: $e")
-            }
+    fun deleteAlarm(medId: String): Deferred<Unit> = CoroutineScope(Dispatchers.IO).async {
+        val documents = alarmsRef.whereEqualTo("medId", medId).get().await().documents
+        val deletionTasks = documents.map { document ->
+            alarmsRef.document(document.id).delete().asDeferred()
+        }
+        deletionTasks.awaitAll()
     }
 
     suspend fun getAlarmsByMedId(medId: String): List<AlarmEntity?> {

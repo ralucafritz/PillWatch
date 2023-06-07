@@ -177,14 +177,16 @@ class AlarmHandler @Inject constructor(
             Timber.tag("ALARM HANDLER").d("Reschedule and regen alarms for med no. $medId")
             val currentTime = System.currentTimeMillis()
             val lastAlarm = alarmRepository.getLastAlarmByMedId(medId)
-            if (currentTime > lastAlarm.timeInMillis) {
-                val newAlarmList = generateAlarms(lastAlarm, currentTime)
+            lastAlarm?.let {
+                if (currentTime > lastAlarm.timeInMillis) {
+                    val newAlarmList = generateAlarms(lastAlarm, currentTime)
 
-                alarmRepository.clearForMedId(medId).await()
-                alarmRepository.insertAll(newAlarmList)
+                    alarmRepository.clearForMedId(medId).await()
+                    alarmRepository.insertAll(newAlarmList)
 
-                newAlarmList.forEach { alarm ->
-                    scheduleAlarm(alarm.id, alarm.timeInMillis)
+                    newAlarmList.forEach { alarm ->
+                        scheduleAlarm(alarm.id, alarm.timeInMillis)
+                    }
                 }
             }
         }

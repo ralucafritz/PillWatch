@@ -129,7 +129,7 @@
                 android:id="@+id/googlelogo"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="15dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/googlelogo"
                 app:layout_constraintBottom_toBottomOf="@id/btn_google_sign_in"
@@ -160,7 +160,7 @@
                 <TextView
                     android:id="@+id/signup"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     android:text="@string/sign_up"

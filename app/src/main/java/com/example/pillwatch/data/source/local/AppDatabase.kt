@@ -21,7 +21,7 @@ import com.example.pillwatch.data.model.UserMedsEntity
         AlarmEntity::class,
         MedsLogEntity::class,
         UserMedsEntity::class],
-    version = 7,
+    version = 8,
     exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -30,7 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val userDao: UserDao
     abstract val alarmDao: AlarmDao
     abstract val medsLogDao: MedsLogDao
-    abstract  val userMedsDao: UserMedsDao
+    abstract val userMedsDao: UserMedsDao
 
     companion object {
         @Volatile //  = value of INSTANCE is up to date and the same to all threads
