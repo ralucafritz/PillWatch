@@ -27,5 +27,5 @@ data class UserEntity(
     val idToken: String? = null,
 
     @ColumnInfo(name = "role")
-    val role: Role = Role.USER
+    var role: Role = Role.USER
 )

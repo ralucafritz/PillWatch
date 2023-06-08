@@ -39,7 +39,7 @@ class AlarmRepository(
 
     suspend fun clearForMedId(medId: String): Deferred<Unit> = CoroutineScope(Dispatchers.IO).async {
         withContext(Dispatchers.IO) {
-            alarmFirestoreRepository.deleteAlarm(medId)
+            alarmFirestoreRepository.deleteAlarm(medId).await()
             alarmDao.clearForMedId(medId)
         }
     }

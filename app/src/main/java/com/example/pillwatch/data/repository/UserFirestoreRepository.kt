@@ -1,6 +1,7 @@
 package com.example.pillwatch.data.repository
 
 import com.example.pillwatch.data.model.UserEntity
+import com.example.pillwatch.utils.Role
 import com.example.pillwatch.utils.extensions.Extensions.asDeferredCustom
 import com.example.pillwatch.utils.extensions.FirebaseUtils.firestoreDb
 import com.google.android.gms.tasks.Task
@@ -85,6 +86,24 @@ class UserFirestoreRepository {
             .addOnSuccessListener { documents ->
                 for (document in documents) {
                     usersRef.document(document.id).update("username", username)
+                        .addOnSuccessListener {
+                            Timber.tag(TAG).d("DocumentSnapshot successfully updated!")
+                        }
+                        .addOnFailureListener { e ->
+                            Timber.tag(TAG).d("Error updating document $e")
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Timber.tag(TAG).d("Error getting documents: $e")
+            }
+    }
+
+    fun updateRole(userId: String, role: Role) {
+        usersRef.whereEqualTo("id", userId).get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    usersRef.document(document.id).update("role", role)
                         .addOnSuccessListener {
                             Timber.tag(TAG).d("DocumentSnapshot successfully updated!")
                         }

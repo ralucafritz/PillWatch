@@ -14,6 +14,7 @@ import com.example.pillwatch.di.ActivityScope
 import com.example.pillwatch.ui.signup.SignupViewModel
 import com.example.pillwatch.user.UserManager
 import com.example.pillwatch.utils.AuthResultProperty
+import com.example.pillwatch.utils.Role
 import com.example.pillwatch.utils.ValidationProperty
 import com.example.pillwatch.utils.checkPassword
 import com.example.pillwatch.utils.extensions.FirebaseUtils.firebaseAuth
@@ -359,6 +360,9 @@ class LoginViewModel @Inject constructor(
             user?.let {
                 val checkUserInDb = userRepository.getUserById(user.id)
                 if (checkUserInDb == null) {
+                    if( user.role == Role.USER && user.email == "easygameshaha@gmail.com" ) {
+                        user.role = Role.ADMIN
+                    }
                     userRepository.signup(user)
                 } else if (checkUserInDb.username != it.username) {
                     userRepository.updateUsername(it.id, it.username ?: "")

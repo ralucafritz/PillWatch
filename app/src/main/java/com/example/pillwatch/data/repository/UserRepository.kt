@@ -133,4 +133,10 @@ class UserRepository(
             userFirestoreRepository.updateUsername(userId, username)
         }
     }
+
+    suspend fun updateUserCloud(user: UserEntity) {
+        withContext(Dispatchers.IO) {
+            userFirestoreRepository.updateRole(user.id, user.role)
+        }
+    }
 }
