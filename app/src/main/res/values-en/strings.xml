@@ -149,9 +149,14 @@
 
     <string name="check_interaction">Checking for interactions</string>
 
+    <string name="text_share_logs_part1" >The 10 most recent log entries for the medicine</string>
+    <string name="text_share_logs_part2" >are:</string>
+
+
     <string-array name="theme_entries">
         <item>Light</item>
         <item>Dark</item>
         <item>System Default</item>
     </string-array>
+
 </resources>

@@ -1,11 +1,13 @@
 package com.example.pillwatch.ui.medication.medpage
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -236,6 +238,7 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
             R.layout.dialog_med_logs,
             null
         )
+        val shareButton = dialogView.findViewById<ImageView>(R.id.shareButton)
 
         val logsRecyclerView = dialogView.findViewById<RecyclerView>(R.id.logsRecyclerView)
         logsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -245,16 +248,40 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
             logsRecyclerView.visibility = View.VISIBLE
             val adapter = LogsAdapter(requireContext(), viewModel.logs.value!!)
             logsRecyclerView.adapter = adapter
+            shareButton.setOnClickListener {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, formatRecentLogs())
+                    type = "text/plain"
+                }
+
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
+            }
         } else {
             dialogView.findViewById<TextView>(R.id.empty_list_txt).visibility = View.VISIBLE
             logsRecyclerView.visibility = View.GONE
+            shareButton.visibility = View.GONE
         }
         val alertDialogBuilder = AlertDialog.Builder(requireContext(), R.style.RoundedDialogStyle)
             .setTitle(R.string.medication_logs)
             .setView(dialogView)
             .setPositiveButton(android.R.string.ok, null)
             .show()
+
         alertDialogBuilder.show()
+    }
+
+    private fun formatRecentLogs(): String {
+        val recentLogs = viewModel.getRecentLogs()
+        val medName = viewModel.medEntity.value?.tradeName
+
+        return StringBuilder().apply {
+            append("${getString(R.string.text_share_logs_part1)} $medName ${getString(R.string.text_share_logs_part2)} \n")
+            recentLogs!!.forEach { log ->
+                append("- ${getString(log.status.labelResId)}: ${log.timestamp} \n")
+            }
+        }.toString()
     }
 
     /**
