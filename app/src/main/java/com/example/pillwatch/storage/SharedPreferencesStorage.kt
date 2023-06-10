@@ -1,9 +1,10 @@
 package com.example.pillwatch.storage
 
 import android.content.Context
+import com.example.pillwatch.R
 import javax.inject.Inject
 
-class SharedPreferencesStorage @Inject constructor(context: Context) : Storage {
+class SharedPreferencesStorage @Inject constructor(private val context: Context) : Storage {
     private val sharedPreferences = context.getSharedPreferences("Dagger", Context.MODE_PRIVATE)
 
     override fun setString(key: String, value: String) {
@@ -46,7 +47,7 @@ class SharedPreferencesStorage @Inject constructor(context: Context) : Storage {
         return sharedPreferences.getBoolean(key, false)
     }
 
-    override fun getInt(key:String): Int {
+    override fun getInt(key: String): Int {
         return sharedPreferences.getInt(key, 0)
     }
 
@@ -71,7 +72,11 @@ class SharedPreferencesStorage @Inject constructor(context: Context) : Storage {
     }
 
     override fun getAlarmNotificationMessage(): String {
-         return sharedPreferences.getString("alarmNotificationMessage", "Time to take your medication:")!!
+        return sharedPreferences.getString(
+            "alarmNotificationMessage", context.resources.getString(
+                R.string.notification_text
+            )
+        )!!
     }
 
     override fun getLanguage(): String {

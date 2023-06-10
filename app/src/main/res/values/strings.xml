@@ -152,6 +152,10 @@
     <string name="text_share_logs_part1" >Cele mai recente 10 administrări ale medicamentului </string>
     <string name="text_share_logs_part2" >sunt:</string>
 
+    <string name="notification_title">Alarmă administrare medicament</string>
+    <string name="notification_ok">OK</string>
+    <string name="notification_postpone">AMÂNARE</string>
+    <string name="notification_text">A sosit momentul pentru administrarea medicamentului: </string>
 
     <string-array name="concentration_measures">
         <item>-</item>

@@ -32,8 +32,8 @@ interface UserMedsDao {
     @Query("SELECT * FROM user_meds_table WHERE id = :id")
     fun getMedById(id: String): UserMedsEntity
 
-    @Query("SELECT COUNT(*) FROM user_meds_table WHERE userId = :userId")
-    fun getMedCountByUserId(userId: String): Int?
+    @Query("SELECT COUNT(*) FROM user_meds_table WHERE userId = :userId and isArchived = :isArchived")
+    fun getActiveMedCountByUserId(userId: String, isArchived: Boolean= false): Int?
 
     @Query("DELETE FROM user_meds_table WHERE id  = :id")
     fun deleteById(id: String)

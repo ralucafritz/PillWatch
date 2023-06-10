@@ -152,22 +152,10 @@
     <string name="text_share_logs_part1" >Cele mai recente 10 administrări ale medicamentului </string>
     <string name="text_share_logs_part2" >sunt:</string>
 
-
-    <string-array name="concentration_measures">
-        <item>-</item>
-        <item>mg</item>
-        <item>ml</item>
-        <item>g</item>
-        <item>%</item>
-        <item>UI</item>
-        <item>MU</item>
-        <item>micrograms</item>
-        <item>mg/ml</item>
-        <item>mg/g</item>
-        <item>µg/ml</item>
-        <item>MU/ml</item>
-        <item>UI/ml</item>
-    </string-array>
+    <string name="notification_title">Alarmă administrare medicament</string>
+    <string name="notification_ok">LUAt</string>
+    <string name="notification_postpone">AMÂNAT</string>
+    <string name="notification_text">A sosit momentul pentru administrarea medicamentului: </string>
 
     <string-array name="theme_entries">
         <item>Luminoasă</item>

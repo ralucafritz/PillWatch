@@ -152,6 +152,10 @@
     <string name="text_share_logs_part1" >The 10 most recent log entries for the medicine</string>
     <string name="text_share_logs_part2" >are:</string>
 
+    <string name="notification_title">Pill Reminder</string>
+    <string name="notification_ok">OK</string>
+    <string name="notification_postpone">POSTPONE</string>
+    <string name="notification_text">It\s time to take your medicine: </string>
 
     <string-array name="theme_entries">
         <item>Light</item>
