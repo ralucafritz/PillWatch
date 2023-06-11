@@ -55,8 +55,8 @@ class UserMedsRepository(
         return userMedsDao.getMedById(id)
     }
 
-    fun getMedCountByUserId(userId: String): Int? {
-        return userMedsDao.getMedCountByUserId(userId)
+    fun getActiveMedCountByUserId(userId: String): Int? {
+        return userMedsDao.getActiveMedCountByUserId(userId)
     }
 
     suspend fun deleteById(id: String) {

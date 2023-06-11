@@ -31,7 +31,7 @@ class ProfileViewModel @Inject constructor(
     fun getMedsCount() {
         viewModelScope.launch {
             _medsCount.value = withContext(Dispatchers.IO) {
-                userMedsRepository.getMedCountByUserId(userManager.id)
+                userMedsRepository.getActiveMedCountByUserId(userManager.id)
             }
         }
     }

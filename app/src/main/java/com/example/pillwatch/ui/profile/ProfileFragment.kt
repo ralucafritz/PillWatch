@@ -108,7 +108,7 @@ class ProfileFragment : Fragment() {
                         ProfileFragmentDirections.actionProfileFragmentToHomeFragment()
                     )
                 }
-                else -> {
+                R.id.settingsFragment -> {
                     this@ProfileFragment.findNavController().navigate(
                         ProfileFragmentDirections.actionProfileFragmentToSettingsFragment()
                     )

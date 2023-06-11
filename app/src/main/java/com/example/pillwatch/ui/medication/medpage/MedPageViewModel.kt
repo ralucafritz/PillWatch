@@ -174,4 +174,9 @@ class MedPageViewModel @Inject constructor(
             }
         }
     }
+
+    fun getRecentLogs(): List<MedsLogEntity>? {
+        return _logs.value?.sortedByDescending { it.timestamp }?.take(10)
+    }
+
 }

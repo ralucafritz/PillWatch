@@ -4,7 +4,7 @@
     <string name="text_test">Text Test</string>
     <string name="meds_on_time">Luarea medicamentelor la timp nu a fost niciodată mai ușoară</string>
     <string name="warning_text_welcome">Aceasta aplicație nu este menită să înlocuiască sugestiile medicilor specialiști.</string>
-    <string name="already_have_an_account">Aveți deja un cont?</string>
+    <string name="already_have_an_account">Ai deja cont?</string>
     <string name="log_in">Conectează-te</string>
     <string name="get_started_button_txt">Înregistrează-te</string>
     <string name="prompt_email">Email</string>
@@ -20,7 +20,7 @@
     <string name="password"><font size="18">Parolă</font></string>
     <string name="email"><font size="18">Email</font></string>
     <string name="sign_up">Înregistrează-te</string>
-    <string name="dont_have_an_account">Nu aveți un cont?</string>
+    <string name="dont_have_an_account">Nu ai cont?</string>
     <string name="log_in_btn">Conectare</string>
     <string name="or">sau</string>
     <string name="log_in_with_google">Conectare cu Google</string>
@@ -149,22 +149,13 @@
 
     <string name="check_interaction">Se verifică interacțiunile chimice</string>
 
+    <string name="text_share_logs_part1" >Cele mai recente 10 administrări ale medicamentului </string>
+    <string name="text_share_logs_part2" >sunt:</string>
 
-    <string-array name="concentration_measures">
-        <item>-</item>
-        <item>mg</item>
-        <item>ml</item>
-        <item>g</item>
-        <item>%</item>
-        <item>UI</item>
-        <item>MU</item>
-        <item>micrograms</item>
-        <item>mg/ml</item>
-        <item>mg/g</item>
-        <item>µg/ml</item>
-        <item>MU/ml</item>
-        <item>UI/ml</item>
-    </string-array>
+    <string name="notification_title">Alarmă administrare medicament</string>
+    <string name="notification_ok">LUAt</string>
+    <string name="notification_postpone">AMÂNAT</string>
+    <string name="notification_text">A sosit momentul pentru administrarea medicamentului: </string>
 
     <string-array name="theme_entries">
         <item>Luminoasă</item>
