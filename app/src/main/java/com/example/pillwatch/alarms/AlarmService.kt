@@ -40,6 +40,7 @@ class AlarmService : Service() {
         mediaPlayer = MediaPlayer.create(this, alarmUri)
 
         mediaPlayer?.start()
+        vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator // initialize vibrator here
         startVibration()
 
         Handler(Looper.getMainLooper()).postDelayed({
@@ -83,6 +84,5 @@ class AlarmService : Service() {
 
     private fun stopVibration() {
         vibrator?.cancel()
-        vibrator = null
     }
 }
