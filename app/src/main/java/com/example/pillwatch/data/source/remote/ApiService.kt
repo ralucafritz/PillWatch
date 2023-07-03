@@ -10,7 +10,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-private const val BASE_URL = "https://pill-watch-server.herokuapp.com/"
+private const val BASE_URL = "https://pillwatch-sv-06da76c7968b.herokuapp.com/"
 
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())

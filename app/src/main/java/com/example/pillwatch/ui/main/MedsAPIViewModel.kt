@@ -30,10 +30,6 @@ class MedsAPIViewModel @Inject constructor(
     companion object {
         const val TAG_MEDS_DB = "MEDS_DATABASE"
         const val SHA = "sha"
-        const val UPDATE_SUCCESS = "Update successful."
-        const val UPDATE_FAILED = "Update failed."
-        const val UP_TO_DATE = "Medication data is up to date."
-        const val SERVER_ERR = "Server is unavailable."
     }
 
     // mutable live data
@@ -51,7 +47,11 @@ class MedsAPIViewModel @Inject constructor(
      * Retrieves medication data from the API and updates the local database if necessary.
      * Returns the result of the update operation.
      */
-    suspend fun getMedsDataFromAPI(checkCount : Boolean = true): Result<Boolean> {
+    suspend fun getMedsDataFromAPI(
+        checkCount : Boolean = true,
+        arrayMessages: Array<String>,
+        arrayTitles: Array<String>
+    ): Result<Boolean> {
         val result = withContext(Dispatchers.Main) {
             if(checkCount) {
                 val count = withContext(Dispatchers.IO) {
@@ -80,20 +80,20 @@ class MedsAPIViewModel @Inject constructor(
                             medsRepository.insertAll(entitiesList)
                         }
                         // log the result
-                        logMeds("Success", UPDATE_SUCCESS)
+                        logMeds(arrayTitles[0], arrayMessages[0], 0)
                         true
                     } else {
                         // log the result
-                        logMeds("Failure", UPDATE_FAILED)
+                        logMeds(arrayTitles[1], arrayMessages[1], 1)
                         false
                     }
                 } else {
                     // log the result
-                    logMeds("No update required", UP_TO_DATE)
+                    logMeds(arrayTitles[2], arrayMessages[2], 2)
                     false
                 }
             } catch (e: Exception) {
-                logMeds("Error", SERVER_ERR, e.printStackTrace().toString())
+                logMeds(arrayTitles[3], arrayMessages[3] ,3, e.printStackTrace().toString())
                 false
             }
         }
@@ -169,15 +169,15 @@ class MedsAPIViewModel @Inject constructor(
      * @param status The status message of the update operation.
      * @param errMsg The error message, if any.
      */
-    private fun logMeds(title: String, status: String, errMsg: String = "") {
+    private fun logMeds(title: String, status: String, pos: Int, errMsg: String = "") {
         _updateDialogTitle.value = title
         _updateMessage.value = status
 
-        val logMessage = when (status) {
-            UPDATE_SUCCESS -> "Meds introduced to the database. $UPDATE_SUCCESS"
-            UPDATE_FAILED -> "Failure: Meds were not introduced into the database. $UPDATE_FAILED"
-            UP_TO_DATE -> "Meds were not introduced into the database. $UP_TO_DATE"
-            SERVER_ERR -> "$UPDATE_FAILED $SERVER_ERR $errMsg"
+        val logMessage = when (pos) {
+            0 -> "Meds introduced to the database. $status"
+            1 -> "Failure: Meds were not introduced into the database. $status"
+            2 -> "Meds were not introduced into the database. $status"
+            3 -> "$status $errMsg"
             else -> ""
         }
         Timber.tag(TAG_MEDS_DB).d(logMessage)

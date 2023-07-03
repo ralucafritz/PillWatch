@@ -226,7 +226,7 @@ class SignupViewModel @Inject constructor(
                             if (user != null) {
                                 userManager.loginUser(user.id, user.email, user.username)
                             } else {
-                                user = userRepository.signup(email, "")
+                                user = userRepository.signup(email, "", true)
                                 if (user != null) {
                                     userManager.loginUser(user.id, user.email, user.username)
                                 } else {

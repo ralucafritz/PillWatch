@@ -34,7 +34,7 @@
     <string name="nav_open">Deschide</string>
     <string name="nav_close">Închide</string>
     <string name="profile">Profil</string>
-    <string name="check_for_updates">Verifică actualizări noi pentru medicamente</string>
+    <string name="check_for_updates">Verifică actualizări noi </string>
     <string name="an_app_for_your_needs">O aplicație pentru nevoile dumneavoastră</string>
     <string name="add_a_med">Adăugați un medicament</string>
     <string name="medName">MedName</string>
@@ -80,7 +80,7 @@
 
     <string name="no_username">Numele nu a fost găsit </string>
     <string name="no_email_found">Email-ul nu a fost găsit</string>
-    <string name="count_zero">0 medicamente găsite</string>
+    <string name="count_zero">0 </string>
 
 
     <string name="apply_changes">Aplicați modificările</string>
@@ -156,6 +156,16 @@
     <string name="notification_ok">LUAt</string>
     <string name="notification_postpone">AMÂNAT</string>
     <string name="notification_text">A sosit momentul pentru administrarea medicamentului: </string>
+
+    <string name="success">Actualizare reușită.</string>
+    <string name="failure">Actualizare eșuată.</string>
+    <string name="no_update_req">Datele medicamentelor sunt deja actualizate.</string>
+    <string name="error">Serverul nu este disponibil.</string>
+
+    <string name="title_success">Succes</string>
+    <string name="title_failure">Eșec</string>
+    <string name="title_no_update_req">Nu este necesară actualizarea</string>
+    <string name="title_error">Eroare</string>
 
     <string-array name="theme_entries">
         <item>Luminoasă</item>
