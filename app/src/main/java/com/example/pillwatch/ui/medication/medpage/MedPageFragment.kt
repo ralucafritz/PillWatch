@@ -29,6 +29,9 @@ import com.example.pillwatch.utils.extensions.ContextExtensions.toast
 import com.example.pillwatch.utils.extensions.ContextExtensions.toastTop
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 
@@ -279,7 +282,7 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
         return StringBuilder().apply {
             append("${getString(R.string.text_share_logs_part1)} $medName ${getString(R.string.text_share_logs_part2)} \n")
             recentLogs!!.forEach { log ->
-                append("- ${getString(log.status.labelResId)}: ${log.timestamp} \n")
+                append("- ${getString(log.status.labelResId)}: ${formatTimestamp(log.timestamp)} \n")
             }
         }.toString()
     }
@@ -323,4 +326,11 @@ class MedPageFragment : Fragment(), OnAlarmUpdatedListener {
             viewModel.updateAlarm(updatedAlarm)
         }
     }
+
+    private fun formatTimestamp(timestamp: Long): String {
+        val dateFormat = SimpleDateFormat("HH:mm E dd-MMM-yy ", Locale.getDefault())
+        val date = Date(timestamp)
+        return dateFormat.format(date)
+    }
+
 }

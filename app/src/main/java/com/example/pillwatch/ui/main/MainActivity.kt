@@ -160,9 +160,22 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
                     id.nav_update -> {
                         val progressDialog = showProgressDialog(resources.getString(R.string.check_for_updates))
+
+                        val arrayMessages = arrayOf(
+                            resources.getString(R.string.success),
+                            resources.getString(R.string.failure),
+                            resources.getString(R.string.no_update_req),
+                            resources.getString(R.string.error),
+                        )
+                        val arrayTitles = arrayOf(
+                            resources.getString(R.string.title_success),
+                            resources.getString(R.string.title_failure),
+                            resources.getString(R.string.title_no_update_req),
+                            resources.getString(R.string.title_error),
+                        )
                         lifecycleScope.launch {
                             withContext(Dispatchers.IO) {
-                                medsAPIViewModel.getMedsDataFromAPI(false)
+                                medsAPIViewModel.getMedsDataFromAPI(false, arrayMessages,arrayTitles)
                             }
                             dismissProgressDialog(
                                 progressDialog,

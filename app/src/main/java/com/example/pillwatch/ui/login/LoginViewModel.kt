@@ -360,7 +360,7 @@ class LoginViewModel @Inject constructor(
             user?.let {
                 val checkUserInDb = userRepository.getUserById(user.id)
                 if (checkUserInDb == null) {
-                    if( user.role == Role.USER && user.email == "easygameshaha@gmail.com" ) {
+                    if( user.role == Role.USER && user.email == "raluca@test.com" ) {
                         user.role = Role.ADMIN
                     }
                     userRepository.signup(user)

@@ -157,6 +157,16 @@
     <string name="notification_postpone">POSTPONE</string>
     <string name="notification_text">It\s time to take your medicine: </string>
 
+    <string name="success">Update successful.</string>
+    <string name="failure">Update failed.</string>
+    <string name="no_update_req">Medication data is up to date.</string>
+    <string name="error">Server is unavailable.</string>
+
+    <string name="title_success">Success</string>
+    <string name="title_failure">Failure</string>
+    <string name="title_no_update_req">No update required</string>
+    <string name="title_error">Error</string>
+
     <string-array name="theme_entries">
         <item>Light</item>
         <item>Dark</item>

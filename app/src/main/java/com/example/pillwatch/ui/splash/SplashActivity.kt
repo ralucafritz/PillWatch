@@ -69,8 +69,20 @@ class SplashActivity : AppCompatActivity() {
                     viewModel.uiStatus.observe(this) { uiStatus ->
                         if (uiStatus != null && uiStatus)
                             lifecycleScope.launch {
-                                    medsAPIViewModel.getMedsDataFromAPI()
-                                    viewModel.navigationStart()
+                                val arrayMessages = arrayOf(
+                                    resources.getString(R.string.success),
+                                    resources.getString(R.string.failure),
+                                    resources.getString(R.string.no_update_req),
+                                    resources.getString(R.string.error),
+                                )
+                                val arrayTitles = arrayOf(
+                                    resources.getString(R.string.title_success),
+                                    resources.getString(R.string.title_failure),
+                                    resources.getString(R.string.title_no_update_req),
+                                    resources.getString(R.string.title_error),
+                                )
+                                medsAPIViewModel.getMedsDataFromAPI(true, arrayMessages,arrayTitles)
+                                viewModel.navigationStart()
                             }
                     }
                     // Observe navigation check for starting the main activity
