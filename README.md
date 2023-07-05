@@ -38,5 +38,3 @@ The development of PillWatch was carried out in a series of stages, each focusin
 
 
 More informations on the development process can be found in the Pull Requests.
-
-More information will be added in the near future.
